@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>PWDAssistant</title>
+
+     <!-- Latest compiled and minified CSS --> 
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"> 
+     <!-- jQuery library --> 
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script> 
+     <!-- Popper JS --> 
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script> 
+     <!-- Latest compiled JavaScript --> 
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+     <!-- Font Awesome 6 Icon Library --> 
+        <link rel="stylesheet" href="css/all.min.css"> 
+        <link rel="stylesheet" href="css/fontawesome.min.css">
+        <script src="https://kit.fontawesome.com/3b9f69c096.js" crossorigin="anonymous"></script>  
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="css/dashhomestyle.css"/>
+    <link rel="stylesheet" href="css/cardtablestyle.css"/>
+    <link rel="icon" type="image/png" href="images/appmainlogo.png" sizes="48x48"/>
+
+    <!-- Boxicons CSS -->
+    <link href="https://unpkg.com/boxicons@2.1.2/css/boxicons.min.css" rel="stylesheet"/>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/3.1.2/rollups/aes.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/3.1.2/rollups/pbkdf2.js"></script>
+  </head>
+  <body>
+    <nav>
+      <div class="logo">
+        <i class="fas fa-bars"></i>
+        <span class="logo-name">PWDAssistant</span>
+      </div>
+
+      <div class="sidebar">
+        <div class="logo">
+          <i class="fas fa-bars"></i>
+          <span class="logo-name">PWDAssistant</span>
+        </div>
+
+        <div class="sidebar-content">
+          <ul class="lists">
+            <li class="list">
+              <a href="dashboardhome.html" class="nav-link">
+                <i class="fas fa-house icon"></i>
+                <span class="link">Dashboard</span>
+              </a>
+            </li>
+            <li class="list">
+              <a href="chartanalysis.html" class="nav-link">
+                <i class="fas fa-chart-simple icon"></i>
+                <span class="link">Analytics</span>
+              </a>
+            </li>
+            <li class="list">
+              <a onclick="window.open('queuecaller.html', 'name', 'width=700', 'height=1200')" style="cursor: pointer;" class="nav-link">
+                <i class="fas fa-bell icon"></i>
+                <span class="link">Queue Caller</span>
+              </a>
+            </li>
+            <li class="list">
+              <a href="carduserslist.html" class="nav-link">
+                <i class="fas fa-id-card icon"></i>
+                <span class="link">Card Users List</span>
+              </a>
+            </li>
+            <li class="list">
+              <a href="scheduleslist.html" class="nav-link">
+                <i class="fas fa-clock icon"></i>
+                <span class="link">Schedule List</span>
+              </a>
+            </li>
+            <li class="list">
+              <a href="uploadfiles.html" class="nav-link active">
+                <i class="fas fa-file-import icon"></i>
+                <span class="link">Upload Files</span>
+              </a>
+            </li>
+            <li class="list">
+              <a href="updatepassword.html" class="nav-link">
+                <i class="fas fa-pen icon"></i>
+                <span class="link">Edit Account</span>
+              </a>
+            </li>
+          </ul>
+
+          <div class="bottom-cotent">
+            <li class="list">
+              <a href="#" class="nav-link">
+                <i class="fas fa-user icon"></i>
+                <span class="link" id="userspan"></span>
+              </a>
+            </li>
+            <li class="list">
+              <a href="#" class="nav-link">
+                <i class="bx bx-log-out icon"></i>
+                <span class="link" id="logout">Logout</span>
+              </a>
+            </li>
+          </div>
+        </div>
+      </div>
+    </nav>
+    
+    <section class="overlay"></section>
+    
+    <div class="tabletitle">
+        <h1 class="tabtitle">Upload Files</h1>
+    </div>
+    
+    <div class="fileselectarea">
+      <form>
+        <div class="fileselector">
+          <label for="fileselector" class="fileLBL">Upload medical certificate:</label>
+          <input type="file" id="medselect" accept=".pdf, .docx" required>
+          <button type="button" class="uploadmedBTN" id="uploadmedBTN">Upload</button>
+          <p class="medalert" id="medalert"></p>
+        </div>
+        <div class="fileselector">
+          <label for="fileselector" class="fileLBL">Upload birth certificate:</label>
+          <input type="file" id="birthselect" accept=".pdf, .docx" required>
+          <button type="button" class="uploadbctBTN" id="uploadbctBTN">Upload</button>
+          <p class="bthalert" id="bthalert"></p>
+        </div>
+        <div class="fileselector">
+          <label for="fileselector" class="fileLBL">Upload barangay certificate:</label>
+          <input type="file" id="brgyselect" accept=".pdf, .docx" required>
+          <button type="button" class="uploadrctBTN" id="uploadrctBTN">Upload</button>
+          <p class="brgalert" id="brgalert"></p>
+        </div>
+        <div class="fileselector">
+          <label for="fileselector" class="fileLBL">Upload photo:</label>
+          <input type="file" id="imgselect" accept=".png, .jpg, .jpeg" required>
+          <button type="button" class="uploadimgBTN" id="uploadimgBTN">Upload</button>
+          <p class="imgalert" id="imgalert"></p>
+        </div>
+        <div class="fileselector">
+          <label for="fileselector" class="fileLBL">Upload affidavit of loss:</label>
+          <input type="file" id="affiselect" accept=".pdf, .docx" required>
+          <button type="button" class="uploadaflBTN" id="uploadaflBTN">Upload</button>
+          <p class="afialert" id="afialert"></p>
+        </div>
+      </form>
+    </div>
+
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/3.1.9-1/crypto-js.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.0.0/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.5.3/jspdf.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.6/jspdf.plugin.autotable.min.js"></script>
+    <script type="module">
+      const navBar = document.querySelector("nav"),
+        menuBtns = document.querySelectorAll(".fa-bars"),
+        overlay = document.querySelector(".overlay");
+
+      menuBtns.forEach((menuBtn) => {
+        menuBtn.addEventListener("click", () => {
+          navBar.classList.toggle("open");
+        });
+      });
+
+      overlay.addEventListener("click", () => {
+        navBar.classList.remove("open");
+      });
+
+      import {initializeApp} from "https://www.gstatic.com/firebasejs/9.22.1/firebase-app.js";
+       
+      const firebaseConfig = {
+        apiKey: "AIzaSyCDNLsVNK45kH5PRCaXBw3wV9Nkw2jGdv8",
+        authDomain: "pwdcardregisterapp.firebaseapp.com",
+        databaseURL: "https://pwdcardregisterapp-default-rtdb.firebaseio.com",
+        projectId: "pwdcardregisterapp",
+        storageBucket: "pwdcardregisterapp.appspot.com",
+        messagingSenderId: "1097703662378",
+        appId: "1:1097703662378:web:d66126bbf452d5c290f453"
+      };
+
+      const app = initializeApp(firebaseConfig);
+
+      import {getFirestore, doc, getDoc, getDocs, setDoc, count, getCountFromServer, collection, query, onSnapshot, where, addDoc, updateDoc, deleteDoc, deleteField} from "https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore.js";
+      import {getStorage, ref, getDownloadURL, getBlob, uploadBytes} from "https://www.gstatic.com/firebasejs/9.22.1/firebase-storage.js";
+      import {getAuth, onAuthStateChanged, updatePassword, reauthenticateWithCredential, signOut} from "https://www.gstatic.com/firebasejs/9.22.1/firebase-auth.js";
+
+      const db = getFirestore(app);
+      const storage = getStorage(app);
+      const auth = getAuth(app);
+      
+      var files = [];
+      var reader = new FileReader();
+      
+      var selmed = document.getElementById("medselect");
+      var selbir = document.getElementById("birthselect");
+      var selbrgy = document.getElementById("brgyselect");
+      var selimg = document.getElementById("imgselect");
+      var selafl = document.getElementById("affiselect");
+      
+      var submed = document.getElementById("uploadmedBTN");
+      var subbir = document.getElementById("uploadbctBTN");
+      var subbrgy = document.getElementById("uploadrctBTN");
+      var subimg = document.getElementById("uploadimgBTN");
+      var subafl = document.getElementById("uploadaflBTN");
+      
+      var user = document.getElementById("userspan");
+      
+      const signout = document.querySelector("#logout");
+      
+      onAuthStateChanged(auth, (user) => {
+        if (user) {
+         const uemail = user.email;
+         userspan.innerHTML = uemail;
+        } else {
+         window.location.href = "logsign.html";
+        }
+      })
+      
+      const signOutUser = async() => {
+        signOut(auth).then(() => {
+           window.location.href = "logsign.html";
+        }).catch((error) => {
+           alert("Sign out not working, please try again");
+        }); 
+      }
+      
+      signout.addEventListener('click', signOutUser);
+      
+      let medfiles, medfileName, medfileType;
+      let birfiles, birfileName, birfileType;
+      let brgyfiles, brgyfileName, brgyfileType;
+      let photo, imgName, imgType;
+      let afifiles, afifileName, afifileType;
+      
+      function handleMedUploadChange(e){
+        medfiles = event.target.files;
+        medfileName = medfiles[0].name;
+        medfileType = medfiles[0].type;
+      }
+      
+      function handleBctUploadChange(e){
+        birfiles = event.target.files;
+        birfileName = birfiles[0].name;
+        birfileType = birfiles[0].type;
+      }
+      
+      function handleBryUploadChange(e){
+        brgyfiles = event.target.files;
+        brgyfileName = brgyfiles[0].name;
+        brgyfileType = brgyfiles[0].type;
+      }
+      
+      function handleImgUploadChange(e){
+        photo = event.target.files;
+        imgName = photo[0].name;
+        imgType = photo[0].type;
+      }
+      
+      function handleAfiUploadChange(e){
+        afifiles = event.target.files;
+        afifileName = afifiles[0].name;
+        afifileType = afifiles[0].type;
+      }
+      
+      function handleMedUploadSubmit(e){
+        document.getElementById("medalert").innerHTML = ""; 
+        const selectedmedFile = medfiles[0];
+        const medRef = ref(storage, "medical_cert/" + medfileName);
+        const metadata = {
+         contentType: medfileType,
+        };
+        
+        uploadBytes(medRef, selectedmedFile, metadata).then((snapshot) => {
+          document.getElementById("medalert").innerHTML = "Medical certificate uploaded successfully."; 
+          document.getElementById("medalert").style.color = "midnightblue";
+        }).catch((err) => {
+          document.getElementById("medalert").innerHTML = "Unable to upload medical certificate, please try again later."; 
+          document.getElementById("medalert").style.color = "red";
+        });
+      }
+      
+      function handleBctUploadSubmit(e){
+        document.getElementById("bthalert").innerHTML = ""; 
+        const selectedbirFile = birfiles[0];
+        const birRef = ref(storage, "birth_or_marriage_cert/" + birfileName);
+        const metadata = {
+         contentType: birfileType,
+        };
+        
+        uploadBytes(birRef, selectedbirFile, metadata).then((snapshot) => {
+          document.getElementById("bthalert").innerHTML = "Birth/Marriage certificate uploaded successfully."; 
+          document.getElementById("bthalert").style.color = "midnightblue";
+        }).catch((err) => {
+          document.getElementById("bthalert").innerHTML = "Unable to upload birth or medical certificate, please try again later."; 
+          document.getElementById("bthalert").style.color = "red";
+        });
+      }
+      
+      function handleBryUploadSubmit(e){
+        document.getElementById("brgalert").innerHTML = ""; 
+        const selectedbrgyFile = brgyfiles[0];
+        const brgyRef = ref(storage, "barangay_resid_cert/" + brgyfileName);
+        const metadata = {
+         contentType: brgyfileType,
+        };
+        
+        uploadBytes(brgyRef, selectedbrgyFile, metadata).then((snapshot) => {
+          document.getElementById("brgalert").innerHTML = "Barangay certificate uploaded successfully."; 
+          document.getElementById("brgalert").style.color = "midnightblue";
+        }).catch((err) => {
+          document.getElementById("brgalert").innerHTML = "Unable to upload barangay certificate, please try again later."; 
+          document.getElementById("brgalert").style.color = "red";
+        });
+      }
+      
+      function handleImgUploadSubmit(e){
+        document.getElementById("imgalert").innerHTML = ""; 
+        const selectedimgFile = photo[0];
+        const imgRef = ref(storage, "photos/" + imgName);
+        const metadata = {
+         contentType: afifileType,
+        };
+        
+        uploadBytes(imgRef, selectedimgFile, metadata).then((snapshot) => {
+          getDownloadURL(imgRef).then((url)=>{
+            console.log(url);
+          });
+          document.getElementById("imgalert").innerHTML = "Image uploaded successfully."; 
+          document.getElementById("imgalert").style.color = "midnightblue";
+        }).catch((err) => {
+          document.getElementById("imgalert").innerHTML = "Unable to upload photo, please try again later."; 
+          document.getElementById("imgalert").style.color = "red";
+        });
+      }
+      
+      function handleAfiUploadSubmit(e){
+        document.getElementById("afialert").innerHTML = ""; 
+        const selectedafiFile = afifiles[0];
+        const afiRef = ref(storage, "affidavit_of_loss/" + afifileName);
+        const metadata = {
+         contentType: imgfileType,
+        };
+        
+        uploadBytes(afiRef, selectedafiFile, metadata).then((snapshot) => {
+          document.getElementById("afialert").innerHTML = "Affidavit of loss uploaded successfully."; 
+          document.getElementById("afialert").style.color = "midnightblue";
+        }).catch((err) => {
+          document.getElementById("afialert").innerHTML = "Unable to upload affidavit of loss, please try again later."; 
+          document.getElementById("afialert").style.color = "red";
+        });
+      }
+      
+      selmed.addEventListener('change', handleMedUploadChange);
+      submed.addEventListener('click', handleMedUploadSubmit);
+      
+      selbir.addEventListener('change', handleBctUploadChange);
+      subbir.addEventListener('click', handleBctUploadSubmit);
+      
+      selbrgy.addEventListener('change', handleBryUploadChange);
+      subbrgy.addEventListener('click', handleBryUploadSubmit);
+      
+      selimg.addEventListener('change', handleImgUploadChange);
+      subimg.addEventListener('click', handleImgUploadSubmit);
+      
+      selafl.addEventListener('change', handleAfiUploadChange);
+      subafl.addEventListener('click', handleAfiUploadSubmit);
+      
+      signout.addEventListener('click', signOutUser);
+    </script>
+  </body>
+</html>

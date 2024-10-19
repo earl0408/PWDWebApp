@@ -1,0 +1,75 @@
+{
+  "indexes": [
+    {
+      "collectionGroup": "app_users",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "fullname",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "username",
+          "order": "ASCENDING"
+        }
+      ]
+    },
+    {
+      "collectionGroup": "cards",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "cardnumber",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "cardstatus",
+          "order": "ASCENDING"
+        }
+      ]
+    },
+    {
+      "collectionGroup": "cards",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "registrantfullname",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "cardstatus",
+          "order": "ASCENDING"
+        }
+      ]
+    },
+    {
+      "collectionGroup": "schedule_receives",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "appuserID",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "receivedateandtime",
+          "order": "DESCENDING"
+        }
+      ]
+    },
+    {
+      "collectionGroup": "schedule_receives",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "specificcardnum",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "appuserID",
+          "order": "ASCENDING"
+        }
+      ]
+    }
+  ],
+  "fieldOverrides": []
+}

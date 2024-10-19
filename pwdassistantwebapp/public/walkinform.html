@@ -1,0 +1,667 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>PWDAssistant</title>
+
+     <!-- Latest compiled and minified CSS --> 
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"> 
+     <!-- jQuery library --> 
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script> 
+     <!-- Popper JS --> 
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script> 
+     <!-- Latest compiled JavaScript --> 
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+     <!-- Font Awesome 6 Icon Library --> 
+        <link rel="stylesheet" href="css/all.min.css"> 
+        <link rel="stylesheet" href="css/fontawesome.min.css">
+        <script src="https://kit.fontawesome.com/3b9f69c096.js" crossorigin="anonymous"></script>  
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="css/cardtablestyle.css"/>
+    <link rel="stylesheet" href="css/walkinformstyle.css"/>
+    <link rel="icon" type="image/png" href="images/appmainlogo.png" sizes="48x48"/>
+
+    <!-- Boxicons CSS -->
+    <link href="https://unpkg.com/boxicons@2.1.2/css/boxicons.min.css" rel="stylesheet"/>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/3.1.2/rollups/aes.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/3.1.2/rollups/pbkdf2.js"></script>
+  </head>
+  <body style="overflow: hidden">
+    <div class="walkinform">
+        <h1 class="formtitle">PWD Registration/Renewal Card Form</h1>
+        <form id="formfields">
+          <div class="carduserdata">
+            <label for="cardname">Full Name:</label>
+            <div class="input-box-long">
+              <input type="text" class="cardname" id="cardname" maxlength="80"
+               oninput="this.value = this.value.replace(/[^A-Za-zñ.\-\s]/g, '');">
+              <p class="errortext" id="ert1"></p>
+            </div>
+          </div>
+          <div class="carduserdata">
+            <label for="address">Address:</label>
+            <div class="input-box-long">
+              <input type="text" class="cardadds" id="address" maxlength="150"
+               oninput="this.value = this.value.replace(/[^0-9A-Za-zñ.\&\,\-\s]/g, '');">
+               <p class="errortext" id="ert2"></p>
+            </div>
+          </div>
+          <div class="carduserdata">
+            <label for="birthdate">Birthday:</label>
+            <div class="input-box-short">
+              <input type="date" class="birthdate" id="birthdate" placeholder="yyyy/mm/dd" max="today" required>
+              <p class="errortext" id="ert3"></p>
+            </div>
+          </div>
+          <div class="carduserdata">
+            <label for="disabCBX">Disability Type:</label>
+            <div class="input-box-short">
+              <select class="disabCBX" id="disability">
+                <option value="unselected">-------</option>
+                <option value="Psychosocial disability">Psychosocial disability</option>
+                <option value="Disability resulting from a chronic illness">Disability resulting from a chronic illness</option>
+                <option value="Learning disability">Learning disability</option>
+                <option value="Visual disability">Visual disability</option>
+                <option value="Orthopedic/Physical disability">Orthopedic/Physical disability</option>
+                <option value="Mental disability">Mental disability</option>
+                <option value="Intellectual disability">Intellectual disability</option>
+                <option value="Hearing disability">Hearing disability</option>
+                <option value="Speech or language impairment">Speech or language impairment</option>
+                <option value="Cancer">Cancer</option>
+                <option value="Rare disease">Rare disease</option>
+              </select>
+              <p class="errortext" id="ert4"></p>
+            </div>       
+          </div>
+          <div class="carduserdata">
+            <label for="gender">Gender:</label>
+            <div class="input-box-short">
+              <select class="genCBX" id="gender">
+                <option value="unselected">-------</option>
+                <option value="Male">Male</option>
+                <option value="Female">Female</option>
+              </select>
+              <p class="errortext" id="ert5"></p>
+            </div>    
+          </div>
+          <div class="carduserdata">
+            <label for="bloodtype">Blood Type:</label>
+            <div class="input-box-short">
+              <select class="btypeCBX" id="bloodtype">
+                <option value="unselected">-------</option>
+                <option value="A+">A+</option>
+                <option value="A-">A-</option>
+                <option value="B+">B+</option>
+                <option value="B-">B-</option>
+                <option value="AB+">AB+</option>
+                <option value="AB-">AB-</option>
+                <option value="O+">O+</option>
+                <option value="O-">O-</option>
+              </select>
+              <p class="errortext" id="ert6"></p>
+            </div> 
+          </div>
+          <h2 class="formsubheads">In case of emergency, please contact:</h2>
+          <div class="carduserdata">
+            <label for="guardname">Guardian Name:</label>
+            <div class="input-box-short">
+              <input type="text" class="guardname" id="guardname" maxlength="80"
+               oninput="this.value = this.value.replace(/[^A-Za-zñ.\-\s]/g, '');">
+               <p class="errortext" id="ert7"></p>
+            </div>
+          </div>
+          <div class="carduserdata">
+            <label for="guardphone">Guardian Phone:</label>
+            <div class="input-box-short">
+              <input type="text" class="guardphone" id="guardphone" maxlength="11"
+               oninput="this.value = this.value.replace(/[^0-9]/g, '');">
+              <p class="errortext" id="ert8"></p>
+            </div>
+          </div>
+          <div class="btnarray">
+            <button type="button" class="registerBTN" id="registerdata">Register</button>
+            <button type="button" class="renewBTN" id="renewdata">Renew</button>
+            <button type="button" class="reprintBTN" id="reprintdata">Reprint</button>
+            <button type="button" class="resetBTN" id="resetfields">Reset Fields</button>
+          </div>
+        </form>
+        <div class="givennumber" id="givennumber">
+          <p class="completestate">Transaction complete. Your ticket/customer number is:</p>
+          <p class="numbershown" id="numshown"></p>
+          <p class="completestate">Please wait for your number to be called.</p>
+          <div class="btnarray2">
+             <button type="button" class="refreshBTN" id="refreshnew" onclick="location.reload();">Start new transaction</button>
+          </div>
+        </div>
+    </div>
+    <div class="alertsnack" id="snackbar">Some required fields are empty. Please complete the form.</div>
+  </body>
+  <script type="module">
+    var today = new Date();
+    var dd = today.getDate();
+    var mm = today.getMonth() + 1;
+    var yyyy = today.getFullYear();
+    if(dd < 10){
+        dd = '0' + dd;
+    } 
+    if(mm<10){
+        mm = '0' + mm;
+    } 
+
+    today = yyyy+'-'+mm+'-'+dd;
+    document.getElementById("birthdate").setAttribute("max", today);
+
+    function makeID(length) {
+      let result = '';
+      const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+      const charactersLength = characters.length;
+      let counter = 0;
+      while (counter < length) {
+        result += characters.charAt(Math.floor(Math.random() * charactersLength));
+        counter += 1;
+      }
+      return result;
+    }
+
+    var alphnum1 = makeID(7);
+    var alphnum2 = makeID(7);
+    var codeval = alphnum1 + "-" + alphnum2;
+
+    function formatDate(date) {
+      var d = new Date(date),
+        month = '' + (d.getMonth() + 1),
+        day = '' + d.getDate(),
+        year = d.getFullYear();
+
+      if (month.length < 2) 
+        month = '0' + month;
+      if (day.length < 2) 
+        day = '0' + day;
+
+      return [year, month, day].join('/');
+    }
+
+    function formatDate2(date) {
+      var d = new Date(date),
+        month = '' + (d.getMonth() + 1),
+        day = '' + d.getDate(),
+        year = d.getFullYear();
+
+      if (month.length < 2) 
+        month = '0' + month;
+      if (day.length < 2) 
+        day = '0' + day;
+
+      return [month, day, year].join('/');
+    }
+
+    var today = new Date();
+    var issuedate = formatDate2(today);
+    
+    var rendate = today.setFullYear(today.getFullYear() + 5);
+    var renewaldate = formatDate(rendate);
+
+    var basecardnum = "04-2106"
+    var brgycode;
+
+    function determineBrgyCode(string){
+      if(string === "Burol"){brgycode = "003";}
+      else if(string === "Langkaan I"){brgycode = "005";}
+      else if(string === "Paliparan I"){brgycode = "008";}
+      else if(string === "Sabang"){brgycode = "010";}
+      else if(string === "Salawag"){brgycode = "011";}
+      else if(string === "Salitran I"){brgycode = "012";}
+      else if(string === "Sampaloc I"){brgycode = "013";}
+      else if(string === "San Agustin I"){brgycode = "014";}
+      else if(string === "San Jose"){brgycode = "015";}
+      else if(string === "Zone I"){brgycode = "016";}
+      else if(string === "Zone II"){brgycode = "017";}
+      else if(string === "Zone III"){brgycode = "018";}
+      else if(string === "Zone IV"){brgycode = "019";}
+      else if(string === "Datu Esmael"){brgycode = "020";}
+      else if(string === "Emmanuel Berrgado I"){brgycode = "021";}
+      else if(string === "Fatima I"){brgycode = "022";}
+      else if(string === "Luzviminda I"){brgycode = "023";}
+      else if(string === "Saint Peter I"){brgycode = "024";}
+      else if(string === "San Andres I"){brgycode = "025";}
+      else if(string === "San Antonio De Padua I"){brgycode = "026";}
+      else if(string === "San Dionisio"){brgycode = "027";}
+      else if(string === "San Esteban"){brgycode = "028";}
+      else if(string === "San Francisco I"){brgycode = "029";}
+      else if(string === "San Isidro Labrador I"){brgycode = "030";}
+      else if(string === "San Juan"){brgycode = "031";}
+      else if(string === "San Lorenzo Ruiz I"){brgycode = "032";}
+      else if(string === "San Luis I"){brgycode = "033";}
+      else if(string === "San Manuel I"){brgycode = "034";}
+      else if(string === "San Mateo"){brgycode = "035";}
+      else if(string === "San Miguel"){brgycode = "036";}
+      else if(string === "San Nicolas I"){brgycode = "037";}
+      else if(string === "San Roque"){brgycode = "038";}
+      else if(string === "San Simon"){brgycode = "039";}
+      else if(string === "Santa Cristina I"){brgycode = "040";}
+      else if(string === "Santa Cruz I"){brgycode = "041";}
+      else if(string === "Santa Fe"){brgycode = "042";}
+      else if(string === "Santa Lucia"){brgycode = "043";}
+      else if(string === "Santa Maria"){brgycode = "044";}
+      else if(string === "Santo Cristo"){brgycode = "045";}
+      else if(string === "Santo Niño I"){brgycode = "046";}
+      else if(string === "Burol I"){brgycode = "047";}
+      else if(string === "Burol II"){brgycode = "048";}
+      else if(string === "Burol III"){brgycode = "049";}
+      else if(string === "Emmanuel Berrgado II"){brgycode = "050";}
+      else if(string === "Fatima II"){brgycode = "051";}
+      else if(string === "Fatima III"){brgycode = "052";}
+      else if(string === "Langkaan II"){brgycode = "053";}
+      else if(string === "Lusviminda II"){brgycode = "054";}
+      else if(string === "Paliparan II"){brgycode = "055";}
+      else if(string === "Paliparan III"){brgycode = "056";}
+      else if(string === "Saint Peter II"){brgycode = "057";}
+      else if(string === "Salitran II"){brgycode = "058";}
+      else if(string === "Salitran III"){brgycode = "059";}
+      else if(string === "Salitran IV"){brgycode = "060";}
+      else if(string === "Sampaloc II"){brgycode = "061";}
+      else if(string === "Sampaloc III"){brgycode = "062";}
+      else if(string === "Sampaloc IV"){brgycode = "063";}
+      else if(string === "Sampaloc V"){brgycode = "064";}
+      else if(string === "San Agustin II"){brgycode = "065";}
+      else if(string === "San Agustin III"){brgycode = "066";}
+      else if(string === "San Andres II"){brgycode = "067";}
+      else if(string === "San Antonio De Padua II"){brgycode = "068";}
+      else if(string === "San Francisco II"){brgycode = "069";}
+      else if(string === "San Isidro Labrador II"){brgycode = "070";}
+      else if(string === "San Lorenzo Ruiz II"){brgycode = "071";}
+      else if(string === "San Luis II"){brgycode = "072";}
+      else if(string === "San Manuel II"){brgycode = "073";}
+      else if(string === "San Miguel II"){brgycode = "074";}
+      else if(string === "San Nicolas II"){brgycode = "075";}
+      else if(string === "Santa Cristina II"){brgycode = "076";}
+      else if(string === "Santa Cruz II"){brgycode = "077";}
+      else if(string === "Santo Niño II"){brgycode = "078";}
+      else if(string === "Zone I-B"){brgycode = "079";}
+      else if(string === "H-2"){brgycode = "080";}
+      else if(string === "Victoria Reyes"){brgycode = "081";}
+      else{brgycode = "000";}
+      return brgycode;
+    }
+
+    function randNumGen(){
+      const rNum = Math.floor(Math.random() * 9999) + 1;
+      let padNum = rNum.toString();
+      while (padNum.length < 4) {
+        padNum = '0' + padNum;
+      }
+      return padNum;
+    }
+
+    import {initializeApp} from "https://www.gstatic.com/firebasejs/9.22.1/firebase-app.js";
+       
+    const firebaseConfig = {
+      apiKey: "AIzaSyCDNLsVNK45kH5PRCaXBw3wV9Nkw2jGdv8",
+      authDomain: "pwdcardregisterapp.firebaseapp.com",
+      databaseURL: "https://pwdcardregisterapp-default-rtdb.firebaseio.com",
+      projectId: "pwdcardregisterapp",
+      storageBucket: "pwdcardregisterapp.appspot.com",
+      messagingSenderId: "1097703662378",
+      appId: "1:1097703662378:web:d66126bbf452d5c290f453"
+    };
+ 
+    const app = initializeApp(firebaseConfig);
+
+    import {getFirestore, doc, getDoc, getDocs, setDoc, count, getCountFromServer, collection, query, onSnapshot, where, updateDoc, increment} from "https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore.js";
+
+    const db = getFirestore(app);
+
+    const cdname = document.querySelector("#cardname");
+    const dtype = document.querySelector("#disability");
+    const adres = document.querySelector("#address");
+    const gndr = document.querySelector("#gender");
+    const btype = document.querySelector("#bloodtype");
+    const bdate = document.querySelector("#birthdate");
+    const grnm = document.querySelector("#guardname");
+    const grph = document.querySelector("#guardphone");
+
+    const resetform = document.querySelector("#resetfields");
+    const addcard = document.querySelector("#registerdata");
+    const renewcard = document.querySelector("#renewdata");
+    const reprintcard = document.querySelector("#reprintdata");
+
+    var regtype = "E-";
+    var rentype = "N-";
+    var reptype = "P-";
+
+    var nameregex = /[A-Za-z\s.]{7,85}/;
+    var addressregex = /\b.{10,250}\b/;
+    var phoneregex = /\b\d{11}\b/;
+
+    const numref1 = doc(db, "assign_tracker", "registerassign");
+    const numref2 = doc(db, "assign_tracker", "renewassign");
+    const numref3 = doc(db, "assign_tracker", "reprintassign");
+
+    function postSubmit(){
+      document.getElementById("formfields").style.display = "none";
+      document.getElementById("givennumber").style.display = "block";
+    }
+
+    function appearSnack(){
+      var snack = document.getElementById("snackbar");
+
+      snack.className = "active";
+
+      setTimeout(function(){ snack.className = snack.className.replace("active", "alertsnack"); }, 3000);
+    }
+
+    function clearErrors(){
+      document.getElementById("ert1").innerHTML = "";
+      document.getElementById("ert2").innerHTML = "";
+      document.getElementById("ert3").innerHTML = "";
+      document.getElementById("ert4").innerHTML = "";
+      document.getElementById("ert5").innerHTML = "";
+      document.getElementById("ert6").innerHTML = "";
+      document.getElementById("ert7").innerHTML = "";
+      document.getElementById("ert8").innerHTML = "";
+    }
+
+    const resetvalue = 0;
+    function checkTime() {
+        const now = new Date();
+        const currentHour = now.getHours();
+        const currentMinute = now.getMinutes();
+        
+        if (currentHour === 17 && currentMinute === 0) {
+          updateDoc(numref1, {customernum: resetvalue})
+          updateDoc(numref2, {customernum: resetvalue})
+          updateDoc(numref3, {customernum: resetvalue})
+        }
+    }
+    setInterval(checkTime, 1000);
+
+    const resetFormFields = async() => {
+        cdname.value = "";
+        dtype.selectedIndex = 0;
+        adres.value = "";
+        gndr.selectedIndex = 0;
+        btype.selectedIndex = 0;
+        bdate.value = "";
+        grnm.value = "";
+        grph.value = "";
+        grph.value = "";
+    }
+
+    const addDataRegister = async() => {
+      clearErrors();
+      if((cdname.value != "" && nameregex.test(cdname.value)) && (adres.value != "" && addressregex.test(adres.value))
+          && dtype.value != "unselected" && gndr.value !="unselected" && btype.value != "unselected" && bdate.value != "" 
+          && (grnm.value != "" && nameregex.test(grnm.value)) && (grph.value != "" && phoneregex.test(grph.value))){
+          const checkRef = query(collection(db, "cards"), where("registrantfullname", "==", cdname.value));
+          const countsnapshot1 = await getCountFromServer(checkRef);
+          if(countsnapshot1.data().count == 0){
+            var regadds = adres.value;
+            var filteradd = regadds.match(/Barangay (.*$)/)[1];
+            var bcode = determineBrgyCode(filteradd);
+            var grn = randNumGen();
+            var cardnum = [basecardnum, bcode, grn].join("-");
+            var bday = formatDate(bdate.value);
+            await setDoc(doc(db, "cards", codeval), {
+              appuserID: "Walk-in submission",
+              cardnumber: cardnum,
+              registrantfullname: cdname.value,
+              disabilitytype: dtype.value,
+              registrantaddress: adres.value,
+              registrantgender: gndr.value,
+              registrantbloodtype: btype.value,
+              registrantbirthday: bday,
+              guardianname: grnm.value,
+              guardianphone: grph.value,
+              cardstatus: "SUBMITTED",
+              dateofissue: issuedate,
+              renewaldate: renewaldate
+            }).then(()=>{
+              cdname.value = "";
+              dtype.selectedIndex = 0;
+              adres.value = "";
+              gndr.selectedIndex = 0;
+              btype.selectedIndex = 0;
+              bdate.value = "";
+              grnm.value = "";
+              grph.value = "";
+              PostDataRegister1();
+            }).catch((error)=>{
+                document.getElementById("snackbar").innerHTML = "Failed to add data, please try again.";
+                appearSnack();  
+            })
+          }else{
+            document.getElementById("snackbar").innerHTML = "This cardholder already exists, please enter a new name.";
+            appearSnack();  
+          }
+        }else{
+          if(cdname.value == ""){document.getElementById("ert1").innerHTML = "This field is required."; cdname.style.border = "2px solid red";}
+          else if(!nameregex.test(cdname.value)){document.getElementById("ert1").innerHTML = "Value has invalid characters."; cdname.style.border = "2px solid red";}
+          if(adres.value == ""){document.getElementById("ert2").innerHTML = "This field is required."; adres.style.border = "2px solid red";}
+          else if(!addressregex.test(adres.value)){document.getElementById("ert2").innerHTML = "Value has invalid characters."; adres.style.border = "2px solid red";}
+          if(bdate.value == ""){document.getElementById("ert3").innerHTML = "This field is required."; bdate.style.border = "2px solid red";}
+          if(dtype.value == "unselected"){document.getElementById("ert4").innerHTML = "This field is required."; dtype.style.border = "2px solid red";}
+          if(gndr.value == "unselected"){document.getElementById("ert5").innerHTML = "This field is required."; gndr.style.border = "2px solid red";}
+          if(btype.value == "unselected"){document.getElementById("ert6").innerHTML = "This field is required."; btype.style.border = "2px solid red";}
+          if(grnm.value == ""){document.getElementById("ert7").innerHTML = "This field is required."; grnm.style.border = "2px solid red";}
+          else if(!nameregex.test(grnm.value)){document.getElementById("ert7").innerHTML = "Value has invalid characters."; grnm.style.border = "2px solid red";}
+          if(grph.value == ""){document.getElementById("ert8").innerHTML = "This field is required."; grph.style.border = "2px solid red";}
+          else if(!phoneregex.test(grph.value)){document.getElementById("ert8").innerHTML = "Value has invalid characters."; grph.style.border = "2px solid red";}
+        }
+    }
+
+    async function PostDataRegister2(){
+      const assignsnapshot = await getDoc(numref1);
+      var innum = assignsnapshot.data().customernum;       
+      var padNref = innum.toString().padStart(3,"0");
+      var custno = regtype.concat(padNref); 
+      document.getElementById("numshown").innerHTML = custno;
+      postSubmit();   
+    }
+
+    async function PostDataRegister1(){
+      await updateDoc(numref1, {
+        customernum: increment(1)
+      }).then(()=>{
+        PostDataRegister2();
+      });         
+    }
+
+    const updateDataRenewal = async() => {
+      clearErrors();
+      var carddoc = "";
+      var checkAdds, checkGName, checkGPhone;
+      const getNRef = query(collection(db, "cards"), where("cardstatus", "==", "PENDING_RENEWAL"), where("registrantfullname", "==", cdname.value));
+      onSnapshot(getNRef,(querySnapshot) => {
+        querySnapshot.forEach(doc =>{
+          carddoc = doc.id;
+          checkName = doc.data().fullname;
+          checkAdds = doc.data().registrantaddress;
+          filterRenew1 = checkAdds.match(/Barangay (.*$)/)[1];
+          checkGName = doc.data().guardianname;
+          checkGPhone = doc.data().guardianphone;
+        });
+      })
+      const updatedpwdcarddata = {
+        cardstatus: "SUBMITTED",
+        dateofissue: issuedate,
+        renewaldate: renewaldate
+      }; 
+      if((cdname.value != "" && nameregex.test(cdname.value)) && (adres.value != "" && addressregex.test(adres.value))
+          && dtype.value != "unselected" && gndr.value !="unselected" && btype.value != "unselected" && bdate.value != "" 
+          && (grnm.value != "" && nameregex.test(grnm.value)) && (grph.value != "" && phoneregex.test(grph.value))){
+            const countsnapshot1 = await getCountFromServer(getNRef);
+            if(countsnapshot1.data().count != 0){
+            const getURef = doc(db, "cards", carddoc);
+            if(checkAdds != adres.value){
+              const newadds = {registrantaddress: adres.value};
+              Object.assign(updatedpwdcarddata, newadds);
+              let typedadds = adres.value;
+              filterRenew2 = typedadds.match(/Barangay (.*$)/)[1];
+              if(filterRenew1 != filterRenew2){
+                var bcode = determineBrgyCode(filterupdate2);
+                var grn = randNumGen();
+                var cardnum = [basecardnum, bcode, grn].join("-");
+                const newcardnum = {cardnumber: cardnum};
+                Object.assign(updatedpwdcarddata, newcardnum);
+              }
+            }
+            if(checkGName != grnm.value){
+              const newgrnm = {guardianname: grnm.value};
+              Object.assign(updateddata, newgrnm);
+            }
+            if(checkGPhone != grph.value){
+              const newgrph = {guardianphone: grph.value};
+              Object.assign(updateddata, newgrph);
+            }
+            await updateDoc(getURef, updatedpwdcarddata).then(()=>{
+              cdname.value = "";
+              dtype.selectedIndex = 0;
+              adres.value = "";
+              gndr.selectedIndex = 0;
+              btype.selectedIndex = 0;
+              bdate.value = "";
+              grnm.value = "";
+              grph.value = "";
+              PostDataRenewal1();
+            }).catch((error)=>{
+                document.getElementById("snackbar").innerHTML = "Update failed, please try again.";
+                appearSnack();   
+            })
+          }
+      }else{
+        if(cdname.value == ""){document.getElementById("ert1").innerHTML = "This field is required."; cdname.style.border = "2px solid red";}
+        else if(!nameregex.test(cdname.value)){document.getElementById("ert1").innerHTML = "Value has invalid characters."; cdname.style.border = "2px solid red";}
+        if(adres.value == ""){document.getElementById("ert2").innerHTML = "This field is required."; adres.style.border = "2px solid red";}
+        else if(!addressregex.test(adres.value)){document.getElementById("ert2").innerHTML = "Value has invalid characters."; adres.style.border = "2px solid red";}
+        if(bdate.value == ""){document.getElementById("ert3").innerHTML = "This field is required."; bdate.style.border = "2px solid red";}
+        if(dtype.value == "unselected"){document.getElementById("ert4").innerHTML = "This field is required."; dtype.style.border = "2px solid red";}
+        if(gndr.value == "unselected"){document.getElementById("ert5").innerHTML = "This field is required."; gndr.style.border = "2px solid red";}
+        if(btype.value == "unselected"){document.getElementById("ert6").innerHTML = "This field is required."; btype.style.border = "2px solid red";}
+        if(grnm.value == ""){document.getElementById("ert7").innerHTML = "This field is required."; grnm.style.border = "2px solid red";}
+        else if(!nameregex.test(grnm.value)){document.getElementById("ert7").innerHTML = "Value has invalid characters."; grnm.style.border = "2px solid red";}
+        if(grph.value == ""){document.getElementById("ert8").innerHTML = "This field is required."; grph.style.border = "2px solid red";}
+        else if(!phoneregex.test(grph.value)){document.getElementById("ert8").innerHTML = "Value has invalid characters."; grph.style.border = "2px solid red";}
+      } 
+    }
+    
+
+    const updateDataReprint = async() => {
+      clearErrors();
+      var checkAdds, checkGName, checkGPhone, filterRenew1, filterRenew2;
+      if((cdname.value != "" && nameregex.test(cdname.value)) && (adres.value != "" && addressregex.test(adres.value))
+          && dtype.value != "unselected" && gndr.value !="unselected" && btype.value != "unselected" && bdate.value != "" 
+          && (grnm.value != "" && nameregex.test(grnm.value)) && (grph.value != "" && phoneregex.test(grph.value))){
+            const updateddata = {
+              cardstatus: "SUBMITTED",
+              dateofissue: issuedate,
+              renewaldate: renewaldate,
+            }
+            const checkPRef = query(collection(db, "cards"), where("registrantfullname", "==", cdname.value));
+            const countsnapshotP = await getCountFromServer(getPRef);
+            console.log(countsnapshotP.data().count);
+            if(countsnapshotP.data().count != 0){
+              let carddoc;
+              const reprintSnapshot = await getDocs(getPRef);
+              reprintSnapshot.forEach(doc =>{
+                 carddoc = doc.id;
+                 checkAdds = doc.data().registrantaddress;
+                 filterRenew1 = checkAdds.match(/Barangay (.*$)/)[1];
+                 checkGName = doc.data().guardianname;
+                 checkGPhone = doc.data().guardianphone;
+                 if(checkAdds != adres.value){
+                   const newadds = {registrantaddress: adres.value};
+                   Object.assign(updateddata, newadds);
+                   filterRenew2 = adres.value.match(/Barangay (.*$)/)[1];
+                   if(filterRenew1 != filterRenew2){
+                     var bcode = determineBrgyCode(filteradd);
+                     var grn = randNumGen();
+                     var cardnum = [basecardnum, bcode, grn].join("-");
+                     const newcardnum = {cardnumber: cardnum};
+                     Object.assign(updateddata, newcardnum);
+                   }
+                 }
+                 if(checkGName != grnm.value){
+                   const newgrnm = {guardianname: grnm.value};
+                   Object.assign(updateddata, newgrnm);
+                 }
+                 if(checkGPhone != grph.value){
+                   const newgrph = {guardianphone: grph.value};
+                   Object.assign(updateddata, newgrph);
+                 }
+              });
+            } 
+            const getPrintRef = doc(db, "cards", carddoc);
+            await updateDoc(getPrintRef, updateddata).then(()=>{
+              cdname.value = "";
+              dtype.selectedIndex = 0;
+              adres.value = "";
+              gndr.selectedIndex = 0;
+              btype.selectedIndex = 0;
+              bdate.value = "";
+              grnm.value = "";
+              grph.value = "";
+              grph.value = "";
+              PostDataReprint1();   
+            }).catch((error)=>{
+                document.getElementById("snackbar").innerHTML = "Update failed, please try again.";  
+            })
+      }else{
+        if(cdname.value == ""){document.getElementById("ert1").innerHTML = "This field is required."; cdname.style.border = "2px solid red";}
+        else if(!nameregex.test(cdname.value)){document.getElementById("ert1").innerHTML = "Value has invalid characters."; cdname.style.border = "2px solid red";}
+        if(adres.value == ""){document.getElementById("ert2").innerHTML = "This field is required."; adres.style.border = "2px solid red";}
+        else if(!addressregex.test(adres.value)){document.getElementById("ert2").innerHTML = "Value has invalid characters."; adres.style.border = "2px solid red";}
+        if(bdate.value == ""){document.getElementById("ert3").innerHTML = "This field is required."; bdate.style.border = "2px solid red";}
+        if(dtype.value == "unselected"){document.getElementById("ert4").innerHTML = "This field is required."; dtype.style.border = "2px solid red";}
+        if(gndr.value == "unselected"){document.getElementById("ert5").innerHTML = "This field is required."; gndr.style.border = "2px solid red";}
+        if(btype.value == "unselected"){document.getElementById("ert6").innerHTML = "This field is required."; btype.style.border = "2px solid red";}
+        if(grnm.value == ""){document.getElementById("ert7").innerHTML = "This field is required."; grnm.style.border = "2px solid red";}
+        else if(!nameregex.test(grnm.value)){document.getElementById("ert7").innerHTML = "Value has invalid characters."; grnm.style.border = "2px solid red";}
+        if(grph.value == ""){document.getElementById("ert8").innerHTML = "This field is required."; grph.style.border = "2px solid red";}
+        else if(!phoneregex.test(grph.value)){document.getElementById("ert8").innerHTML = "Value has invalid characters."; grph.style.border = "2px solid red";}
+      }
+    }
+
+    async function PostDataRenewal1(){
+      await updateDoc(numref2, {
+        customernum: increment(1)
+      }).then(()=>{
+        PostDataRenewal2();
+      });         
+    }
+
+    async function PostDataRenewal2(){
+      const assignsnapshot = await getDoc(numref2);
+      var innum = assignsnapshot.data().customernum;       
+      var padNref = innum.toString().padStart(3,"0");
+      var custno = rentype.concat(padNref); 
+      document.getElementById("numshown").innerHTML = custno;
+      postSubmit();   
+    }
+
+    async function PostDataReprint1(){
+      await updateDoc(numref3, {
+        customernum: increment(1)
+      }).then(()=>{
+        PostDataReprint2();
+      });         
+    }
+
+    async function PostDataReprint2(){
+      const assignsnapshot = await getDoc(numref3);
+      var innum = assignsnapshot.data().customernum;       
+      var padNref = innum.toString().padStart(3,"0");
+      var custno = reptype.concat(padNref); 
+      document.getElementById("numshown").innerHTML = custno;
+      postSubmit();   
+    }
+
+    resetform.addEventListener('click', resetFormFields);
+
+    addcard.addEventListener('click', addDataRegister);
+    renewcard.addEventListener('click', updateDataRenewal);
+    reprintcard.addEventListener('click', updateDataReprint);
+  </script>
+</html>

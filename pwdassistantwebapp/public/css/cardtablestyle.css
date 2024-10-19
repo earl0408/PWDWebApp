@@ -1,0 +1,669 @@
+.tableshow{
+  width: fit-content;
+  height: 500px;
+  margin-top: 100px;
+}
+  
+.tablebox{
+  width: fit-content;
+  height: 400px;
+  margin-top: 20px;
+  margin-left: auto;
+  margin-right: auto;
+  align-items: center;
+  background-color: cyan;
+  border-collapse: collapse;
+  border: 1px solid;
+  table-layout: fixed;
+  overflow-y: auto;
+  border-radius: 12px;
+}
+  
+table{
+  width: fit-content;
+  height: auto;
+  overflow-y: auto;
+  margin-left: auto;
+  margin-right: auto;
+  align-items: center;
+  background-color: cyan;
+  border-collapse: collapse;
+  border: 1px solid;
+  border-radius: 12px;
+}
+  
+thead th{
+  width: 200px;
+  height: 40px;
+  text-align: left;
+  border: 1px solid;
+  padding: 7px;
+}
+  
+thead .num{
+  width: 30px;
+}
+
+thead .name{
+  width: 150px;
+}
+
+thead .address{
+  width: 320px;
+}
+
+thead .bday{
+  width: 120px;
+}
+  
+tr td{
+  border: 1px solid;
+  padding: 7px;
+  height: 30px;
+  line-height: 20px;
+  white-space: wrap;
+}
+
+.tabletitle{
+  width: fit-content;
+  height: 30px;
+  margin: auto;
+  margin-top: 20px;
+  margin-bottom: 7px;
+}
+
+.tabletitle .tabtitle{
+  font-size: 30px;
+}
+
+.searchbar{
+  width: 585px;
+  height: 40px;
+  margin: auto;
+  margin-top: 40px;
+}
+
+.printclick{
+  width: 200px;
+  height: 40px;
+  margin: auto;
+  margin-top: 10px;
+}
+
+.customalert, .customalert2, .customalert3, .customalert4{
+  color: red;
+  font-weight: 700;
+  font-size: 20px;
+  text-align: center;
+}
+  
+.searchbar .searchFLD, .fieldCBX{
+  display: inline-block;
+  width: 245px;
+  height: 40px;
+  padding-left: 7px;
+  border-radius: 10px;
+}
+
+.searchBTN{
+  display: inline-block;
+  margin-top: 3px;
+  margin-left: 3px;
+  background-color: cyan;
+  border: 3px solid dodgerblue;
+  border-radius: 7px;
+  padding-left: 7px;
+  padding-right: 7px;
+  padding-top: 3px;
+  padding-bottom: 3px;
+  text-align: center;
+  text-decoration: none;
+  font-size: 16px;
+  color: black;
+  width: fit-content;
+  height: 40px;
+}
+
+.printtableBTN{
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 3px;
+  margin-left: 3px;
+  background-color: cyan;
+  border: 3px solid dodgerblue;
+  border-radius: 7px;
+  padding-left: 7px;
+  padding-right: 7px;
+  padding-top: 3px;
+  padding-bottom: 3px;
+  text-align: center;
+  text-decoration: none;
+  font-size: 18px;
+  color: black;
+  width: 100%;
+  height: 40px;
+}
+
+.formdetails{
+  margin-top: 50px;
+  margin-bottom: 50px;
+  width: 900px;
+  height: auto;
+  margin-left: auto;
+  margin-right: auto;
+  align-items: center;
+  background-color: chartreuse;
+  padding: 28px;
+  border-radius: 15px;
+  border: 5px solid limegreen;
+}
+
+.formtitle{
+  font-size: 30px;
+  font-weight: bold;
+  text-align: center;
+}
+
+.carduserinfo{
+  display: inline-flex;
+  flex-wrap: wrap;
+  min-width: 370px;
+  min-height: 44px;
+  max-height: 90px;
+  margin-top: 10px;
+  margin-right: 10px;
+}
+
+.receiveschedinfo{
+  display: inline-flex;
+  flex-wrap: wrap;
+  min-width: 740px;
+  min-height: 44px;
+  max-height: 90px;
+  margin-top: 10px;
+  margin-right: 10px;
+}
+
+.carduserinfo .input-box{
+  display: inline-flex;
+  flex-wrap: wrap;
+  width: 238px;
+}
+
+.receiveschedinfo .input-box{
+  display: inline-flex;
+  flex-wrap: wrap;
+  width: 500px;
+}
+
+.carduserinfo label, .receiveschedinfo label{
+  display: inline-flex;
+  width: 150px;
+  height: 31px;
+  vertical-align: bottom;
+  margin-right: 5px;
+  font-size: 17px;
+  font-weight: 400;
+}
+
+.carduserinfo input, select{
+  height: 40px;
+  width: 95%;
+  border-radius: 10px;
+  font-size: 18px;
+  outline: none;
+  border: 1px solid #ccc;
+  padding: 0 7px;
+}
+
+.givennumber{
+  width: 900px;
+  margin: 22px auto 0;
+  display: none;
+}
+
+.receiveschedinfo input, .receiveschedinfo select{
+  height: 40px;
+  width: 45.5%;
+  border-radius: 10px;
+  font-size: 18px;
+  outline: none;
+  border: 1px solid #ccc;
+  padding: 0 7px;
+}
+
+.disabCBX, .genCBX, .btypeCBX{
+  display: block;
+  width: 228px;
+  height: 40px;
+  border-radius: 10px;
+  outline: none;
+  font-size: 18px;
+  border: 1px solid #ccc;
+  padding: 0px 5px 0px;
+}
+
+h2.formsubheads{
+  margin-top: 10px;
+  font-size: 20px;
+  height: fit-content;
+  text-align: left;
+}
+
+p.completestate{
+  font-size: 27px;
+  font-weight: 500;
+  text-align: center;
+  margin-bottom: 0;
+}
+
+p.numbershown{
+  font-size: 90px;
+  font-weight: 500;
+  text-align: center;
+}
+
+.btnarray{
+  margin-top: 10px;
+  display: flex;
+}
+
+.btnarray2{
+  margin-top: 10px;
+  display: inline-flex;
+  width: 900px;
+}
+
+.btnarray .getmedcertBTN, .btnarray .getpsacertBTN,
+.btnarray .getbrgycertBTN, .btnarray .getaffiBTN{
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 7px;
+  font-size: 18px;
+  background-color: yellow;
+  border: 3px solid gold;
+  border-radius: 7px;
+  padding: 5px;
+  text-align: center;
+  text-decoration: none;
+  font-size: 16px;
+  color: black;
+  width: 24.7%;
+  height: 40px;
+}
+
+.btnarray .getpsacertBTN,
+.btnarray .getbrgycertBTN, .btnarray .getaffiBTN{
+  margin-left: 2px;
+}
+
+.btnarray .downloadimage, .btnarray .downloadsignature{
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 7px;
+  margin-left: 2px;
+  font-size: 18px;
+  background-color: yellow;
+  border: 3px solid gold;
+  border-radius: 7px;
+  padding: 5px;
+  text-align: center;
+  text-decoration: none;
+  font-size: 17px;
+  color: black;
+  width: 33%;
+  height: 40px;
+}
+
+.btnarray .registerBTN, 
+.btnarray .renewBTN, .btnarray .reprintBTN{
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 7px;
+  margin-left: 2px;
+  font-size: 18px;
+  background-color: cyan;
+  border: 3px solid dodgerblue;
+  border-radius: 7px;
+  padding: 5px;
+  text-align: center;
+  text-decoration: none;
+  font-size: 17px;
+  color: black;
+  width: 33%;
+  height: 40px;
+}
+
+.btnarray .addBTN, .btnarray .updateBTN, .btnarray .addinfoBTN{
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 7px;
+  margin-left: 2px;
+  font-size: 18px;
+  background-color: cyan;
+  border: 3px solid dodgerblue;
+  border-radius: 7px;
+  padding: 5px;
+  text-align: center;
+  text-decoration: none;
+  font-size: 17px;
+  color: black;
+  width: 24.7%;
+  height: 40px;
+}
+
+.refreshBTN{
+  display: inline-flex;
+  justify-content: center;
+  left: 50%;
+  margin: 0 auto 0;
+  background-color: cyan;
+  border: 3px solid dodgerblue;
+  border-radius: 7px;
+  padding: 5px;
+  text-align: center;
+  text-decoration: none;
+  font-size: 22px;
+  color: black;
+  width: 40%;
+  height: 50px;
+}
+
+.btnarray .getinfoBTN{
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 7px;
+  font-size: 18px;
+  background-color: mediumaquamarine;
+  border: 3px solid springgreen;
+  border-radius: 7px;
+  padding: 5px;
+  text-align: center;
+  text-decoration: none;
+  font-size: 17px;
+  color: black;
+  width: 33%;
+  height: 40px;
+}
+
+.btnarray .resetBTN{
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 7px;
+  margin-left: 2px;
+  font-size: 18px;
+  background-color: orange;
+  border: 3px solid khaki;
+  border-radius: 7px;
+  padding: 5px;
+  text-align: center;
+  text-decoration: none;
+  font-size: 17px;
+  color: black;
+  width: 24.7%;
+  height: 40px;
+}
+
+.btnarray .archiveBTN{
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 7px;
+  margin-left: 2px;
+  font-size: 18px;
+  background-color: salmon;
+  border: 3px solid red;
+  border-radius: 7px;
+  padding: 5px;
+  text-align: center;
+  text-decoration: none;
+  font-size: 17px;
+  color: black;
+  width: 25%;
+  height: 40px;
+}
+
+.uploadmedBTN, .uploadbctBTN, .uploadrctBTN,
+.uploadimgBTN, .uploadaflBTN{
+  justify-content: center;
+  align-items: center;
+  margin-top: 3px;
+  margin-left: 3px;
+  background-color: cyan;
+  border: 3px solid dodgerblue;
+  border-radius: 7px;
+  padding-left: 7px;
+  padding-right: 7px;
+  padding-top: 3px;
+  padding-bottom: 3px;
+  text-align: center;
+  text-decoration: none;
+  font-size: 16px;
+  color: black;
+  width: 100px;
+  height: 35px;
+  display: inline-block;
+}
+
+.cardpreview{
+  position: relative;
+  margin-top: 50px;
+  margin-bottom: 50px;
+  min-width: 650px;
+  max-width: 900px;
+  height: auto;
+  margin-left: auto;
+  margin-right: auto;
+  align-items: center;
+  z-index: -1;
+}
+
+.fileselectarea{
+  margin-top: 30px;
+  margin-bottom: 30px;
+  min-width: 700px;
+  max-width: 800px;
+  height: auto;
+  margin-left: auto;
+  margin-right: auto;
+  align-items: center;
+}
+
+.previewtitle{
+  width: fit-content;
+  height: 30px;
+  margin: auto;
+  margin-top: 20px;
+  margin-bottom: 7px;
+}
+
+.cardfrontside, .cardbackside{
+  width: 550px;
+  height: 378px;
+}
+
+.cardfrontside{
+  position: relative;
+}
+
+.carduserphoto{
+  visibility: hidden;
+  position: absolute;
+  background-color: white;
+  width: 162px;
+  height: 162px;
+  top: 127px;
+  right: 26px;
+  z-index: 3;
+}
+
+.cardusersign{
+  visibility: hidden;
+  position: absolute;
+  background-color: transparent;
+  width: 160px;
+  height: 45px;
+  top: 242px;
+  right: 280px;
+  z-index: 5;
+  cursor: pointer;
+}
+
+.frontpreview, .backpreview{
+  width: 550px;
+  height: 378px;
+  margin-top: 25px;
+  margin-left: auto;
+  margin-right: auto;
+  position: relative;
+}
+
+.fileselector{
+  margin-top: 20px;
+  width: 800px;
+  height: 100px;
+}
+
+.fileLBL{
+  font-size: 17px;
+  font-weight: 600;
+  width: 270px;
+  margin-right: 5px;
+}
+
+p.showncardno{
+  position: absolute;
+  top: 95px;
+  left: 80px;
+  font-size: 16px;
+  z-index: 3;
+}
+
+p.showncardname{
+  position: absolute;
+  top: 130px;
+  left: 30px;
+  width: 315px;
+  text-align: center;
+  font-size: 18px;
+  z-index: 3;
+}
+
+p.showndisability{
+  position: absolute;
+  top: 195px;
+  left: 30px;
+  font-size: 15px;
+  width: 315px;
+  text-align: center;
+  z-index: 3;
+}
+
+p.shownaddress{
+  position: absolute;
+  top: 13px;
+  left: 77px;
+  width: 430px;
+  text-align: center;
+  font-size: 12px;
+  z-index: 3;
+}
+
+p.shownbirthday{
+  position: absolute;
+  top: 35px;
+  left: 120px;
+  width: 247px;
+  text-align: center;
+  font-size: 15px;
+  z-index: 3;
+}
+
+p.showngender{
+  position: absolute;
+  top: 35px;
+  left: 420px;
+  width: 88px;
+  text-align: center;
+  font-size: 16px;
+  z-index: 3;
+}
+
+p.shownissuedate{
+  position: absolute;
+  top: 59px;
+  left: 120px;
+  width: 240px;
+  text-align: center;
+  font-size: 15px;
+  z-index: 3;
+}
+
+p.shownbloodtype{
+  position: absolute;
+  top: 59px;
+  left: 450px;
+  width: 60px;
+  text-align: center;
+  font-size: 16px;
+  z-index: 3;
+}
+
+p.shownguardianname{
+  position: absolute;
+  top: 118px;
+  left: 147px;
+  width: 360px;
+  text-align: left;
+  font-size: 16px;
+  z-index: 3;
+}
+
+p.shownguardianphone{
+  position: absolute;
+  top: 140px;
+  left: 115px;
+  width: 395px;
+  text-align: left;
+  font-size: 16px;
+  z-index: 3;
+}
+
+p.medalert, p.bthalert, p.brgalert, 
+p.imgalert, p.afialert{
+  margin-top: 3px;
+  color: red;
+}
+
+p.errortext{
+  color: red;
+  display: block;
+  font-size: 14px;
+}
+
+input[type=file]{
+  width: 600px;
+  display: inline-block;
+}
+
+input[type=file]::file-selector-button {
+  margin-right: 20px;
+  border: none;
+  background: #084cdf;
+  padding: 10px 20px;
+  border-radius: 10px;
+  color: #fff;
+  cursor: pointer;
+  transition: background .2s ease-in-out;
+}
+
+input[type=file]::file-selector-button:hover {
+  background: #0d45a5;
+}

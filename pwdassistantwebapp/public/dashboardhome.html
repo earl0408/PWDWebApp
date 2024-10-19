@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>PWDAssistant</title>
+
+     <!-- Latest compiled and minified CSS --> 
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"> 
+     <!-- jQuery library --> 
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script> 
+     <!-- Popper JS --> 
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script> 
+     <!-- Latest compiled JavaScript --> 
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+     <!-- Font Awesome 6 Icon Library --> 
+        <link rel="stylesheet" href="css/all.min.css"> 
+        <link rel="stylesheet" href="css/fontawesome.min.css">
+        <script src="https://kit.fontawesome.com/3b9f69c096.js" crossorigin="anonymous"></script>   
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="css/dashhomestyle.css" />
+    <link rel="icon" type="image/png" href="images/appmainlogo.png" sizes="48x48"/>
+
+    <!-- Boxicons CSS -->
+    <link
+      href="https://unpkg.com/boxicons@2.1.2/css/boxicons.min.css"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <nav>
+      <div class="logo">
+        <i class="fas fa-bars"></i>
+        <span class="logo-name">PWDAssistant</span>
+      </div>
+
+      <div class="sidebar">
+        <div class="logo">
+          <i class="fas fa-bars"></i>
+          <span class="logo-name">PWDAssistant</span>
+        </div>
+
+        <div class="sidebar-content">
+          <ul class="lists">
+            <li class="list">
+              <a href="dashboardhome.html" class="nav-link active">
+                <i class="fas fa-house icon"></i>
+                <span class="link">Dashboard</span>
+              </a>
+            </li>
+            <li class="list">
+              <a href="chartanalysis.html" class="nav-link">
+                <i class="fas fa-chart-simple icon"></i>
+                <span class="link">Analytics</span>
+              </a>
+            </li>
+            <li class="list">
+              <a onclick="window.open('queuecaller.html', 'name', 'width=700', 'height=1200')" style="cursor: pointer;" class="nav-link">
+                <i class="fas fa-bell icon"></i>
+                <span class="link">Queue Caller</span>
+              </a>
+            </li>
+            <li class="list">
+              <a href="carduserslist.html" class="nav-link">
+                <i class="fas fa-id-card icon"></i>
+                <span class="link">Card Users List</span>
+              </a>
+            </li>
+            <li class="list">
+              <a href="scheduleslist.html" class="nav-link">
+                <i class="fas fa-clock icon"></i>
+                <span class="link">Schedule List</span>
+              </a>
+            </li>
+            <li class="list">
+              <a href="uploadfiles.html" class="nav-link">
+                <i class="fas fa-file-import icon"></i>
+                <span class="link">Upload Files</span>
+              </a>
+            </li>
+            <li class="list">
+              <a href="updatepassword.html" class="nav-link">
+                <i class="fas fa-pen icon"></i>
+                <span class="link">Edit Account</span>
+              </a>
+            </li>
+          </ul>
+
+          <div class="bottom-cotent">
+            <li class="list">
+              <a href="#" class="nav-link">
+                <i class="fas fa-user icon"></i>
+                <span class="link" id="userspan"></span>
+              </a>
+            </li>
+            <li class="list">
+              <a href="#" class="nav-link">
+                <i class="bx bx-log-out icon"></i>
+                <span class="link" id="logout">Logout</span>
+              </a>
+            </li>
+          </div>
+        </div>
+      </div>
+    </nav>
+
+    <div class="card-content">
+      <div class="cards">
+        <div class="card">
+          <div class="box">
+            <div class="iconside">
+              <i class="fas fa-address-card icon"></i>
+            </div>
+            <h1 id="num1"></h1>
+            <h3>New PWDs</h3>           
+          </div>
+        </div>
+        <div class="card">
+          <div class="box">
+            <div class="iconside">
+              <i class="fas fa-mobile icon"></i>
+            </div>
+            <h1 id="num2"></h1>
+            <h3>App Users</h3>
+          </div>
+        </div>
+        <div class="card">
+          <div class="box">
+            <div class="iconside">
+              <i class="fas fa-arrow-rotate-left icon"></i>
+            </div> 
+            <h1 id="num3"></h1>
+            <h3>Renewals</h3>
+          </div>
+        </div>
+        <div class="card">
+          <div class="box">
+            <div class="iconside">
+              <i class="fas fa-print icon"></i>
+            </div>
+            <h1 id="num4"></h1>
+            <h3>Card Reprints</h3>     
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="tablescontent">
+       <div class="receiveschedule">
+           <div class="schedtabletitle">
+               <h4>Scheduled Receives</h4>
+               <a href="#" class="viewallbtn">View All</a>
+           </div>
+           <div class="stablecon">
+               <table id="scheddatatable" class="scheddatatable">
+                <thead class="schedhead">
+                 <tr>
+                  <th class="num">#</th>
+                  <th class="cname">Card Name</th>
+                  <th class="cnum">Card Number</th>
+                  <th class="recdt">Receive Date</th>
+                  <th class="rectype">Receive Type</th>  
+                 </tr>        
+                </thead>
+                <tbody id="slistbody">
+  
+                </tbody>
+            </table>
+               
+           </div>
+           
+       </div>
+       <div class="useraccounts">
+           <div class="usertabletitle">
+               <h4>Users</h4>
+                
+           </div>
+           <div class="htablecon">
+               <table id="userdatatable" class="userdatatable">
+                 <tbody id="hlistbody">
+  
+                 </tbody>
+               </table>    
+           </div>
+       </div>
+    </div>
+
+    <section class="overlay"></section>
+    <script type="module">
+      const navBar = document.querySelector("nav"),
+        menuBtns = document.querySelectorAll(".fa-bars"),
+        overlay = document.querySelector(".overlay");
+
+        menuBtns.forEach((menuBtn) => {
+        menuBtn.addEventListener("click", () => {
+          navBar.classList.toggle("open");
+        });
+      });
+
+      overlay.addEventListener("click", () => {
+        navBar.classList.remove("open");
+      });
+      
+      var useNo = 0;
+      var sbody = document.getElementById("slistbody");
+      var hbody = document.getElementById("hlistbody");
+      
+      function AddDocToTable(cname, canum, rdate, rtype){
+        let trow = document.createElement("tr");
+        let td1 = document.createElement("td");
+        let td2 = document.createElement("td");
+        let td3 = document.createElement("td");
+        let td4 = document.createElement("td");
+        let td5 = document.createElement("td");
+        td5.setAttribute("id", "reckind");
+
+        td1.innerHTML = useNo++;
+        td2.innerHTML = cname;
+        td3.innerHTML = canum;
+        td4.innerHTML = rdate;
+        td5.innerHTML = rtype;
+
+        trow.appendChild(td1);
+        trow.appendChild(td2);
+        trow.appendChild(td3);
+        trow.appendChild(td4);
+        trow.appendChild(td5);
+
+        sbody.appendChild(trow);
+      }
+      
+      function AddUserToTable(aname){
+         let hrow = document.createElement("tr");
+         let ud = document.createElement("td");  
+         ud.innerHTML = aname;
+         hrow.appendChild(ud);
+         hbody.appendChild(hrow);
+      }
+      
+      function AddAllUsersToTable(AppUsers){
+         hbody.innerHTML = "";
+         AppUsers.forEach(element => {AddUserToTable(element.fullname)});
+      }
+      
+      function AddAllDocsToTable(ScheduleReceives){
+        useNo = 1;
+        sbody.innerHTML = "";
+        ScheduleReceives.forEach(element => {
+           AddDocToTable(element.nameofcarduser, element.specificcardnum,
+                         element.receivedateandtime, element.receivetype);
+        });
+      }
+
+      import {initializeApp} from "https://www.gstatic.com/firebasejs/9.22.1/firebase-app.js";
+       
+      const firebaseConfig = {
+        apiKey: "AIzaSyCDNLsVNK45kH5PRCaXBw3wV9Nkw2jGdv8",
+        authDomain: "pwdcardregisterapp.firebaseapp.com",
+        databaseURL: "https://pwdcardregisterapp-default-rtdb.firebaseio.com",
+        projectId: "pwdcardregisterapp",
+        storageBucket: "pwdcardregisterapp.appspot.com",
+        messagingSenderId: "1097703662378",
+        appId: "1:1097703662378:web:d66126bbf452d5c290f453"
+      };
+
+      const app = initializeApp(firebaseConfig);
+
+      import {getFirestore, getCountFromServer, doc, getDoc, getDocs, collection, query,
+              onSnapshot, where, orderBy, startAt, limit} from "https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore.js";
+      import {getAuth, onAuthStateChanged, signOut} from "https://www.gstatic.com/firebasejs/9.22.1/firebase-auth.js";
+
+      const db = getFirestore(app);
+      const auth = getAuth(app);
+      
+      const signout = document.querySelector("#logout");
+
+      const newcards = document.querySelector("#num1");
+      const appusers = document.querySelector("#num2");
+      const renewals = document.querySelector("#num3");
+      const reprints = document.querySelector("#num4");
+
+      const docref1 = doc(db, "stats_count", "--NewCardCount--");
+      const docref2 = doc(db, "stats_count", "--UserCount--");
+      const docref3 = doc(db, "stats_count", "--RenewalCount--");
+      const docref4 = doc(db, "stats_count", "--ReprintCount--");
+      const snapshot1 = await getDoc(docref1);
+      const snapshot2 = await getDoc(docref2);
+      const snapshot3 = await getDoc(docref3);
+      const snapshot4 = await getDoc(docref4);
+      newcards.innerHTML = snapshot1.data().total;
+      appusers.innerHTML = snapshot2.data().total;
+      renewals.innerHTML = snapshot3.data().total;
+      reprints.innerHTML = snapshot4.data().total;
+      
+      const schedtbl = document.querySelector("#scheddatatable");
+      
+      var user = document.getElementById("userspan");
+      
+      onAuthStateChanged(auth, (user) => {
+        if (user) {
+         const uemail = user.email;
+         userspan.innerHTML = uemail;
+        } else {
+         window.location.href = "logsign.html";
+        }
+      })
+      
+      const signOutUser = async() => {
+        signOut(auth).then(() => {
+           window.location.href = "logsign.html";
+        }).catch((error) => {
+           alert("Sign out not working, please try again");
+        }); 
+      }
+      
+      async function GetAllOfData(){
+        const querySnapshot = query(collection(db, "schedule_receives"), orderBy("receivedateandtime", "desc"), limit(25));
+        const querySnap2 = query(collection(db, "app_users"), where("fullname", "!=", ""), limit(30));
+
+        var schedule_receives = [];
+        var app_users = [];
+
+        querySnapshot.forEach(doc => {
+          schedule_receives.push(doc.data());
+        });
+        
+        querySnap2.forEach(doc => {
+          app_users.push(doc.data());
+        });
+
+        for(let row of tbl.rows) {
+            
+           console.log(row.cells[1].innerHTML);
+        }
+
+        AddAllDocsToTable(schedule_receives);
+        AddAllUsersToTable(app_users);
+      }
+      
+      async function DataUpdateRealtime(){
+        const dbRef = query(collection(db, "schedule_receives"), orderBy("receivedateandtime", "desc"), limit(25));
+        const dbRef2 = query(collection(db, "app_users"), where("fullname", "!=", ""), limit(30));
+
+        onSnapshot(dbRef,(querySnapshot) => {
+          var schedule_receives = [];
+
+          querySnapshot.forEach(doc =>{
+            schedule_receives.push(doc.data());
+          });
+          
+          AddAllDocsToTable(schedule_receives);
+        })
+        
+        onSnapshot(dbRef2,(querySnap2) => {
+          var app_users = [];
+          
+          querySnap2.forEach(doc => {
+            app_users.push(doc.data());
+          });
+          AddAllUsersToTable(app_users);
+        })
+        
+        const stat1 = onSnapshot(docref1, (doc) => {
+          newcards.innerHTML = snapshot1.data().total;
+        });
+        
+        const stat2 = onSnapshot(docref2, (doc) => {
+          appusers.innerHTML = snapshot2.data().total;
+        });
+        
+        const stat3 = onSnapshot(docref3, (doc) => {
+          renewals.innerHTML = snapshot3.data().total;
+        });
+        
+        const stat4 = onSnapshot(docref4, (doc) => {
+          reprints.innerHTML = snapshot4.data().total;
+        });
+      }
+
+      window.onload = DataUpdateRealtime();
+      signout.addEventListener('click', signOutUser);
+    </script>
+  </body>
+</html>

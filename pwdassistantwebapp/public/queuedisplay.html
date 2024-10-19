@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>PWDAssistant</title>
+
+     <!-- Latest compiled and minified CSS --> 
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"> 
+     <!-- jQuery library --> 
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script> 
+     <!-- Popper JS --> 
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script> 
+     <!-- Latest compiled JavaScript --> 
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+     <!-- Font Awesome 6 Icon Library --> 
+        <link rel="stylesheet" href="css/all.min.css"> 
+        <link rel="stylesheet" href="css/fontawesome.min.css">
+        <script src="https://kit.fontawesome.com/3b9f69c096.js" crossorigin="anonymous"></script> 
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="css/queuedisplaystyle.css"/>
+    <link rel="icon" type="image/png" href="images/appmainlogo.png" sizes="48x48"/>
+
+    <!-- Boxicons CSS -->
+    <link
+      href="https://unpkg.com/boxicons@2.1.2/css/boxicons.min.css"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <button id="hiddenButton" style="display: none;"></button>
+    <div class="navbar">
+      <div class="col-md-auto">
+        <img class="logo" src="images/appmainlogo.png">
+        <p class="branch-name">City Social Welfare<br>Development Office<br>Dasmariñas, Cavite</p>
+      </div>
+      <div class="col-md-auto">
+        <div class="digiclock-calendar">
+          <i class="fas fa-clock"></i><p id="clock">hh:mm:ss am</p>
+          <i class="fas fa-calendar"></i><p id="calendar">www, MMM dd, yyyy</p>
+        </div>
+      </div>
+    </div>
+    <div class="nowserving">
+      <table class="countertable" id="countertable">
+        <tr>
+          <th>Counter</th>
+          <th>Now Serving</th>
+        </tr>
+        <tr>
+          <th class="counter" id="con1">1</td>
+          <td id="customerline1"></td>
+        </tr>
+        <tr>
+          <th class="counter" id="con2">2</td>
+          <td id="customerline2"></td>
+        </tr>
+        <tr>
+          <th class="counter" id="con3">3</td>
+          <td id="customerline3"></td>
+        </tr>
+        <tr>
+          <th class="counter" id="con4">4</td>
+          <td id="customerline4"></td>
+        </tr>
+        <tr>
+          <th class="counter" id="con5">5</td>
+          <td id="customerline5"></td>
+        </tr>
+      </table>
+    </div>
+    <div class="videoplayer">
+      <video src="videos/infovid1.mp4" id="infovid" autoplay loop muted controls></video>
+    </div>
+    <div class="ticker-wrap">
+      <div class="ticker">
+        <span class="item-collection-1">
+          <span class="item">&#10240City Social Welfare Development Office - Dasmariñas, Cavite &#10240 &#x2022</span>
+          <span class="item">&#10240PWD Card Application and Registration Center &#10240 &#x2022</span>
+          <span class="item">&#10240CSWDO Dasmariñas, Cavite Opening Hours: Mondays to Thursdays: 8:00AM to 5:00PM, Fridays: 9:00AM to 5:00PM, Saturdays and Sundays: CLOSED &#10240 &#x2022</span>
+          <span class="item">&#10240Download PWDAssistant Mobile App for a convenient application process. &#10240 &#x2022</span>
+          <span class="item">&#10240Please check your necessary requirements for a smooth and quick transaction. &#10240 &#x2022</span>
+        </span>
+        <span class="item-collection-2">
+          <span class="item">&#10240City Social Welfare Development Office - Dasmariñas, Cavite &#10240 &#x2022</span>
+          <span class="item">&#10240PWD Card Application and Registration Center &#10240 &#x2022</span>
+          <span class="item">&#10240CSWDO Dasmariñas, Cavite Opening Hours: Mondays to Thursdays: 8:00AM to 5:00PM, Fridays: 9:00AM to 5:00PM, Saturdays and Sundays: CLOSED &#10240 &#x2022</span>
+          <span class="item">&#10240Download PWDAssistant Mobile App for a convenient application process. &#10240 &#x2022</span>
+          <span class="item">&#10240Please check your necessary requirements for a smooth and quick transaction. &#10240 &#x2022</span>
+        </span>
+      </div>
+    </div>
+  </body>
+  <script type="module">  
+      setInterval(showTime, 1000);
+      function showTime() {
+        let time = new Date();
+        let hour = time.getHours();
+        let min =time.getMinutes();
+        let sec = time.getSeconds();
+        var am_pm = "AM";
+    
+        if (hour >= 12) {
+          if (hour > 12)
+            hour -= 12;
+            am_pm = "PM";
+        } else if (hour == 0) {
+            hr = 12;
+            am_pm = "AM";
+        }
+    
+        hour = hour < 10 ? "0" + hour : hour;
+        min = min < 10 ? "0" + min : min;
+        sec = sec < 10 ? "0" + sec : sec;
+    
+        let currentTime = hour +":" + min +":" + sec + " " + am_pm;
+    
+        document.getElementById("clock").innerHTML = currentTime;
+      }
+      
+      const options = { weekday: 'short', year: 'numeric', month: 'short', day: 'numeric' };
+      var today = new Date().toLocaleDateString('en-us', options);
+    
+      document.getElementById("calendar").innerHTML = today;
+
+      import {initializeApp} from "https://www.gstatic.com/firebasejs/9.22.1/firebase-app.js";
+       
+      const firebaseConfig = {
+        apiKey: "AIzaSyCDNLsVNK45kH5PRCaXBw3wV9Nkw2jGdv8",
+        authDomain: "pwdcardregisterapp.firebaseapp.com",
+        databaseURL: "https://pwdcardregisterapp-default-rtdb.firebaseio.com",
+        projectId: "pwdcardregisterapp",
+        storageBucket: "pwdcardregisterapp.appspot.com",
+        messagingSenderId: "1097703662378",
+        appId: "1:1097703662378:web:d66126bbf452d5c290f453"
+      };
+
+      const app = initializeApp(firebaseConfig);
+
+      import {getFirestore, doc, getDoc, getDocs, setDoc, count, getCountFromServer, collection, query, onSnapshot, where, addDoc, updateDoc, deleteDoc, deleteField} from "https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore.js";
+
+      const db = getFirestore(app);
+
+      const cline1 = document.getElementById("customerline1");
+      const cline2 = document.getElementById("customerline2");
+      const cline3 = document.getElementById("customerline3");
+      const cline4 = document.getElementById("customerline4");
+      const cline5 = document.getElementById("customerline5");
+
+      window.onload = DataUpdateRealtime;
+
+      const btn = document.createElement('button');
+      btn.style.display = 'none';
+      btn.id = 'TTS_activate';
+
+      async function speakInfo(text) {
+        return new Promise((resolve, reject) => {
+          const utterance = new SpeechSynthesisUtterance(text);
+          utterance.onend = () => resolve();
+          utterance.onerror = (error) => reject(error);
+          speechSynthesis.speak(utterance);
+        });
+      };
+
+      async function speakMessageAsync(message) {
+        try {
+          speakInfo(message);
+        } catch (error) {
+          console.error("Speech synthesis error:", error);
+        }        
+      }
+
+      async function DataUpdateRealtime(){
+
+        function activateClickListener(string) {
+          document.getElementById("hiddenButton").addEventListener("click", speakMessageAsync(string));
+        }
+
+        function triggerButtonClick() {
+          const hiddenButton = document.getElementById("hiddenButton");
+          hiddenButton.click();
+        }
+
+        const observer1 = new MutationObserver(function(mutationsList){
+          for (let mutation of mutationsList) {
+            if (mutation.type === 'characterData' || mutation.type === 'childList') {
+              console.log(cline1.innerHTML);
+              if(cline1.innerHTML !== "?-000"){
+                var pronouncenum = Array.from(cline1.innerHTML);
+                pronouncenum[1] = "dash"; 
+                var numstr = pronouncenum[0] + ";" + pronouncenum[1] + ";" + pronouncenum[2] + pronouncenum[3] + pronouncenum[4];
+                activateClickListener("customer number; " + numstr + "; Please proceed to counter 1.");
+                triggerButtonClick();
+              }
+            }
+          }
+        });
+
+        const observer2 = new MutationObserver(function(mutationsList) {
+          for (let mutation of mutationsList) {
+            if (mutation.type === 'characterData'  || mutation.type === 'childList') {
+              console.log(cline2.innerHTML);
+              if(cline2.innerHTML !== "?-000"){
+                var pronouncenum = Array.from(cline2.innerHTML);
+                pronouncenum[1] = "dash"; 
+                var numstr = pronouncenum[0] + ";" + pronouncenum[1] + ";" + pronouncenum[2] + pronouncenum[3] + pronouncenum[4];
+                activateClickListener("customer number; " + numstr + "; Please proceed to counter 2.");
+                triggerButtonClick();
+              }
+            }
+          }
+        });
+
+        const observer3 = new MutationObserver(function(mutationsList) {
+          for (let mutation of mutationsList) {
+            if (mutation.type === 'characterData'  || mutation.type === 'childList') {
+              console.log(cline3.innerHTML);
+              if(cline3.innerHTML !== "?-000"){
+                var pronouncenum = Array.from(cline3.innerHTML);
+                pronouncenum[1] = "dash"; 
+                var numstr = pronouncenum[0] + ";" + pronouncenum[1] + ";" + pronouncenum[2] + pronouncenum[3] + pronouncenum[4];
+                activateClickListener("customer number; " + numstr + "; Please proceed to counter 3.");
+                triggerButtonClick();
+              }
+            }
+          }
+        });
+
+        const observer4 = new MutationObserver(function(mutationsList) {
+          for (let mutation of mutationsList) {
+            if (mutation.type === 'characterData'  || mutation.type === 'childList') {
+              console.log(cline4.innerHTML);
+              if(cline4.innerHTML !== "?-000"){
+                var pronouncenum = Array.from(cline4.innerHTML);
+                pronouncenum[1] = "dash"; 
+                var numstr = pronouncenum[0] + ";" + pronouncenum[1] + ";" + pronouncenum[2] + pronouncenum[3] + pronouncenum[4];
+                activateClickListener("customer number; " + numstr + "; Please proceed to counter 4.");
+                triggerButtonClick();
+              }
+            }
+          }
+        });
+
+        const observer5 = new MutationObserver(function(mutationsList) {
+          for (let mutation of mutationsList) {
+            if (mutation.type === 'characterData'  || mutation.type === 'childList') {
+              console.log(cline5.innerHTML);
+              if(cline5.innerHTML !== "?-000"){
+                var pronouncenum = Array.from(cline5.innerHTML);
+                pronouncenum[1] = "dash"; 
+                var numstr = pronouncenum[0] + ";" + pronouncenum[1] + ";" + pronouncenum[2] + pronouncenum[3] + pronouncenum[4];
+                activateClickListener("customer number; " + numstr + "; Please proceed to counter 5.");
+                triggerButtonClick();
+              }
+            }
+          }
+        });
+
+        const mconfig = {characterData: true, subtree: true, childList: true};
+
+        const qserve1 = onSnapshot(doc(db, "counter_is_serving", "counter1"), (doc) => {
+          cline1.innerHTML = doc.data().nowserving;
+          observer1.observe(cline1, mconfig);
+          if(cline1.innerHTML == "pending"){
+            cline1.innerHTML = "?-000";
+          }
+        });
+
+        const qserve2 = onSnapshot(doc(db, "counter_is_serving", "counter2"), (doc) => {
+          cline2.innerHTML = doc.data().nowserving;
+          observer2.observe(cline2, mconfig);
+          if(cline2.innerHTML == "pending"){
+            cline2.innerHTML = "?-000";
+          }
+        });
+
+        const qserve3 = onSnapshot(doc(db, "counter_is_serving", "counter3"), (doc) => {
+          cline3.innerHTML = doc.data().nowserving;
+          observer3.observe(cline3, mconfig);
+          if(cline3.innerHTML == "pending"){
+            cline3.innerHTML = "?-000";
+          }
+        });
+
+        const qserve4 = onSnapshot(doc(db, "counter_is_serving", "counter4"), (doc) => {
+          cline4.innerHTML = doc.data().nowserving;
+          observer4.observe(cline4, mconfig);
+          if(cline4.innerHTML == "pending"){
+            cline4.innerHTML = "?-000";
+          }
+        });
+
+        const qserve5 = onSnapshot(doc(db, "counter_is_serving", "counter5"), (doc) => {
+          cline5.innerHTML = doc.data().nowserving;
+          observer5.observe(cline5, mconfig);
+          if(cline5.innerHTML == "pending"){
+            cline5.innerHTML = "?-000";
+          }
+        });       
+      }
+
+      function checkTime() {
+        const now = new Date();
+        const currentHour = now.getHours();
+        const currentMinute = now.getMinutes();
+
+        const serveref1 = doc(db, "counter_is_serving", "counter1");
+        const serveref2 = doc(db, "counter_is_serving", "counter2");
+        const serveref3 = doc(db, "counter_is_serving", "counter3");
+        const serveref4 = doc(db, "counter_is_serving", "counter4");
+        const serveref5 = doc(db, "counter_is_serving", "counter5");
+        
+        if (currentHour === 17 && currentMinute === 0) {
+          updateDoc(serveref1, {nowserving: pending})
+          updateDoc(serveref2, {nowserving: pending})
+          updateDoc(serveref3, {nowserving: pending})
+          updateDoc(serveref4, {nowserving: pending})
+          updateDoc(serveref5, {nowserving: pending})
+        }
+      }
+      setInterval(checkTime, 1000);
+      
+  </script>
+</html>

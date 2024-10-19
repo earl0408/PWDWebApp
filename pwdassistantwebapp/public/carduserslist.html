@@ -1,0 +1,1762 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>PWDAssistant</title>
+
+     <!-- Latest compiled and minified CSS --> 
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"> 
+     <!-- jQuery library --> 
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script> 
+     <!-- Popper JS --> 
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script> 
+     <!-- Latest compiled JavaScript --> 
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+     <!-- Font Awesome 6 Icon Library --> 
+        <link rel="stylesheet" href="css/all.min.css"> 
+        <link rel="stylesheet" href="css/fontawesome.min.css">
+        <script src="https://kit.fontawesome.com/3b9f69c096.js" crossorigin="anonymous"></script>  
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="css/dashhomestyle.css"/>
+    <link rel="stylesheet" href="css/cardtablestyle.css"/>
+    <link rel="icon" type="image/png" href="images/appmainlogo.png" sizes="48x48"/>
+
+    <!-- Boxicons CSS -->
+    <link href="https://unpkg.com/boxicons@2.1.2/css/boxicons.min.css" rel="stylesheet"/>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/3.1.2/rollups/aes.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/3.1.2/rollups/pbkdf2.js"></script>
+  </head>
+  <body>
+    <nav>
+      <div class="logo">
+        <i class="fas fa-bars"></i>
+        <span class="logo-name">PWDAssistant</span>
+      </div>
+
+      <div class="sidebar">
+        <div class="logo">
+          <i class="fas fa-bars"></i>
+          <span class="logo-name">PWDAssistant</span>
+        </div>
+
+        <div class="sidebar-content">
+          <ul class="lists">
+            <li class="list">
+              <a href="dashboardhome.html" class="nav-link">
+                <i class="fas fa-house icon"></i>
+                <span class="link">Dashboard</span>
+              </a>
+            </li>
+            <li class="list">
+              <a href="chartanalysis.html" class="nav-link">
+                <i class="fas fa-chart-simple icon"></i>
+                <span class="link">Analytics</span>
+              </a>
+            </li>
+            <li class="list">
+              <a onclick="window.open('queuecaller.html', '_blank', 'width=700', 'height=1200')" style="cursor: pointer;" class="nav-link">
+                <i class="fas fa-bell icon"></i>
+                <span class="link">Queue Caller</span>
+              </a>
+            </li>
+            <li class="list">
+              <a href="carduserslist.html" class="nav-link active">
+                <i class="fas fa-id-card icon"></i>
+                <span class="link">Card Users List</span>
+              </a>
+            </li>
+            <li class="list">
+              <a href="scheduleslist.html" class="nav-link">
+                <i class="fas fa-clock icon"></i>
+                <span class="link">Schedule List</span>
+              </a>
+            </li>
+            <li class="list">
+              <a href="uploadfiles.html" class="nav-link">
+                <i class="fas fa-file-import icon"></i>
+                <span class="link">Upload Files</span>
+              </a>
+            </li>
+            <li class="list">
+              <a href="updatepassword.html" class="nav-link">
+                <i class="fas fa-pen icon"></i>
+                <span class="link">Edit Account</span>
+              </a>
+            </li>
+          </ul>
+
+          <div class="bottom-cotent">
+            <li class="list">
+              <a href="#" class="nav-link">
+                <i class="fas fa-user icon"></i>
+                <span class="link" id="userspan"></span>
+              </a>
+            </li>
+            <li class="list">
+              <a href="#" class="nav-link">
+                <i class="fas fa-door-open icon"></i>
+                <span class="link" id="logout">Logout</span>
+              </a>
+            </li>
+          </div>
+        </div>
+      </div>
+    </nav>
+
+    <div class="searchbar">
+      <select class="fieldCBX" id="fieldselect">
+        <option value="unselected">Category</option>
+        <option value="cardnumber">Card Number</option>
+        <option value="registrantfullname">Full Name</option>
+        <option value="Birthday">Birthday</option>
+      </select>
+      <input class="searchFLD" id="searchinput" type="text" placeholder="Search..." maxlength="150"
+        oninput="this.value = this.value.replace(/[^0-9A-Za-z.\!\?\^\'\+\=\,\*\&\%\$\s\-]/g, '');"/>
+      <button type="button" class="searchBTN" id="tosearch">Search</button> 
+    </div>
+    
+    <div class="printclick">
+        <button type="button" class="printtableBTN" id="printtable" onclick="createDataTablePDF()">Print Table</button>
+    </div>
+    
+    <div class="pdfcenter" id="pdfcenter">
+      <div class="tabletitle">
+        <h1 class="tabtitle">PWD Cards List</h1>
+      </div>    
+      
+      <div class="tablebox" id="tablebox">
+       <table id="carddatatable">
+        <thead>
+          <tr>
+            <th class="num">#</th>
+            <th>Card Number</th>
+            <th class="name">Full Name</th>
+            <th class="address">Address</th>
+            <th class="bday">Birthday</th>  
+          </tr>        
+        </thead>
+        <tbody id="listbody">
+  
+        </tbody>
+       </table>
+     </div>    
+    </div>
+    
+    <section class="overlay"></section>
+
+    <div class="formdetails">
+      <h1 class="formtitle">Card Details</h1>
+      <form>
+        <div class="carduserinfo">
+          <label for="cardno">Card Code:</label>
+          <div class="input-box">
+            <input type="text" class="cardcode" id="cardcode" disabled
+             oninput="this.value = this.value.replace(/[^0-9A-Za-z\-]/g, '');">
+          </div>
+        </div>
+        <div class="carduserinfo">
+          <label for="appuser">App User:</label>
+          <div class="input-box">
+            <select class="appuser" id="appuser" required>
+              <option value="unselected">-------</option>
+              <option value="Walk-in submission">Walk-in submission</option>
+            </select>
+            <p class="errortext" id="ert1"></p>
+          </div>
+        </div>
+        <div class="carduserinfo">
+          <label for="cardno">Card Number:</label>
+          <div class="input-box">
+            <input type="text" class="cardnum" id="cardno" placeholder="04-2106-###-####" autocomplete="off"
+             required oninput="this.value = this.value.replace(/[^0-9\-]/g, '');" maxlength="17">
+            <p class="errortext" id="ert2"></p>
+          </div>    
+        </div>
+        <div class="carduserinfo">
+          <label for="cardname">Full Name:</label>
+          <div class="input-box">
+            <input type="text" class="cardname" id="cardname" maxlength="80"
+             required oninput="this.value = this.value.replace(/[^A-Za-zñ.\-\s]/g, '');">
+            <p class="errortext" id="ert3"></p>
+          </div>
+        </div>
+        <div class="carduserinfo">
+          <label for="address">Address:</label>
+          <div class="input-box">
+            <input type="text" class="cardadds" id="address" maxlength="150"
+             required oninput="this.value = this.value.replace(/[^0-9A-Za-zñ.\&\,\-\s]/g, '');">
+            <p class="errortext" id="ert4"></p>
+          </div>
+        </div>
+        <div class="carduserinfo">
+          <label for="birthdate">Birthday:</label>
+          <div class="input-box">
+            <input type="date" class="birthdate" id="birthdate" placeholder="yyyy/mm/dd" max="today" required>
+            <p class="errortext" id="ert5"></p>
+          </div>
+        </div>
+        <div class="carduserinfo">
+          <label for="disabCBX">Disability Type:</label>
+          <div class="input-box">
+            <select class="disabCBX" id="disability" required>
+              <option value="unselected">-------</option>
+              <option value="Psychosocial disability">Psychosocial disability</option>
+              <option value="Disability resulting from a chronic illness">Disability resulting from a chronic illness</option>
+              <option value="Learning disability">Learning disability</option>
+              <option value="Visual disability">Visual disability</option>
+              <option value="Orthopedic/Physical disability">Orthopedic/Physical disability</option>
+              <option value="Mental disability">Mental disability</option>
+              <option value="Intellectual disability">Intellectual disability</option>
+              <option value="Hearing disability">Hearing disability</option>
+              <option value="Speech or language impairment">Speech or language impairment</option>
+              <option value="Cancer">Cancer</option>
+              <option value="Rare disease">Rare disease</option>
+            </select>
+            <p class="errortext" id="ert6"></p>
+          </div>       
+        </div>
+        <div class="carduserinfo">
+          <label for="gender">Gender:</label>
+          <div class="input-box">
+            <select class="genCBX" id="gender" required>
+              <option value="unselected">-------</option>
+              <option value="Male">Male</option>
+              <option value="Female">Female</option>
+            </select>
+            <p class="errortext" id="ert7"></p>
+          </div>    
+        </div>
+        <div class="carduserinfo">
+          <label for="address">Blood Type:</label>
+          <div class="input-box">
+            <select class="btypeCBX" id="bloodtype" required>
+              <option value="unselected">-------</option>
+              <option value="A+">A+</option>
+              <option value="A-">A-</option>
+              <option value="B+">B+</option>
+              <option value="B-">B-</option>
+              <option value="AB+">AB+</option>
+              <option value="AB-">AB-</option>
+              <option value="O+">O+</option>
+              <option value="O-">O-</option>
+            </select>
+            <p class="errortext" id="ert8"></p>
+          </div> 
+        </div>
+        <div class="carduserinfo">
+          <label for="cardstatus">Card Status:</label>
+          <div class="input-box">
+            <!--<input type="text" class="cardstatus" id="cardstatus" maxlength="40">-->
+            <select class="cardstatus" id="cardstatus" required>
+              <option value="unselected">-------</option>
+              <option value="DRAFT">DRAFT</option>
+              <option value="SUBMITTED">SUBMITTED</option>
+              <option value="RENEWED">RENEWED</option>
+              <option value="RENEW_DRAFT">RENEW_DRAFT</option>
+              <option value="PENDING_RENEWAL">PENDING_RENEWAL</option>
+              <option value="PENDING_REPRINT">PENDING_REPRINT</option>
+            </select>
+            <p class="errortext" id="ert9"></p>
+          </div>
+        </div>
+        <h2 class="formsubheads">In case of emergency, please contact:</h2>
+        <div class="carduserinfo">
+          <label for="guardname">Name:</label>
+          <div class="input-box">
+            <input type="text" class="guardname" id="guardname" maxlength="80"
+             oninput="this.value = this.value.replace(/[^A-Za-zñ.\-\s]/g, '');">
+            <p class="errortext" id="ert10"></p>
+          </div>
+        </div>
+        <div class="carduserinfo">
+          <label for="guardphone">Contact Number:</label>
+          <div class="input-box">
+            <input type="text" class="guardphone" id="guardphone" maxlength="11"
+             oninput="this.value = this.value.replace(/[^0-9]/g, '');">
+            <p class="errortext" id="ert11"></p>
+          </div>
+        </div>
+        <h2 class="formsubheads">Submitted files and card date info:</h2>
+        <div class="carduserinfo">
+          <label for="medcertpath">Med Cert. Path:</label>
+          <div class="input-box">
+            <input type="text" class="medcertpath" id="medcertpath" placeholder="medical_cert/File name"
+             oninput="this.value = this.value.replace(/[^0-9A-Za-zñ.\&\,\-\_\/\s]/g, '');">
+            <p class="errortext" id="ert12"></p>
+          </div>
+        </div>
+        <div class="carduserinfo">
+          <label for="birthcertpath">Birth Cert. Path:</label>
+          <div class="input-box">
+            <input type="text" class="birthcertpath" id="birthcertpath" placeholder="birth_or_marriage_cert/File name"
+             oninput="this.value = this.value.replace(/[^0-9A-Za-zñ.\&\,\-\_\/\s]/g, '');">
+            <p class="errortext" id="ert13"></p>
+          </div>
+        </div>
+        <div class="carduserinfo">
+          <label for="brgycertpath">Brgy. Cert. Path:</label>
+          <div class="input-box">
+            <input type="text" class="brgycertpath" id="brgycertpath" placeholder="barangay_resid_cert/File name"
+             oninput="this.value = this.value.replace(/[^0-9A-Za-zñ.\&\,\-\_\/\s]/g, '');">
+            <p class="errortext" id="ert14"></p>
+          </div>
+        </div>
+        <div class="carduserinfo">
+          <label for="photopath">Photo Path:</label>
+          <div class="input-box">
+            <input type="text" class="photopath" id="photopath" placeholder="photos/File name"
+             oninput="this.value = this.value.replace(/[^0-9A-Za-zñ.\&\,\-\_\/\s]/g, '');">
+            <p class="errortext" id="ert15"></p>
+          </div>
+        </div>
+        <div class="carduserinfo">
+          <label for="cardno">Affidavit Of Loss Path:</label>
+          <div class="input-box">
+            <input type="text" class="affipath" id="affipath" placeholder="affidavit_of_loss/File name"
+             oninput="this.value = this.value.replace(/[^0-9A-Za-zñ.\&\,\-\_\/\s]/g, '');">
+            <p class="errortext" id="ert16"></p>
+          </div>
+        </div>
+        <div class="carduserinfo">
+          <label for="esignpath">E-signature Path:</label>
+          <div class="input-box">
+            <input type="text" class="esignpath" id="esignpath" placeholder="signatures/File name"
+             oninput="this.value = this.value.replace(/[^0-9A-Za-zñ.\&\,\-\_\/\s]/g, '');">
+            <p class="errortext" id="ert17"></p>
+          </div>
+        </div>
+        <div class="carduserinfo">
+          <label for="issuedate">Issue Date:</label>
+          <div class="input-box">
+            <input type="date" class="issuedate" id="issuedate" placeholder="mm/dd/yyyy" max="today" required>
+            <p class="errortext" id="ert18"></p>
+          </div>
+        </div>
+        <div class="carduserinfo">
+          <label for="renewdate">Renewal Date:</label>
+          <div class="input-box">
+            <input type="text" class="renewaldate" id="renewaldate" placeholder="yyyy/mm/dd" disabled>
+            <p class="errortext" id="ert19"></p>
+          </div>
+        </div>
+        <div class="btnarray">
+            <button type="button" class="getmedcertBTN" id="getmedcert">Open Medical Cert.</button>
+            <button type="button" class="getpsacertBTN" id="getpsacert">Open Birth Cert.</button>
+            <button type="button" class="getbrgycertBTN" id="getbrgycert">Open Brgy. Cert.</button>
+            <button type="button" class="getaffiBTN" id="getaffidavit">Open Affidavit Of Loss</button>
+        </div>
+        <div class="btnarray">
+            <button type="button" class="downloadimage" id="downloadimg">Upload Photo</button>
+            <button type="button" class="getinfoBTN" id="getdata">Get Card Data</button>
+            <button type="button" class="downloadsignature" id="downloadsign">Get Signature</button>
+        </div>
+        <div class="btnarray">
+            <button type="button" class="addBTN" id="adddata">Insert Card Data</button>
+            <button type="button" class="updateBTN" id="updatedata">Update Info</button>
+            <button type="button" class="resetBTN" id="resetfields">Reset Fields</button>
+            <button type="button" class="archiveBTN" id="archivedata">Archive Card Data</button>
+        </div>
+        <div class="customalert" id="customalert"></div>
+        <div class="customalert2" id="customalert2"></div>
+        <div class="customalert3" id="customalert3"></div>
+        <div class="customalert4" id="customalert4"></div>
+      </form>
+    </div>
+    
+    <h2 class="previewtitle">PWD Card Preview</h2>
+       
+    <div class="printclick">
+        <button type="button" class="printtableBTN" id="printcard" onclick="printPWDCard();">Print Card</button>
+    </div>
+    
+    <div class="cardpreview" id="cardpreview">
+
+       <div class="frontpreview" id="frontpreview">
+         <img src="https://cdn.glitch.global/24efeec9-a113-47b0-bd05-895cb5fb3344/cardfronttemplate.png?v=1717629599784" class="cardfrontside" alt="Front Preview">
+         <p class="showncardno" id="scnum"></p>
+         <p class="showncardname" id="scname"></p>
+         <p class="showndisability" id="scdis"></p>
+         <img class="carduserphoto" id="carduserphoto" alt="Card Profile Photo">
+         <img class="cardusersign" id="draggablesign" alt="Draggable Signature">
+       </div>
+       <div class="backpreview">
+         <img src="https://cdn.glitch.global/24efeec9-a113-47b0-bd05-895cb5fb3344/cardbacktemplate.png?v=1720853047301" class="cardbackside" alt="Back Preview">
+         <p class="shownaddress" id="sads"></p>
+         <p class="shownbirthday" id="sbday"></p>
+         <p class="showngender" id="sgnr"></p>
+         <p class="shownissuedate" id="sdoi"></p>
+         <p class="shownbloodtype" id="sbty"></p>
+         <p class="shownguardianname" id="sgnm"></p>
+         <p class="shownguardianphone" id="sgph"></p>
+       </div>
+    </div> 
+
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/3.1.9-1/crypto-js.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.0.0/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.5.3/jspdf.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/0.4.1/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.6/jspdf.plugin.autotable.min.js"></script>
+    <script src="js/printThis.js"></script>
+    <script>
+        function createDataTablePDF(){
+          var y = 10;
+          var doctab = new jsPDF('p', 'pt', 'letter');
+          var width = doctab.internal.pageSize.getWidth();
+          doctab.text('PWD Cards list', width/2, 30, { align: 'center' });
+          doctab.autoTable({ html: '#carddatatable', startY: 60, theme: 'grid'});
+          doctab.save('PWDCardsList.pdf'); 
+        }
+      
+        function printPWDCard(){
+          $('#cardpreview').printThis({
+            importCSS: true,
+            loadCSS: "",
+          });
+          const iframeElement = document.querySelector('#printThis-1726568012498');
+          console.log(iframeElement);
+        }
+    </script>
+    <script type="module">
+      const navBar = document.querySelector("nav"),
+        menuBtns = document.querySelectorAll(".fa-bars"),
+        overlay = document.querySelector(".overlay");
+
+      menuBtns.forEach((menuBtn) => {
+        menuBtn.addEventListener("click", () => {
+          navBar.classList.toggle("open");
+        });
+      });
+
+      overlay.addEventListener("click", () => {
+        navBar.classList.remove("open");
+      });
+      
+      var useNo = 0;
+      var tbody = document.getElementById("listbody");
+
+      function AddDocToTable(code, name, adds, bday){
+        let trow = document.createElement("tr");
+        let td1 = document.createElement("td");
+        let td2 = document.createElement("td");
+        let td3 = document.createElement("td");
+        let td4 = document.createElement("td");
+        let td5 = document.createElement("td");
+
+        td1.innerHTML = useNo++;
+        td2.innerHTML = code;
+        td3.innerHTML = name;
+        td4.innerHTML = adds;
+        td5.innerHTML = bday;
+
+        trow.appendChild(td1);
+        trow.appendChild(td2);
+        trow.appendChild(td3);
+        trow.appendChild(td4);
+        trow.appendChild(td5);
+
+        tbody.appendChild(trow);
+      }
+      
+      function formatDate(date) {
+        var d = new Date(date),
+          month = '' + (d.getMonth() + 1),
+          day = '' + d.getDate(),
+          year = d.getFullYear();
+
+        if (month.length < 2) 
+          month = '0' + month;
+        if (day.length < 2) 
+          day = '0' + day;
+
+        return [year, month, day].join('/');
+      }
+      
+      function formatDate2(date) {
+        var d = new Date(date),
+          month = '' + (d.getMonth() + 1),
+          day = '' + d.getDate(),
+          year = d.getFullYear();
+
+        if (month.length < 2) 
+          month = '0' + month;
+        if (day.length < 2) 
+          day = '0' + day;
+
+        return [month, day, year].join('/');
+      }
+      
+      function makeID(length) {
+        let result = '';
+        const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+        const charactersLength = characters.length;
+        let counter = 0;
+        while (counter < length) {
+          result += characters.charAt(Math.floor(Math.random() * charactersLength));
+          counter += 1;
+        }
+        return result;
+      }
+
+      var alphnum1 = makeID(7);
+      var alphnum2 = makeID(7);
+      var codeval = alphnum1 + "-" + alphnum2;
+      
+      var basecardnum = "04-2106"
+      var brgycode;
+
+      function determineBrgyCode(string){
+        if(string === "Burol"){brgycode = "003";}
+        else if(string === "Langkaan I"){brgycode = "005";}
+        else if(string === "Paliparan I"){brgycode = "008";}
+        else if(string === "Sabang"){brgycode = "010";}
+        else if(string === "Salawag"){brgycode = "011";}
+        else if(string === "Salitran I"){brgycode = "012";}
+        else if(string === "Sampaloc I"){brgycode = "013";}
+        else if(string === "San Agustin I"){brgycode = "014";}
+        else if(string === "San Jose"){brgycode = "015";}
+        else if(string === "Zone I"){brgycode = "016";}
+        else if(string === "Zone II"){brgycode = "017";}
+        else if(string === "Zone III"){brgycode = "018";}
+        else if(string === "Zone IV"){brgycode = "019";}
+        else if(string === "Datu Esmael"){brgycode = "020";}
+        else if(string === "Emmanuel Berrgado I"){brgycode = "021";}
+        else if(string === "Fatima I"){brgycode = "022";}
+        else if(string === "Luzviminda I"){brgycode = "023";}
+        else if(string === "Saint Peter I"){brgycode = "024";}
+        else if(string === "San Andres I"){brgycode = "025";}
+        else if(string === "San Antonio De Padua I"){brgycode = "026";}
+        else if(string === "San Dionisio"){brgycode = "027";}
+        else if(string === "San Esteban"){brgycode = "028";}
+        else if(string === "San Francisco I"){brgycode = "029";}
+        else if(string === "San Isidro Labrador I"){brgycode = "030";}
+        else if(string === "San Juan"){brgycode = "031";}
+        else if(string === "San Lorenzo Ruiz I"){brgycode = "032";}
+        else if(string === "San Luis I"){brgycode = "033";}
+        else if(string === "San Manuel I"){brgycode = "034";}
+        else if(string === "San Mateo"){brgycode = "035";}
+        else if(string === "San Miguel"){brgycode = "036";}
+        else if(string === "San Nicolas I"){brgycode = "037";}
+        else if(string === "San Roque"){brgycode = "038";}
+        else if(string === "San Simon"){brgycode = "039";}
+        else if(string === "Santa Cristina I"){brgycode = "040";}
+        else if(string === "Santa Cruz I"){brgycode = "041";}
+        else if(string === "Santa Fe"){brgycode = "042";}
+        else if(string === "Santa Lucia"){brgycode = "043";}
+        else if(string === "Santa Maria"){brgycode = "044";}
+        else if(string === "Santo Cristo"){brgycode = "045";}
+        else if(string === "Santo Niño I"){brgycode = "046";}
+        else if(string === "Burol I"){brgycode = "047";}
+        else if(string === "Burol II"){brgycode = "048";}
+        else if(string === "Burol III"){brgycode = "049";}
+        else if(string === "Emmanuel Berrgado II"){brgycode = "050";}
+        else if(string === "Fatima II"){brgycode = "051";}
+        else if(string === "Fatima III"){brgycode = "052";}
+        else if(string === "Langkaan II"){brgycode = "053";}
+        else if(string === "Lusviminda II"){brgycode = "054";}
+        else if(string === "Paliparan II"){brgycode = "055";}
+        else if(string === "Paliparan III"){brgycode = "056";}
+        else if(string === "Saint Peter II"){brgycode = "057";}
+        else if(string === "Salitran II"){brgycode = "058";}
+        else if(string === "Salitran III"){brgycode = "059";}
+        else if(string === "Salitran IV"){brgycode = "060";}
+        else if(string === "Sampaloc II"){brgycode = "061";}
+        else if(string === "Sampaloc III"){brgycode = "062";}
+        else if(string === "Sampaloc IV"){brgycode = "063";}
+        else if(string === "Sampaloc V"){brgycode = "064";}
+        else if(string === "San Agustin II"){brgycode = "065";}
+        else if(string === "San Agustin III"){brgycode = "066";}
+        else if(string === "San Andres II"){brgycode = "067";}
+        else if(string === "San Antonio De Padua II"){brgycode = "068";}
+        else if(string === "San Francisco II"){brgycode = "069";}
+        else if(string === "San Isidro Labrador II"){brgycode = "070";}
+        else if(string === "San Lorenzo Ruiz II"){brgycode = "071";}
+        else if(string === "San Luis II"){brgycode = "072";}
+        else if(string === "San Manuel II"){brgycode = "073";}
+        else if(string === "San Miguel II"){brgycode = "074";}
+        else if(string === "San Nicolas II"){brgycode = "075";}
+        else if(string === "Santa Cristina II"){brgycode = "076";}
+        else if(string === "Santa Cruz II"){brgycode = "077";}
+        else if(string === "Santo Niño II"){brgycode = "078";}
+        else if(string === "Zone I-B"){brgycode = "079";}
+        else if(string === "H-2"){brgycode = "080";}
+        else if(string === "Victoria Reyes"){brgycode = "081";}
+        else{brgycode = "000";}
+        return brgycode;
+      }
+      
+      function randNumGen(){
+        const rNum = Math.floor(Math.random() * 9999) + 1;
+        let padNum = rNum.toString();
+        while (padNum.length < 4){
+          padNum = '0' + padNum;
+        }
+        return padNum;
+      }
+
+      function AddAllDocsToTable(CardUser){
+        useNo = 1;
+        tbody.innerHTML = "";
+        CardUser.forEach(element => {
+           AddDocToTable(element.cardnumber, element.registrantfullname,
+                         element.registrantaddress, 
+                         element.registrantbirthday);
+        });
+      }
+      
+      function isObjectEmpty(obj) {
+        for (var key in obj) {
+          if (obj.hasOwnProperty(key)) {
+              return false;
+          }
+        }
+        return true;
+      }
+      
+      function clearErrors(){
+          document.getElementById("customalert").innerHTML = " ";
+          document.getElementById("ert1").innerHTML = "";
+          document.getElementById("ert2").innerHTML = "";
+          document.getElementById("ert3").innerHTML = "";
+          document.getElementById("ert4").innerHTML = "";
+          document.getElementById("ert5").innerHTML = "";
+          document.getElementById("ert6").innerHTML = "";
+          document.getElementById("ert7").innerHTML = "";
+          document.getElementById("ert8").innerHTML = "";
+          document.getElementById("ert9").innerHTML = "";
+          document.getElementById("ert10").innerHTML = "";
+          document.getElementById("ert11").innerHTML = "";
+          document.getElementById("ert12").innerHTML = "";
+          document.getElementById("ert13").innerHTML = "";
+          document.getElementById("ert14").innerHTML = "";
+          document.getElementById("ert15").innerHTML = "";
+          document.getElementById("ert16").innerHTML = "";
+          document.getElementById("ert17").innerHTML = "";
+          appuse.style.border = "none";
+          cdname.style.border = "none";
+          adres.style.border = "none";
+          bdate.style.border = "none";
+          dtype.style.border = "none";
+          gndr.style.border = "none";
+          btype.style.border = "none";
+          grnm.style.border = "none";
+          grph.style.border = "none";
+          cstat.style.border = "none";
+          mpath.style.border = "none";
+          bpath.style.border = "none";
+          rpath.style.border = "none";
+          ipath.style.border = "none";
+          apath.style.border = "none";
+          spath.style.border = "none";
+          idate.style.border = "none";
+          rdate.style.border = "none";
+      }
+
+      import {initializeApp} from "https://www.gstatic.com/firebasejs/9.22.1/firebase-app.js";
+       
+      const firebaseConfig = {
+        apiKey: "AIzaSyCDNLsVNK45kH5PRCaXBw3wV9Nkw2jGdv8",
+        authDomain: "pwdcardregisterapp.firebaseapp.com",
+        databaseURL: "https://pwdcardregisterapp-default-rtdb.firebaseio.com",
+        projectId: "pwdcardregisterapp",
+        storageBucket: "pwdcardregisterapp.appspot.com",
+        messagingSenderId: "1097703662378",
+        appId: "1:1097703662378:web:d66126bbf452d5c290f453"
+      };
+
+      const app = initializeApp(firebaseConfig);
+
+      import {getFirestore, doc, getDoc, getDocs, setDoc, count, getCountFromServer, collection, query, onSnapshot, where, addDoc, updateDoc, deleteDoc, deleteField, limit, increment} from "https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore.js";
+      import {getStorage, ref, getDownloadURL, getBlob, listAll} from "https://www.gstatic.com/firebasejs/9.22.1/firebase-storage.js";
+      import {getAuth, onAuthStateChanged, signOut} from "https://www.gstatic.com/firebasejs/9.22.1/firebase-auth.js";
+
+      const db = getFirestore(app);
+      const storage = getStorage(app);
+      const auth = getAuth(app);
+      
+      var user = document.getElementById("userspan");
+      
+      onAuthStateChanged(auth, (user) => {
+        if (user) {
+         const uemail = user.email;
+         userspan.innerHTML = uemail;
+        } else {
+         window.location.href = "logsign.html";
+        }
+      })
+      
+      const signout = document.querySelector("#logout");
+
+      const cardtbl = document.querySelector("#carddatatable");
+      const category = document.querySelector("#fieldselect");
+      const searchterm = document.querySelector("#searchinput");
+      const searchrun = document.querySelector("#tosearch");
+
+      const cdcode = document.querySelector("#cardcode");
+      const appuse = document.querySelector("#appuser");
+      const cdnum = document.querySelector("#cardno");
+      const cdname = document.querySelector("#cardname");
+      const dtype = document.querySelector("#disability");
+      const adres = document.querySelector("#address");
+      const gndr = document.querySelector("#gender");
+      const btype = document.querySelector("#bloodtype");
+      const bdate = document.querySelector("#birthdate");
+      const grnm = document.querySelector("#guardname");
+      const grph = document.querySelector("#guardphone");
+
+      const cstat = document.querySelector("#cardstatus");
+      const idate = document.querySelector("#issuedate");
+      const rdate = document.querySelector("#renewaldate");
+
+      const mpath = document.querySelector("#medcertpath");
+      const bpath = document.querySelector("#birthcertpath");
+      const rpath = document.querySelector("#brgycertpath");
+      const ipath = document.querySelector("#photopath");
+      const apath = document.querySelector("#affipath");
+      const spath = document.querySelector("#esignpath");
+      
+      const scno = document.querySelector("#scnum");
+      const scna = document.querySelector("#scname");
+      const scds = document.querySelector("#scdis");
+      const scad = document.querySelector("#sads");
+      const scbd = document.querySelector("#sbday");
+      const scgn = document.querySelector("#sgnr");
+      const scdi = document.querySelector("#sdoi");
+      const scbt = document.querySelector("#sbty");
+      const scnm = document.querySelector("#sgnm");
+      const scph = document.querySelector("#sgph");
+      
+      const scim = document.querySelector("#carduserphoto");
+      const scsi = document.querySelector("#draggablesign");
+
+      const getcard = document.querySelector("#getdata");
+      const addcard = document.querySelector("#adddata");
+      const updatecard = document.querySelector("#updatedata");
+      const archivecard = document.querySelector("#archivedata");
+      const resetform = document.querySelector("#resetfields");
+
+      const getmed = document.querySelector("#getmedcert");
+      const getbcert = document.querySelector("#getpsacert");
+      const getbrcert = document.querySelector("#getbrgycert");
+      const getimg = document.querySelector("#downloadimg");
+      const getaffi = document.querySelector("#getaffidavit");
+      const getsign = document.querySelector("#downloadsign");
+      
+      const docref1 = doc(db, "stats_count", "--NewCardCount--");
+      const docref2 = doc(db, "stats_count", "--RenewalCount--");
+      const docref3 = doc(db, "stats_count", "--ReprintCount--");
+      
+      cdcode.value = codeval;
+      var carddoc = "";
+      
+      var today = new Date();
+      var todaystr = formatDate(today);
+      
+      let canum, caname, distype, regadrs, gend, bltp, btday, gname, gphone, csts, isdate, redate;
+      let mfile, bfile, brfile, photo, afls, sign;
+      
+      idate.addEventListener('change', function (){
+         var selidate = new Date(idate.value);
+         var eqrdate1 = selidate.setFullYear(selidate.getFullYear() + 5);
+         var eqrdate2 = selidate.setMonth(selidate.getMonth());
+         rdate.value = formatDate(eqrdate2);
+      })
+      
+      async function GetAllOfData(){
+        const querySnapshot = query(collection(db, "cards"), where("cardstatus", "!=", "DRAFT"));
+
+        var cards = [];
+
+        querySnapshot.forEach(doc => {
+          cards.push(doc.data());
+        });
+
+        for(let row of tbl.rows) {
+            
+           console.log(row.cells[1].innerHTML);
+        }
+
+        AddAllDocsToTable(cards);
+      }
+      
+      const signOutUser = async() => {
+        signOut(auth).then(() => {
+           window.location.href = "logsign.html";
+        }).catch((error) => {
+           alert("Sign out not working, please try again");
+        }); 
+      }
+
+      async function DataUpdateRealtime(){
+        const dbRef = query(collection(db, "cards"), where("cardstatus", "not-in", ["DRAFT", "RENEW_DRAFT"]));
+        const dbRef2 = query(collection(db, "app_users"), where("fullname", "!=", ""));
+        const renRef3 = query(collection(db, "cards"), where("renewaldate", "==", todaystr));
+
+        onSnapshot(dbRef,(querySnapshot) => {
+          var cards = [];
+
+          querySnapshot.forEach(doc =>{
+            cards.push(doc.data());
+          });
+          AddAllDocsToTable(cards);
+        })
+        
+        onSnapshot(dbRef2,(querySnapshot2) => {
+          var app_users = [];
+          
+          querySnapshot2.forEach(doc => {
+            app_users.push(doc.data().fullname);
+          });
+          app_users.forEach(app_user => {
+            const useoption = document.createElement('option');
+            useoption.text = app_user;
+            useoption.value = app_user;
+            appuse.appendChild(useoption);
+          });
+        })
+        
+        const renSnap = await getDocs(renRef3);
+        
+        renSnap.forEach((doc) => {
+        const docRenew = doc(db, 'cards', doc.id);
+        
+          updateDoc(docRenew, {
+              cardstatus: "PENDING_RENEWAL",
+              dateofissue: "Not yet scheduled.",
+              renewaldate: "Not yet assigned."
+          });
+        });
+      }
+      
+      async function updateCount(reference, step){
+        await updateDoc(reference, {total: increment(step)});         
+      }
+
+      window.onload = DataUpdateRealtime;
+
+      const searchQuery = async() => {
+        const catg = category.value;
+        const srchterm = searchterm.value;
+        
+        if(catg != "unselected" && srchterm != ""){
+           const sq = query(collection(db, "cards"), where("cardstatus", "not-in", ["DRAFT", "RENEW_DRAFT"]), where(catg, "==", srchterm));
+           onSnapshot(sq,(querySnapshot) => {
+              var cards = [];
+
+              querySnapshot.forEach(doc =>{
+                cards.push(doc.data());
+              });
+           AddAllDocsToTable(cards);
+           })
+        }else if(catg == "unselected" || srchterm == ""){
+           alert("Please select category or type your search keyword and try again.");    
+        }
+      }
+      
+      async function getAppUser(appuser){
+        if(appuser != "Walk-in submission"){
+          const appusesnap = doc(db, "app_users", appuser);
+          try {
+            const userSnapshot = await getDoc(appusesnap);
+            if (userSnapshot.exists){
+                appuse.value = userSnapshot.data().fullname;
+            }else{
+                document.getElementById("customalert").innerHTML = "Something wrong happened, please try again.";
+                document.getElementById("customalert").style.color = "red";
+            }
+          }catch(error){
+              document.getElementById("customalert").innerHTML = "Something wrong happened, please try again.";
+              document.getElementById("customalert").style.color = "red";
+          }
+        }else{
+          appuse.value = "Walk-in submission";
+        }
+        
+      }
+
+      const getCardData = async() => {
+        if(cdnum.value != ""){
+          const getRef = query(collection(db, "cards"), where("cardstatus", "!=", "DRAFT"), where("cardnumber", "==", cdnum.value));
+          document.getElementById("customalert").innerHTML = " ";
+          clearErrors();
+          onSnapshot(getRef,(querySnapshot) => {
+            querySnapshot.forEach(doc =>{
+              carddoc = doc.id;
+              cdcode.value = carddoc;
+              getAppUser(doc.data().appuserID);
+              appuse.disabled = true;
+              cdnum.value = doc.data().cardnumber;
+              cdname.value = doc.data().registrantfullname;
+              dtype.value = doc.data().disabilitytype;
+              adres.value = doc.data().registrantaddress;
+              var adds = adres.value;
+              var filteradd = adds.match(/Barangay (.*$)/)[1];
+              gndr.value = doc.data().registrantgender;
+              btype.value = doc.data().registrantbloodtype;
+              const bdaydate = new Date(doc.data().registrantbirthday);
+              const formatDate = bdaydate.getDate() < 10 ? `0${bdaydate.getDate()}`:bdaydate.getDate();
+              const formatMonth = (bdaydate.getMonth() + 1) < 10 ? `0${(bdaydate.getMonth() + 1)}` : (bdaydate.getMonth() + 1);
+              const formattedbDate = [bdaydate.getFullYear(), formatMonth, formatDate].join('-');
+              bdate.value = formattedbDate;
+              grnm.value = doc.data().guardianname;
+              grph.value = doc.data().guardianphone;
+              cstat.value = doc.data().cardstatus;
+              mpath.value = doc.data().medicertpath;
+              bpath.value = doc.data().psacertpath;
+              rpath.value = doc.data().brycertpath;
+              ipath.value = doc.data().imagefilepath;
+              apath.value = doc.data().affidavitpath;
+              spath.value = doc.data().esignpath;
+              const issuedate = new Date(doc.data().dateofissue);
+              const formatidate = issuedate.getDate() < 10 ? `0${issuedate.getDate()}`:issuedate.getDate();
+              const formatimonth = (issuedate.getMonth() + 1) < 10 ? `0${(issuedate.getMonth() + 1)}` : (issuedate.getMonth() + 1);
+              const formattedidate = [issuedate.getFullYear(), formatimonth, formatidate].join('-');
+              idate.value = formattedidate;
+              rdate.value = doc.data().renewaldate;
+              if(mpath.value == "undefined"){
+                  mpath.value = "";
+              }else{mfile = doc.data().medicertpath;}
+              if(bpath.value == "undefined"){
+                  bpath.value = "";
+              }else{bfile = doc.data().psacertpath;}
+              if(rpath.value == "undefined"){
+                  rpath.value = "";
+              }else{brfile = doc.data().brycertpath;}
+              if(ipath.value == "undefined"){
+                  ipath.value = "";
+              }else{photo = doc.data().imagefilepath;}
+              if(apath.value == "undefined"){
+                  apath.value = "";
+              }else{afls = doc.data().affidavitpath;}
+              if(spath.value == "undefined"){
+                  spath.value = "";
+              }else{sign = doc.data().esignpath;}
+              scno.innerHTML = doc.data().cardnumber;
+              scna.innerHTML = doc.data().registrantfullname;
+              scds.innerHTML = doc.data().disabilitytype;
+              scad.innerHTML = doc.data().registrantaddress;
+              scgn.innerHTML = doc.data().registrantgender;
+              scbd.innerHTML = doc.data().registrantbirthday;
+              scdi.innerHTML = doc.data().dateofissue;
+              scbt.innerHTML = doc.data().registrantbloodtype;
+              scnm.innerHTML = doc.data().guardianname;
+              scph.innerHTML = doc.data().guardianphone;
+              canum = doc.data().cardnumber;
+              caname = doc.data().registrantfullname;
+              distype = doc.data().disabilitytype;
+              regadrs = doc.data().registrantaddress;
+              gend = doc.data().registrantgender;
+              bltp = doc.data().registrantbloodtype;
+              btday = doc.data().registrantbirthday;
+              gname = doc.data().guardianname;
+              gphone = doc.data().guardianphone;
+              csts = doc.data().cardstatus;
+              isdate = doc.data().dateofissue;
+              redate = doc.data().renewaldate;
+            });
+          }) 
+        }else{
+           document.getElementById("ert2").innerHTML = "Please enter a valid card number.";
+           cdnum.style.border = "2px solid red";
+        }    
+      }
+      
+      var coderegex = /\d{2}-\d{4}-\d{3}-\d{4}/;
+      var nameregex = /[A-Za-z\s.]{7,85}/;
+      var addressregex = /\b.{10,250}\b/;
+      var phoneregex = /\b\d{11}\b/;
+      var filepathregex = /[a-zA-Z0-9_\-\/]+\/[a-zA-Z0-9_\-]+\.[a-zA-Z0-9]+/;
+      
+      const addCardData = async() => {
+        var apsrid;
+        var isDraft, isReprinting, isWalkIn;
+        var allowedA1, allowedA2, allowedA3, allowedB1, allowedB2, allowedB3, allowedB4;
+        var masterallow1, masterallow2;
+        clearErrors();
+        document.getElementById("customalert").innerHTML = " ";
+        document.getElementById("customalert2").innerHTML = " ";
+        document.getElementById("customalert3").innerHTML = " ";
+        document.getElementById("customalert4").innerHTML = " ";
+        if(appuse.value != "unselected" && (cdname.value != "" && nameregex.test(cdname.value)) && (adres.value != "" && addressregex.test(adres.value))
+          && bdate.value != "" && (grnm.value != "" && nameregex.test(grnm.value)) && (grph.value != "" && phoneregex.test(grph.value))
+          && cstat.value != "unselected"){
+          const checkuseID = query(collection(db, "app_users"), where("fullname", "==", appuse.value), limit(1));
+          const userFindSnapshot = await getDocs(checkuseID);
+          userFindSnapshot.forEach((doc) => {apsrid = doc.id;});
+          const checkRef = query(collection(db, "cards"), where("registrantfullname", "==", cdname.value));
+          const countsnapshot1 = await getCountFromServer(checkRef);
+          if(countsnapshot1.data().count == 0){
+            var regadds = adres.value;
+            var filteradd = regadds.match(/Barangay (.*$)/)[1];
+            var bcode = determineBrgyCode(filteradd);
+            var grn = randNumGen();
+            var cardnum = [basecardnum, bcode, grn].join("-");
+            var bday = formatDate(bdate.value);
+            var iedate = formatDate2(idate.value);
+            document.getElementById("customalert").innerHTML = " ";
+            const newcarddata = {
+                cardnumber: cardnum,
+                registrantfullname: cdname.value,
+                registrantaddress: adres.value,
+                registrantbirthday: bday,
+                guardianname: grnm.value,
+                guardianphone: grph.value,
+                cardstatus: cstat.value,
+            }
+            if(appuse.value == "Walk-in submission"){
+                isWalkIn = true;
+                isDraft = false;
+            }else{
+                isWalkIn = false;
+                if(cstat.value == "DRAFT"){isDraft = true;}else if(cstat.value != "DRAFT"){isDraft = false;}
+                else if(cstat.value == "PENDING_REPRINT"){isReprinting = true;}else if(cstat.value != "PENDING_REPRINT"){isReprinting = false;}
+            }
+            if(isDraft == true && dtype.value == "unselected"){
+              const newdis = {disabilitytype: "n.a."};
+              Object.assign(newcarddata, newdis);
+              allowedA1 = true;
+            }else if(isDraft == false && dtype.value == "unselected"){
+              document.getElementById("ert6").innerHTML = "Please specify disability for non-draft records.";
+              dtype.style.border = "2px solid red";
+              allowedA1 = false;
+            }else if((isDraft == false || isDraft == true) && dtype.value != "unselected"){
+              const newdis = {disabilitytype: dtype.value};
+              Object.assign(newcarddata, newdis);
+              allowedA1 = true;
+            }
+            if(isDraft == true && gndr.value == "unselected"){
+              const newgend = {registrantgender: "n.a."};
+              Object.assign(newcarddata, newgend);
+              allowedA2 = true;
+            }else if(isDraft == false && gndr.value == "unselected"){
+              document.getElementById("ert7").innerHTML = "Please specify gender for non-draft records.";
+              gndr.style.border = "2px solid red";
+              allowedA2 = false;
+            }else if((isDraft == false || isDraft == true) && gndr.value != "unselected"){
+              const newgend = {registrantgender: gndr.value};
+              Object.assign(newcarddata, newgend);
+              allowedA2 = true;
+            }
+            if(isDraft == true && btype.value == "unselected"){
+              const newbtype = {registrantbloodtype: "n.a."};
+              Object.assign(newcarddata, newbtype);
+              allowedA3 = true;
+            }else if(isDraft == false && btype.value == "unselected"){
+              document.getElementById("ert8").innerHTML = "Please specify blood type for non-draft records."; 
+              btype.style.border = "2px solid red";
+              allowedA3 = false;
+            }else if((isDraft == false || isDraft == true) && btype.value != "unselected"){
+              const newbtype = {registrantbloodtype: btype.value};
+              Object.assign(newcarddata, newbtype);
+              allowedA3 = true;
+            }
+            if(allowedA1 == true && allowedA2 == true && allowedA3 == true){masterallow1 = true}else{masterallow1 = false}
+            if(appuse.value != "Walk-in submission"){
+              const useid = {appuserID: apsrid};
+              Object.assign(newcarddata, useid);
+              masterallow2 = false;
+              if(mpath.value != "" && isDraft == false){
+                const newmed = {medicertpath: mpath.value};
+                Object.assign(newcarddata, newmed);
+                allowedB1 = true;
+              }else if(mpath.value == "" && isDraft == false){
+                  document.getElementById("ert12").innerHTML = "Medical certificate is required, Please specify a file name."; 
+                  mpath.style.border = "2px solid red";
+                  allowedB1 = false;
+              }
+              if(bpath.value != "" && isDraft == false){
+                  const newbct = {psacertpath: bpath.value};
+                  Object.assign(newcarddata, newbct);
+                  allowedB2 = true;
+              }else if(bpath.value == "" && isDraft == false){
+                  document.getElementById("ert13").innerHTML = "Birth/marriage certificate is required, Please specify a file name."; 
+                  bpath.style.border = "2px solid red";
+                  allowedB2 = false;
+              }
+              if(rpath.value != "" && isDraft == false){
+                  const newrct = {brycertpath: rpath.value};
+                  Object.assign(newcarddata, newrct);
+                  allowedB3 = true;
+              }else if(rpath.value == "" && isDraft == false){
+                  document.getElementById("ert14").innerHTML = "Barangay certificate is required, Please specify a file name."; 
+                  rpath.style.border = "2px solid red";
+                  allowedB3 = false;
+              }
+              if(ipath.value != "" && isDraft == false){
+                  const newpho = {imagefilepath: ipath.value};
+                  Object.assign(newcarddata, newpho);
+                  allowedB4 = true;
+              }else if(ipath.value == "" && isDraft == false){
+                  document.getElementById("ert15").innerHTML = "Image of PWD required, Please specify a file name."; 
+                  ipath.style.border = "2px solid red";
+                  allowedB4 = false;
+              }
+              if(apath.value != "" && cstat.value == "PENDING_REPRINT"){
+                  const newafl = {affidavitpath: apath.value};
+                  Object.assign(newcarddata, newafl);
+                  allowedB4 = true;
+              }else if(apath.value == "" && cstat.value == "PENDING_REPRINT"){
+                  document.getElementById("ert16").innerHTML = "Affidavit of loss file is required for cards with pending reprint, Please specify a file name."; 
+                  apath.style.border = "2px solid red";
+                  allowedB4 = false;
+              }
+              if(allowedB1 && allowedB2 && allowedB3 && allowedB4){masterallow2 = true}else{masterallow2 = false}
+            }else{
+              const useid = {appuserID: "Walk-in submission"};
+              Object.assign(newcarddata, useid);
+              masterallow2 = true;
+            }
+            if(spath.value != ""){
+                const newsig = {esignpath: spath.value};
+                Object.assign(newcarddata, newsig);
+            }
+            if((idate.value != "" && rdate.value != "") && ((cstat.value != "DRAFT" || cstat.value != "RENEW_DRAFT" || cstat.value != "PENDING_REPRINT" || cstat.value != "PENDING_RENEWAL") || isWalkIn == true)){
+              const newidate = {dateofissue: iedate};
+              Object.assign(newcarddata, newidate);
+              const newrdate = {renewaldate: rdate.value};
+              Object.assign(newcarddata, newrdate);
+            }else if((idate.value == "" && rdate.value == "") && ((cstat.value == "DRAFT" || cstat.value == "RENEW_DRAFT" || cstat.value == "PENDING_REPRINT" || cstat.value == "PENDING_RENEWAL") && isWalkIn == false)){
+              const newidate = {dateofissue: "Not yet scheduled."};
+              Object.assign(newcarddata, newidate);
+              const newrdate = {renewaldate: "Not yet assigned."};
+              Object.assign(newcarddata, newrdate);
+            }
+            console.log(masterallow2);
+            if(masterallow1 == true && masterallow2 == true){
+              await setDoc(doc(db, "cards", codeval), newcarddata).then(()=>{
+                document.getElementById("customalert").innerHTML = "Data added successfully."; 
+                document.getElementById("customalert").style.color = "midnightblue";
+                cdcode.value = codeval;
+                appuse.selectedIndex = 0;
+                cdnum.value = "";
+                cdname.value = "";
+                dtype.selectedIndex = 0;
+                adres.value = "";
+                gndr.selectedIndex = 0;
+                btype.selectedIndex = 0;
+                bdate.value = "";
+                grnm.value = "";
+                grph.value = "";
+                grph.value = "";
+                cstat.selectedIndex = 0;
+                mpath.value = "";
+                bpath.value = "";
+                rpath.value = "";
+                ipath.value = "";
+                apath.value = "";
+                spath.value = "";
+                idate.value = "";
+                rdate.value = "";
+                scno.innerHTML = "";
+                scna.innerHTML = "";
+                scds.innerHTML = "";
+                scad.innerHTML = "";
+                scgn.innerHTML = "";
+                scbt.innerHTML = "";
+                scbd.innerHTML = "";
+                scdi.innerHTML = "";
+                scnm.innerHTML = "";
+                scph.innerHTML = "";
+                scim.style.visibility = "hidden";
+                scim.src = "";
+                scsi.style.visibility = "hidden";
+                scsi.src = "";
+                if(isDraft != false || (cstat.value == "RENEW_DRAFT" || cstat.value == "PENDING_REPRINT")){
+                   updateCount(docRef1, 1);
+                }
+              }).catch((error)=>{
+                document.getElementById("customalert").innerHTML = "Failed to insert card info, please try again.";
+                document.getElementById("customalert").style.color = "red";
+                console.log(error);
+              })
+            }
+            
+          }else{
+            document.getElementById("ert3").innerHTML = "This cardholder already exists, please enter a new name.";
+            cdname.style.border = "2px solid red";
+          }
+        }else{
+          if(appuse.value == "unselected"){document.getElementById("ert1").innerHTML = "This field is required."; appuse.style.border = "2px solid red";}
+          if(cdname.value == ""){document.getElementById("ert3").innerHTML = "This field is required."; cdname.style.border = "2px solid red";}
+          else if(!nameregex.test(cdname.value)){document.getElementById("ert3").innerHTML = "Value has invalid characters."; cdname.style.border = "2px solid red";}
+          if(adres.value == ""){document.getElementById("ert4").innerHTML = "This field is required."; adres.style.border = "2px solid red";}
+          else if(!addressregex.test(adres.value)){document.getElementById("ert4").innerHTML = "Value has invalid characters."; adres.style.border = "2px solid red";}
+          if(bdate.value == ""){document.getElementById("ert5").innerHTML = "This field is required."; bdate.style.border = "2px solid red";}
+          if(dtype.value == "unselected"){document.getElementById("ert6").innerHTML = "This field is required."; dtype.style.border = "2px solid red";}
+          if(gndr.value == "unselected"){document.getElementById("ert7").innerHTML = "This field is required."; gndr.style.border = "2px solid red";}
+          if(btype.value == "unselected"){document.getElementById("ert8").innerHTML = "This field is required."; btype.style.border = "2px solid red";}
+          if(cstat.value == "unselected"){document.getElementById("ert9").innerHTML = "This field is required."; cstat.style.border = "2px solid red";}
+          if(grnm.value == ""){document.getElementById("ert10").innerHTML = "This field is required."; grnm.style.border = "2px solid red";}
+          else if(!nameregex.test(grnm.value)){document.getElementById("ert10").innerHTML = "Value has invalid characters."; grnm.style.border = "2px solid red";}
+          if(grph.value == ""){document.getElementById("ert11").innerHTML = "This field is required."; grph.style.border = "2px solid red";}
+          else if(!phoneregex.test(grph.value)){document.getElementById("ert11").innerHTML = "Value has invalid characters."; grph.style.border = "2px solid red";}
+        }
+      }
+
+      const updateCardData = async() => {
+        var apsrid;
+        var isDraft, isReprinting, isWalkIn;
+        var allowedA1, allowedA2, allowedA3, allowedB1, allowedB2, allowedB3, allowedB4;
+        var masterallow1, masterallow2;
+        var prevstat = csts;
+        clearErrors();
+        document.getElementById("customalert").innerHTML = " ";
+        document.getElementById("customalert2").innerHTML = " ";
+        document.getElementById("customalert3").innerHTML = " ";
+        document.getElementById("customalert4").innerHTML = " ";
+        if((cdnum.value != "" && coderegex.test(cdnum.value)) && (cdname.value != "" && nameregex.test(cdname.value)) 
+          && (adres.value != "" && addressregex.test(adres.value)) && bdate.value != "" && (grnm.value != "" && nameregex.test(grnm.value))
+          && (grph.value != "" && phoneregex.test(grph.value)) && cstat.value != "unselected"){
+           const getRef = doc(db, "cards", carddoc);
+           var bday = formatDate(bdate.value);
+           document.getElementById("customalert").innerHTML = " ";
+           const updatedpwdcarddata = {};
+           var newregadds = regadrs;
+           var filterupdate1 = newregadds.match(/Barangay (.*$)/)[1];
+           var givenbday = formatDate(btday);
+           var newbday = formatDate(bdate.value);
+           var newisdate = formatDate2(idate.value);
+           if(cstat.value != csts){
+              const newstat = {cardstatus: cstat.value};
+              Object.assign(updatedpwdcarddata, newstat);
+           }
+           if(appuse.value == "Walk-in submission"){
+              isWalkIn = true;
+              isDraft = false;
+              masterallow2 = true;
+           }else{
+              isWalkIn = false;
+              masterallow2 = false;
+              if(cstat.value == "DRAFT"){isDraft = true;}else if(cstat.value != "DRAFT"){isDraft = false;}
+              else if(cstat.value == "PENDING_REPRINT"){isReprinting = true;}else if(cstat.value != "PENDING_REPRINT"){isReprinting = false;}
+              if(mfile != mpath.value){
+                if(mfile != undefined){
+                  if(mpath.value != "" && isDraft == false){
+                      const newmed = {medicertpath: mpath.value};
+                      Object.assign(updatedpwdcarddata, newmed);
+                      allowedB1 = true;
+                  }else if(mpath.value == "" && isDraft == false){
+                      document.getElementById("ert12").innerHTML = "Medical certificate is required, Please specify a file name."; 
+                      mpath.style.border = "2px solid red";
+                      allowedB1 = false;
+                  }else if(mpath.value == "" && isDraft == true){
+                      const newmed = {medicertpath: deletefield()};
+                      Object.assign(updatedpwdcarddata, newmed);
+                      allowedB1 = true;
+                  }
+                }
+              }else{allowedB1 = true;}
+              if(bfile != bpath.value){
+                if(bfile != undefined){
+                  if(bpath.value != "" && isDraft == false){
+                      const newbct = {psacertpath: bpath.value};
+                      Object.assign(updatedpwdcarddata, newbct);
+                      allowedB2 = true;
+                  }else if(bpath.value == "" && isDraft == false){
+                      document.getElementById("ert13").innerHTML = "Birth/marriage certificate is required, Please specify a file name."; 
+                      bpath.style.border = "2px solid red";
+                      allowedB2 = false;
+                  }else if(bpath.value == "" && isDraft == true){
+                      const newbct = {psacertpath: deleteField()};
+                      Object.assign(updatedpwdcarddata, newbct);
+                      allowedB2 = true;
+                  }
+                }
+              }else{allowedB2 = true;}
+              if(brfile != rpath.value){
+                if(brfile != undefined){
+                  if(rpath.value != "" && isDraft == false){
+                    const newrct = {brycertpath: rpath.value};
+                    Object.assign(updatedpwdcarddata, newrct);
+                    allowedB3 = true;
+                  }else if(rpath.value == "" && isDraft == false){
+                    document.getElementById("ert14").innerHTML = "Barangay certificate is required, Please specify a file name."; 
+                    rpath.style.border = "2px solid red";
+                    allowedB3 = false;
+                  }else if(rpath.value == "" && isDraft == true){
+                    const newrct = {brycertpath: deleteField()};
+                    Object.assign(updatedpwdcarddata, newrct);
+                    allowedB3 = true;
+                  }
+                }
+              }else{allowedB3 = true;}
+              if(photo != ipath.value){
+                if(photo != undefined){
+                  if(ipath.value != "" && isDraft == false){
+                    const newpho = {imagefilepath: ipath.value};
+                    Object.assign(updatedpwdcarddata, newpho);
+                    allowedB4 = true;
+                  }else if(ipath.value == "" && isDraft == false){
+                    document.getElementById("ert15").innerHTML = "Image of PWD required, Please specify a file name."; 
+                    ipath.style.border = "2px solid red";
+                    allowedB4 = false;
+                  }else if(ipath.value == "" && isDraft == true){
+                    const newpho = {imagefilepath: deleteField()};
+                    Object.assign(updatedpwdcarddata, newpho);
+                    allowedB4 = true;
+                  }
+                }
+              }else{allowedB4 = true;}
+              if(afls != apath.value){
+                if(afls != undefined){
+                  if(apath.value != "" && isReprinting == true){
+                    const newafl = {affidavitpath: apath.value};
+                    Object.assign(updatedpwdcarddata, newafl);
+                    allowedB4 = true;
+                  }else if(apath.value == "" && isReprinting == true){
+                    document.getElementById("ert16").innerHTML = "Affidavit of loss file is required for cards with pending reprint, Please specify a file name."; 
+                    apath.style.border = "2px solid red";
+                    allowedB4 = false;
+                  }else if(apath.value == "" && isReprinting == false){
+                    const newafl = {affidavitpath: deleteField()};
+                    Object.assign(updatedpwdcarddata, newafl);
+                    allowedB4 = true;
+                  }
+                }
+              }else{allowedB4 = true;}
+              if(sign != spath.value){
+                if(spath.value != ""){
+                  const newsig = {esignpath: spath.value};
+                  Object.assign(updatedpwdcarddata, newsig);
+                  allowedB4 = true;
+                }
+              }
+              if(allowedB1 && allowedB2 && allowedB3 && allowedB4){masterallow2 = true}else{masterallow2 = false}
+           }
+           if(newregadds != adres.value){
+              const newadds = {registrantaddress: adres.value};
+              Object.assign(updatedpwdcarddata, newadds);
+              let typedadds = adres.value;
+              var filterupdate2 = typedadds.match(/Barangay (.*$)/)[1];
+              if(filterupdate1 != filterupdate2){
+                var bcode = determineBrgyCode(filterupdate2);
+                var grn = randNumGen();
+                var cardnum = [basecardnum, bcode, grn].join("-");
+                const newcardnum = {};
+                if(isDraft != true || isWalkIn == true){newcardnum.cardnumber = cardnum;}else{newcardnum.cardnumber = "To be assigned.";}
+                Object.assign(updatedpwdcarddata, newcardnum);
+              }
+           }
+           if(cdname.value != caname){
+              const newname = {registrantfullname: cdname.value};
+              Object.assign(updatedpwdcarddata, newname);
+           }
+           if(dtype.value != distype){
+              if(isDraft == true && dtype.value == "unselected"){
+                const updatedis = {disabilitytype: "n.a."};
+                Object.assign(updatedpwdcarddata, updatedis);
+                allowedA1 = true;
+              }else if(isDraft == false && dtype.value == "unselected"){
+                document.getElementById("ert6").innerHTML = "Please specify disability for non-draft records."; 
+                dtype.style.border = "2px solid red";
+                allowedA1 = false;
+              }else if((isDraft == false || isDraft == true) && dtype.value != "unselected"){
+                const updatedis = {disabilitytype: dtype.value};
+                Object.assign(updatedpwdcarddata, updatedis);
+                allowedA1 = true;
+              }         
+           }else{allowedA1 = true;}
+           if(gndr.value != gend){
+              if(isDraft == true && gndr.value == "unselected"){
+                const updategend = {registrantgender: "n.a."};
+                Object.assign(updatedpwdcarddata, updategend);
+                allowedA2 = true;
+              }else if(isDraft == false && gndr.value == "unselected"){
+                document.getElementById("ert7").innerHTML = "Please specify gender for non-draft records."; 
+                gndr.style.border = "2px solid red";
+                allowedA2 = false;
+              }else if((isDraft == false || isDraft == true) && gndr.value != "unselected"){
+                const updategend = {registrantgender: gndr.value};
+                Object.assign(updatedpwdcarddata, updategend);
+                allowedA2 = true;
+              }  
+           }else{allowedA2 = true;}
+           if(btype.value != bltp){
+              if(isDraft == true && btype.value == "unselected"){
+                const updatebtype = {registrantbloodtype: "n.a."};
+                Object.assign(updatedpwdcarddata, updatebtype);
+                allowedA3 = true;
+              }else if(isDraft == false && btype.value == "unselected"){
+                document.getElementById("ert8").innerHTML = "Please specify blood type for non-draft records."; 
+                btype.style.border = "2px solid red";
+                allowedA3 = false;
+              }else if((isDraft == false || isDraft == true) && btype.value != "unselected"){
+                const updatebtype = {registrantbloodtype: btype.value};
+                Object.assign(updatedpwdcarddata, updatebtype);
+                allowedA3 = true;
+              }
+           }else{allowedA3 = true;}
+           if(allowedA1 && allowedA2 && allowedA3){masterallow1 = true}else{masterallow1 = false}
+           if(newbday != givenbday){
+              const updatebdate = {registrantbirthday: newbday};
+              Object.assign(updatedpwdcarddata, updatebdate);
+           }
+           if(grnm.value != gname){
+              const newguardian = {guardianname: grnm.value};
+              Object.assign(updatedpwdcarddata, newguardian);
+           }
+           if(grph.value != gphone){
+              const newguardphone = {guardianphone: grph.value};
+              Object.assign(updatedpwdcarddata, newguardphone);
+           }
+           if(!isObjectEmpty(updatedpwdcarddata) && (masterallow1 == true && masterallow2 == true)){
+              await updateDoc(getRef, updatedpwdcarddata).then(()=>{
+                  /*if(isDraft != false || (cstat.value == "RENEW_DRAFT" || cstat.value == "PENDING_REPRINT")){
+                     updateCount(docRef1, 1);
+                  }*/
+                  appuse.disabled = false;
+                  appuse.selectedIndex = 0;
+                  document.getElementById("customalert").innerHTML = "Data updated successfully."; 
+                  document.getElementById("customalert").style.color = "midnightblue";
+                  cdcode.value = codeval;
+                  cdnum.value = "";
+                  cdname.value = "";
+                  dtype.selectedIndex = 0;
+                  adres.value = "";
+                  gndr.selectedIndex = 0;
+                  btype.selectedIndex = 0;
+                  bdate.value = "";
+                  grnm.value = "";
+                  grph.value = "";
+                  grph.value = "";
+                  cstat.selectedIndex = 0;
+                  mpath.value = "";
+                  bpath.value = "";
+                  rpath.value = "";
+                  ipath.value = "";
+                  apath.value = "";
+                  spath.value = "";
+                  idate.value = "";
+                  rdate.value = "";
+                  scno.innerHTML = "";
+                  scna.innerHTML = "";
+                  scds.innerHTML = "";
+                  scad.innerHTML = "";
+                  scgn.innerHTML = "";
+                  scbt.innerHTML = "";
+                  scbd.innerHTML = "";
+                  scdi.innerHTML = "";
+                  scnm.innerHTML = "";
+                  scph.innerHTML = "";
+                  scim.style.visibility = "hidden";
+                  scim.src = "";
+                  scsi.style.visibility = "hidden";
+                  scsi.src = ""; 
+              })
+              .catch((error)=>{
+                  document.getElementById("customalert").innerHTML = "Update failed, please try again."; 
+                  document.getElementById("customalert").style.color = "red";
+              })
+           }else{
+             if(isObjectEmpty(updatedpwdcarddata)){
+                document.getElementById("customalert").innerHTML = "All the values are the same, Please change any of these to update."; 
+                document.getElementById("customalert").style.color = "red";
+             }
+           } 
+        }else{
+          if(cdname.value == ""){document.getElementById("ert3").innerHTML = "This field is required."; cdname.style.border = "2px solid red";}
+          else if(!nameregex.test(cdname.value)){document.getElementById("ert3").innerHTML = "Value has invalid characters."; cdname.style.border = "2px solid red";}
+          if(adres.value == ""){document.getElementById("ert4").innerHTML = "This field is required."; adres.style.border = "2px solid red";}
+          else if(!addressregex.test(adres.value)){document.getElementById("ert4").innerHTML = "Value has invalid characters."; adres.style.border = "2px solid red";}
+          if(bdate.value == ""){document.getElementById("ert5").innerHTML = "This field is required."; bdate.style.border = "2px solid red";}
+          if(dtype.value == "unselected"){document.getElementById("ert6").innerHTML = "This field is required."; dtype.style.border = "2px solid red";}
+          if(gndr.value == "unselected"){document.getElementById("ert7").innerHTML = "This field is required."; gndr.style.border = "2px solid red";}
+          if(btype.value == "unselected"){document.getElementById("ert8").innerHTML = "This field is required."; btype.style.border = "2px solid red";}
+          if(cstat.value == "unselected"){document.getElementById("ert9").innerHTML = "This field is required."; cstat.style.border = "2px solid red";}
+          if(grnm.value == ""){document.getElementById("ert10").innerHTML = "This field is required."; grnm.style.border = "2px solid red";}
+          else if(!nameregex.test(grnm.value)){document.getElementById("ert10").innerHTML = "Value has invalid characters."; grnm.style.border = "2px solid red";}
+          if(grph.value == ""){document.getElementById("ert11").innerHTML = "This field is required."; grph.style.border = "2px solid red";}
+          else if(!phoneregex.test(grph.value)){document.getElementById("ert11").innerHTML = "Value has invalid characters."; grph.style.border = "2px solid red";}
+        } 
+      }
+      
+      var doctodelete;
+      const archiveCardData = async() => {
+        if((cdname.value != "" && nameregex.test(cdname.value)) && (adres.value != "" && addressregex.test(adres.value))
+          && dtype.value != "unselected" && gndr.value != "unselected" && btype.value != "unselected" && bdate.value != ""
+          && (grnm.value != "" && nameregex.test(grnm.value)) && (grph.value != "" && phoneregex.test(grph.value)) && cstat.value != ""){
+          const checkRef = query(collection(db, "cards"), where("registrantfullname", "==", cdname.value), where(cstat.value, "==", "PENDING_RENEWAL"));
+          const countsnapshot1 = await getCountFromServer(checkRef);
+          if(countsnapshot1.data().count == 0){
+            document.getElementById("customalert").innerHTML = " ";
+            document.getElementById("customalert2").innerHTML = " ";
+            document.getElementById("customalert3").innerHTML = " ";
+            document.getElementById("customalert4").innerHTML = " ";
+            clearErrors();
+            if (confirm("Archive card data?") == true){
+              var bdayarch = formatDate(bdate.value);
+              var issuearch = formatDate2(idate.value);
+              const archivedcarddata = {
+                appuserID: appuse.value,
+                cardnumber: cdnum.value,
+                registrantfullname: cdname.value,
+                disabilitytype: dtype.value,
+                registrantaddress: adres.value,
+                registrantgender: gndr.value,
+                registrantbloodtype: btype.value,
+                registrantbirthday: bdayarch,
+                guardianname: grnm.value,
+                guardianphone: grph.value,
+                dateofissue: issuearch,
+                renewaldate: rdate.value
+              }
+              if(mpath.value != ""){
+                const newmed = {medicertpath: mpath.value};
+                Object.assign(archivedcarddata, newmed);
+              }
+              if(bpath.value != ""){
+                const newbct = {psacertpath: bpath.value};
+                Object.assign(archivedcarddata, newbct);
+              }
+              if(rpath.value != ""){
+                const newrct = {brycertpath: rpath.value};
+                Object.assign(archivedcarddata, newrct);
+              }
+              if(ipath.value != ""){
+                const newpho = {imagefilepath: ipath.value};
+                Object.assign(archivedcarddata, newpho);
+              }
+              if(apath.value != ""){
+                const newafl = {affidavitpath: apath.value};
+                Object.assign(archivedcarddata, newafl);
+              }
+              if(spath.value != ""){
+                const newsig = {esignpath: spath.value};
+                Object.assign(archivedcarddata, newsig);
+              }
+              await setDoc(doc(db, "archived_cards", cdcode.value), archivedcarddata).then(()=>{
+                document.getElementById("customalert").innerHTML = "Data archived successfully."; 
+                document.getElementById("customalert").style.color = "midnightblue";
+                deleteCardData(cdcode.value);
+              }).catch((error)=>{
+                document.getElementById("customalert").innerHTML = "Failed to archive card info, please try again.";
+                document.getElementById("customalert").style.color = "red";
+                console.log(error);
+              })
+            }else{
+               if(cstat.value != "PENDING_RENEWAL"){
+                  document.getElementById("ert9").innerHTML = "You cannot archive cards that are still active, Please select one that is under pending renewal."
+                  cstat.style.border = "2px solid red";
+               }
+            }
+          }
+        }else{
+          if(cdname.value == ""){document.getElementById("ert3").innerHTML = "This field is required."; cdname.style.border = "2px solid red";}
+          else if(!nameregex.test(cdname.value)){document.getElementById("ert3").innerHTML = "Value has invalid characters."; cdname.style.border = "2px solid red";}
+          if(adres.value == ""){document.getElementById("ert4").innerHTML = "This field is required."; adres.style.border = "2px solid red";}
+          else if(!addressregex.test(adres.value)){document.getElementById("ert4").innerHTML = "Value has invalid characters."; adres.style.border = "2px solid red";}
+          if(bdate.value == ""){document.getElementById("ert5").innerHTML = "This field is required."; bdate.style.border = "2px solid red";}
+          if(dtype.value == "unselected"){document.getElementById("ert6").innerHTML = "This field is required."; dtype.style.border = "2px solid red";}
+          if(gndr.value == "unselected"){document.getElementById("ert7").innerHTML = "This field is required."; gndr.style.border = "2px solid red";}
+          if(btype.value == "unselected"){document.getElementById("ert8").innerHTML = "This field is required."; btype.style.border = "2px solid red";}
+          if(cstat.value == "unselected"){document.getElementById("ert9").innerHTML = "This field is required."; cstat.style.border = "2px solid red";}
+          if(grnm.value == ""){document.getElementById("ert10").innerHTML = "This field is required."; grnm.style.border = "2px solid red";}
+          else if(!nameregex.test(grnm.value)){document.getElementById("ert10").innerHTML = "Value has invalid characters."; grnm.style.border = "2px solid red";}
+          if(grph.value == ""){document.getElementById("ert11").innerHTML = "This field is required."; grph.style.border = "2px solid red";}
+          else if(!phoneregex.test(grph.value)){document.getElementById("ert11").innerHTML = "Value has invalid characters."; grph.style.border = "2px solid red";}
+        }
+      }
+      
+      async function deleteCardData(doctodelete){
+          await deleteDoc(doc(db, "cards", doctodelete)
+          ).then(()=>{
+              appuse.disabled = false;
+              appuse.selectedIndex = 0;
+              cdcode.value = codeval;
+              cdnum.value = "";
+              cdname.value = "";
+              dtype.selectedIndex = 0;
+              adres.value = "";
+              gndr.selectedIndex = 0;
+              btype.selectedIndex = 0;
+              bdate.value = "";
+              grnm.value = "";
+              grph.value = "";
+              cstat.selectedIndex = 0;
+              mpath.value = "";
+              bpath.value = "";
+              rpath.value = "";
+              ipath.value = "";
+              apath.value = "";
+              spath.value = "";
+              idate.value = "";
+              rdate.value = "";
+              scno.innerHTML = "";
+              scna.innerHTML = "";
+              scds.innerHTML = "";
+              scad.innerHTML = "";
+              scgn.innerHTML = "";
+              scbt.innerHTML = "";
+              scbd.innerHTML = "";
+              scdi.innerHTML = "";
+              scnm.innerHTML = "";
+              scph.innerHTML = "";
+              scim.style.visibility = "hidden";
+              scim.src = "";
+              scsi.style.visibility = "hidden";
+              scsi.src = "";
+          })
+          .catch((error)=>{
+              document.getElementById("customalert").innerHTML = "Something wrong happened, please try again."; 
+              document.getElementById("customalert").style.color = "red";
+              console.log(error);
+        })      
+      }
+      
+      const downloadMedPDF = async() => {
+        document.getElementById("customalert").innerHTML = " "; 
+        clearErrors();
+        if(mpath.value != ""){
+          const medRef = ref(storage, mpath.value);
+          const medblob = await getBlob(medRef);
+
+          const medurl = URL.createObjectURL(medblob);
+          window.open(medurl, "_blank");
+        }else{
+           document.getElementById("ert12").innerHTML = "Document not found, Please specify file path correctly."; 
+           mpath.style.border = "2px solid red";
+        }      
+      }
+      
+      const downloadPSAPDF = async() => {
+        document.getElementById("customalert").innerHTML = " "; 
+        clearErrors();
+        if(bpath.value != ""){
+          const birthRef = ref(storage, bpath.value);
+          const psablob = await getBlob(birthRef);
+
+          const psaurl = URL.createObjectURL(psablob);
+          window.open(psaurl, "_blank");
+        }else{
+          document.getElementById("ert13").innerHTML = "Document not found, Please specify file path correctly."; 
+          bpath.style.border = "2px solid red";
+        }       
+      }
+      
+      const downloadBrgyPDF = async() => {
+        document.getElementById("customalert").innerHTML = " "; 
+        clearErrors();
+        if(rpath.value != ""){
+          const brgyRef = ref(storage, rpath.value);
+          const brgyblob = await getBlob(brgyRef);
+          const brgyurl = URL.createObjectURL(brgyblob);
+          window.open(brgyurl, "_blank");
+        }else{
+           document.getElementById("ert14").innerHTML = "Document not found, Please specify file path correctly."; 
+           rpath.style.border = "2px solid red";
+        }       
+      }
+
+      const downloadPhoto = async() => {
+        document.getElementById("customalert").innerHTML = " "; 
+        clearErrors();
+        if(ipath.value != ""){
+          const imgRef = ref(storage, ipath.value);
+          const path = imgRef.fullPath;
+          await getDownloadURL(imgRef).then((url) => {
+             scim.style.visibility = "visible";
+             scim.src = url;
+          }).catch((error) => {
+            console.log(error);
+          });
+        }else{
+           document.getElementById("ert15").innerHTML = "Image not found, Please specify file path correctly."; 
+           ipath.style.border = "2px solid red";
+        }       
+      }
+      
+      const downloadAffidavit = async() => {
+        document.getElementById("customalert").innerHTML = " "; 
+        clearErrors();
+        if(apath.value != ""){
+          const affiRef = ref(storage, apath.value);
+          const affiblob = await getBlob(affiRef);
+
+          const affiurl = URL.createObjectURL(affiblob);
+          window.open(affiurl, "_blank");
+        }else{
+           document.getElementById("ert16").innerHTML = "Document not found, Please specify file path correctly."; 
+           apath.style.border = "2px solid red";
+        }       
+      }
+      
+      const downloadSignature  = async() => {
+        document.getElementById("customalert").innerHTML = " "; 
+        clearErrors();
+        if(spath.value != ""){
+          const esignRef = ref(storage, spath.value);
+          const esignblob = await getBlob(esignRef);
+          
+          await getDownloadURL(esignRef).then((url) => {
+             scsi.style.visibility = "visible";
+             scsi.src = url;
+          }).catch((error) => {
+            console.log(error);
+          });
+        }else{
+           document.getElementById("ert17").innerHTML = "E-signature not found, Please specify file path correctly."; 
+           spath.style.border = "2px solid red";
+        }
+      }
+      
+      const resetFormFields = async() => {
+        document.getElementById("customalert").innerHTML = " ";
+        clearErrors();
+        appuse.disabled = false;
+        appuse.selectedIndex = 0;
+        cdcode.value = codeval;
+        cdnum.value = "";
+        cdname.value = "";
+        dtype.selectedIndex = 0;
+        adres.value = "";
+        gndr.selectedIndex = 0;
+        btype.selectedIndex = 0;
+        bdate.value = "";
+        grnm.value = "";
+        grph.value = "";
+        grph.value = "";
+        cstat.selectedIndex = 0;
+        mpath.value = "";
+        bpath.value = "";
+        rpath.value = "";
+        ipath.value = "";
+        idate.value = "";
+        rdate.value = "";
+        scno.innerHTML = "";
+        scna.innerHTML = "";
+        scds.innerHTML = "";
+        scad.innerHTML = "";
+        scgn.innerHTML = "";
+        scbt.innerHTML = "";
+        scbd.innerHTML = "";
+        scdi.innerHTML = "";
+        scnm.innerHTML = "";
+        scph.innerHTML = "";
+        scim.style.visibility = "hidden";
+        scim.src = "";
+        scsi.style.visibility = "hidden";
+        scsi.src = "";
+      }
+
+      searchrun.addEventListener('click', searchQuery);
+
+      getmed.addEventListener('click', downloadMedPDF);
+      getbcert.addEventListener('click', downloadPSAPDF);
+      getbrcert.addEventListener('click', downloadBrgyPDF);
+      getimg.addEventListener('click', downloadPhoto);
+      getaffi.addEventListener('click', downloadAffidavit);
+      getsign.addEventListener('click', downloadSignature);
+
+      getcard.addEventListener('click', getCardData);
+      addcard.addEventListener('click', addCardData);
+      updatecard.addEventListener('click', updateCardData);
+      archivecard.addEventListener('click', archiveCardData);
+      resetform.addEventListener('click', resetFormFields);
+      
+      signout.addEventListener('click', signOutUser);
+    </script>
+  </body>
+</html>

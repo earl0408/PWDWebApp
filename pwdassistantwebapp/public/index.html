@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PWDAssistant</title>
+
+    <!-- Latest compiled and minified CSS --> 
+      <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"> 
+    <!-- jQuery library --> 
+      <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script> 
+    <!-- Popper JS --> 
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script> 
+    <!-- Latest compiled JavaScript --> 
+      <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <!-- Font Awesome 6 Icon Library --> 
+      <link rel="stylesheet" href="css/all.min.css"> 
+      <link rel="stylesheet" href="css/fontawesome.min.css">
+      <script src="https://kit.fontawesome.com/3b9f69c096.js" crossorigin="anonymous"></script> 
+
+    <link rel="stylesheet" href="css/indexstyle.css"/>
+    <link rel="icon" type="image/png" href="images/appmainlogo.png" sizes="48x48"/>
+  </head>
+
+  <body> 
+    <div class="sitetitle">
+        <img src="images/appmainlogo.png">
+        <span class="logo-name">PWDAssistant</span>
+    </div>
+
+    <div class="interfacebuttons">
+        <a href="logsign.html" class="square-button" id="webapp">
+            <span class="icon"><i class="fas fa-user-gear"></i></span>
+            <span class="text">Admin Web App</span>
+        </a>
+        <a href="walkinform.html" class="square-button" id="winform">
+            <span class="icon"><i class="fa-solid fa-file-arrow-up"></i></span>
+            <span class="text">Walk-in Form</span>
+        </a>
+        <a href="queuedisplay.html" class="square-button" id="display">
+            <span class="icon"><i class="fas fa-tv"></i></span>
+            <span class="text">Queue Display</span>
+        </a>
+    </div>
+    
+    <script>
+      document.getElementById('display').addEventListener('click', function(event) {
+          event.preventDefault();
+          window.open(this.href, '_blank');
+      });
+    </script>
+   
+  </body>
+</html>

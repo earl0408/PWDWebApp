@@ -1,0 +1,674 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>PWDAssistant</title>
+
+     <!-- Latest compiled and minified CSS --> 
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"> 
+     <!-- jQuery library --> 
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script> 
+     <!-- Popper JS --> 
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script> 
+     <!-- Latest compiled JavaScript --> 
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+     <!-- Font Awesome 6 Icon Library --> 
+        <link rel="stylesheet" href="css/all.min.css"> 
+        <link rel="stylesheet" href="css/fontawesome.min.css">
+        <script src="https://kit.fontawesome.com/3b9f69c096.js" crossorigin="anonymous"></script>  
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="css/dashhomestyle.css"/>
+    <link rel="stylesheet" href="css/cardtablestyle.css"/>
+    <link rel="icon" type="image/png" href="images/appmainlogo.png" sizes="48x48"/>
+
+    <!-- Boxicons CSS -->
+    <link href="https://unpkg.com/boxicons@2.1.2/css/boxicons.min.css" rel="stylesheet"/>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/3.1.2/rollups/aes.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/3.1.2/rollups/pbkdf2.js"></script>
+  </head>
+  <body>
+    <nav>
+      <div class="logo">
+        <i class="fas fa-bars"></i>
+        <span class="logo-name">PWDAssistant</span>
+      </div>
+
+      <div class="sidebar">
+        <div class="logo">
+          <i class="fas fa-bars"></i>
+          <span class="logo-name">PWDAssistant</span>
+        </div>
+
+        <div class="sidebar-content">
+          <ul class="lists">
+            <li class="list">
+              <a href="dashboardhome.html" class="nav-link">
+                <i class="fas fa-house icon"></i>
+                <span class="link">Dashboard</span>
+              </a>
+            </li>
+            <li class="list">
+              <a href="chartanalysis.html" class="nav-link">
+                <i class="fas fa-chart-simple icon"></i>
+                <span class="link">Analytics</span>
+              </a>
+            </li>
+            <li class="list">
+              <a onclick="window.open('queuecaller.html', 'name', 'width=700', 'height=1200')" style="cursor: pointer;" class="nav-link">
+                <i class="fas fa-bell icon"></i>
+                <span class="link">Queue Caller</span>
+              </a>
+            </li>
+            <li class="list">
+              <a href="carduserslist.html" class="nav-link">
+                <i class="fas fa-id-card icon"></i>
+                <span class="link">Card Users List</span>
+              </a>
+            </li>
+            <li class="list">
+              <a href="scheduleslist.html" class="nav-link active">
+                <i class="fas fa-clock icon"></i>
+                <span class="link">Schedule List</span>
+              </a>
+            </li>
+            <li class="list">
+              <a href="uploadfiles.html" class="nav-link">
+                <i class="fas fa-file-import icon"></i>
+                <span class="link">Upload Files</span>
+              </a>
+            </li>
+            <li class="list">
+              <a href="updatepassword.html" class="nav-link">
+                <i class="fas fa-pen icon"></i>
+                <span class="link">Edit Account</span>
+              </a>
+            </li>
+          </ul>
+
+          <div class="bottom-cotent">
+            <li class="list">
+              <a href="#" class="nav-link">
+                <i class="fas fa-user icon"></i>
+                <span class="link" id="userspan"></span>
+              </a>
+            </li>
+            <li class="list">
+              <a href="#" class="nav-link">
+                <i class="bx bx-log-out icon"></i>
+                <span class="link" id="logout">Logout</span>
+              </a>
+            </li>
+          </div>
+        </div>
+      </div>
+    </nav>
+
+    <div class="searchbar">
+      <select class="fieldCBX" id="fieldselect">
+        <option value="unselected">Category</option>
+        <option value="specificcardnum">Card Number</option>
+        <option value="nameofcarduser">Full Name</option>
+        <option value="receivedateandtime">Receive Date And Time</option>
+        <option value="receivetype">Receive Type</option>
+      </select>
+      <input class="searchFLD" id="searchinput" type="text" placeholder="Search..." required
+        oninput="this.value = this.value.replace(/[^0-9A-Za-z.\!\?\^\'\/\:\_\,\$\s\-]/g, '');"/>
+      <button type="button" class="searchBTN" id="tosearch">Search</button> 
+    </div>
+    
+    <div class="printclick">
+        <button type="button" class="printtableBTN" id="printtable" onclick="createPDF()">Print Table</button>
+    </div>
+    
+    <div class="pdfcenter" id="pdfcenter">
+      <div class="tabletitle">
+        <h1 class="tabtitle">Scheduled Receives List</h1>
+      </div>    
+      
+      <div class="tablebox" id="tablebox">
+       <table id="carddatatable">
+        <thead>
+          <tr>
+            <th class="num">#</th>
+            <th>Schedule ID</th>
+            <th>Card Number</th>
+            <th class="name">Full Name</th>
+            <th class="address">Receive Date And Time</th>
+            <th class="bday">Receive Type</th>  
+          </tr>        
+        </thead>
+        <tbody id="listbody">
+  
+        </tbody>
+       </table>
+     </div>    
+    </div>
+    
+    <section class="overlay"></section>
+    
+    <div class="formdetails">
+      <h1 class="formtitle">Schedule Details</h1>
+      <form>
+        <div class="carduserinfo">
+          <label for="schedcode">Schedule ID:</label>
+          <div class="input-box">
+            <input type="text" class="schedcode" id="schedcode"
+             oninput="this.value = this.value.replace(/[^0-9A-Za-z\-]/g, '');">
+          </div>
+        </div>
+        <div class="carduserinfo">
+          <label for="appuser">App User:</label>
+          <div class="input-box">
+            <select class="appuser" id="appuser" required>
+              <option value="unselected">-------</option>
+              <option value="Walk-in submission">Walk-in submission</option>
+            </select>
+            <p class="errortext" id="schederr1"></p>
+          </div>
+        </div>
+        <div class="carduserinfo">
+          <label for="cardno">Card Number:</label>
+          <div class="input-box">
+            <input type="text" class="cardnum" id="cardno" placeholder="04-2106-###-####"
+             oninput="this.value = this.value.replace(/[^0-9\-]/g, '');">
+            <p class="errortext" id="schederr2"></p>
+          </div>
+        </div>
+        <div class="carduserinfo">
+          <label for="cardname">Full Name:</label>
+          <div class="input-box">
+            <input type="text" class="cardname" id="cardname" maxlength="80"
+             required oninput="this.value = this.value.replace(/[^A-Za-zñ.\-\s]/g, '');">
+            <p class="errortext" id="schederr3"></p>
+          </div>
+        </div>
+        <div class="carduserinfo">
+          <label for="rtype">Receive Type:</label>
+          <div class="input-box">
+            <select class="rtype" id="rtype" required>
+              <option value="unselected">-------</option>
+              <option value="CARD_CREATION">CARD_CREATION</option>
+              <option value="CARD_RENEWAL">CARD_RENEWAL</option>
+              <option value="CARD_REPRINT">CARD_REPRINT</option>
+            </select>
+            <p class="errortext" id="schederr4"></p>
+          </div>
+        </div>
+        <div class="receiveschedinfo">
+          <label for="recdate">Receive Date<br>And Time:</label>
+          <div class="input-box">
+            <input type="date" class="recdate" id="recdate">
+            <p style="font-size: 17px; margin: 0 12px; vertical-align: middle;">at</p>
+            <select class="rectime" id="rectime" required>
+              <option value="unselected">-------</option>
+              <option value="8:00AM to 8:30AM">8AM to 8:30AM</option>
+              <option value="8:30AM to 9:00AM">8:30AM to 9AM</option>
+              <option value="9:00AM to 9:30AM">9AM to 9:30AM</option>
+              <option value="9:30AM to 10:00AM">9:30AM to 10AM</option>
+              <option value="10:00AM to 10:30AM">10AM to 10:30AM</option>
+              <option value="10:30AM to 11:00AM">10:30 to 11AM</option>
+              <option value="11:00AM to 11:30AM">11AM to 11:30AM</option>
+              <option value="11:30AM to 12:00NN">11:30AM to 12NN</option>
+              <option value="12:00NN to 12:30PM">12NN to 12:30PM</option>
+              <option value="12:30PM to 1:00PM">12:30PM to 1PM</option>
+              <option value="1:00PM to 1:30PM">1PM to 1:30PM</option>
+              <option value="1:30PM to 2:00PM">1:30PM to 2PM</option>
+              <option value="2:00PM to 2:30PM">2PM to 2:30PM</option>
+              <option value="2:30PM to 3:00PM">2:30PM to 3PM</option>
+              <option value="3:00PM to 3:30PM">3PM to 3:30PM</option>
+              <option value="3:30PM to 4:00PM">3:30PM to 4PM</option>
+              <option value="4:00PM to 4:30PM">4PM to 4:30PM</option>
+              <option value="4:30PM to 5:00PM">4:30PM to 5PM</option>
+            </select>
+            <p class="errortext" id="schederr5"></p>
+          </div>
+        </div>
+        <div class="btnarray">
+            <button type="button" class="getinfoBTN" id="getscheddata">Get Schedule Data</button>
+            <button type="button" class="addinfoBTN" id="addscheddata">Add Schedule Data</button>
+            <button type="button" class="updateBTN" id="updatescheddata">Reschedule</button>
+            <button type="button" class="resetBTN" id="resetfields">Reset Fields</button>
+        </div>
+        <div class="customalert" id="customalert"></div>
+      </form>
+    </div>
+
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/3.1.9-1/crypto-js.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.0.0/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.5.3/jspdf.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.6/jspdf.plugin.autotable.min.js"></script>
+    <script>
+        function createPDF(){
+          var y = 10;
+          var doctab = new jsPDF('p', 'pt', 'letter');
+          var width = doctab.internal.pageSize.getWidth();
+          doctab.text('PWD Cards list', width/2, 30, { align: 'center' });
+          doctab.autoTable({ html: '#carddatatable', startY: 60, theme: 'grid'});
+          doctab.save('PWDCardsList.pdf');
+        }
+    </script>
+    <script type="module">
+      const navBar = document.querySelector("nav"),
+        menuBtns = document.querySelectorAll(".fa-bars"),
+        overlay = document.querySelector(".overlay");
+
+      menuBtns.forEach((menuBtn) => {
+        menuBtn.addEventListener("click", () => {
+          navBar.classList.toggle("open");
+        });
+      });
+
+      overlay.addEventListener("click", () => {
+        navBar.classList.remove("open");
+      });
+      
+      var useNo = 0;
+      var shbody = document.getElementById("listbody");
+
+      function AddDocToTable(schedcode, canum, cname, rdate, rtype){
+        let trow = document.createElement("tr");
+        let td1 = document.createElement("td");
+        let td2 = document.createElement("td");
+        let td3 = document.createElement("td");
+        let td4 = document.createElement("td");
+        let td5 = document.createElement("td");
+        let td6 = document.createElement("td");
+
+        td1.innerHTML = useNo++;
+        td2.innerHTML = schedcode;
+        td3.innerHTML = canum;
+        td4.innerHTML = cname;
+        td5.innerHTML = rdate;
+        td6.innerHTML = rtype;
+
+        trow.appendChild(td1);
+        trow.appendChild(td2);
+        trow.appendChild(td3);
+        trow.appendChild(td4);
+        trow.appendChild(td5);
+        trow.appendChild(td6);
+
+        shbody.appendChild(trow);
+      }
+
+      function AddAllDocsToTable(ScheduleReceives){
+        useNo = 1;
+        shbody.innerHTML = "";
+        ScheduleReceives.forEach(element => {
+           AddDocToTable(element.id, element.data.specificcardnum, element.data.nameofcarduser,
+                         element.data.receivedateandtime, element.data.receivetype);
+        });
+      }
+      
+      function formatRecDate(date) {
+        var d = new Date(date),
+          month = '' + (d.getMonth() + 1),
+          day = '' + d.getDate(),
+          year = d.getFullYear();
+
+        if (month.length < 2) 
+          month = '0' + month;
+        if (day.length < 2) 
+          day = '0' + day;
+
+        return [month, day, year].join('/');
+      }
+      
+      function makeID(length) {
+        let result = '';
+        const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+        const charactersLength = characters.length;
+        let counter = 0;
+        while (counter < length) {
+          result += characters.charAt(Math.floor(Math.random() * charactersLength));
+          counter += 1;
+        }
+        return result;
+      }
+
+      var alphnum1 = makeID(5);
+      var alphnum2 = makeID(5);
+      var alphnum3 = makeID(5);
+      var scodeval = alphnum1 + "-" + alphnum2 + "-" + alphnum3;
+
+      import {initializeApp} from "https://www.gstatic.com/firebasejs/9.22.1/firebase-app.js";
+       
+      const firebaseConfig = {
+        apiKey: "AIzaSyCDNLsVNK45kH5PRCaXBw3wV9Nkw2jGdv8",
+        authDomain: "pwdcardregisterapp.firebaseapp.com",
+        databaseURL: "https://pwdcardregisterapp-default-rtdb.firebaseio.com",
+        projectId: "pwdcardregisterapp",
+        storageBucket: "pwdcardregisterapp.appspot.com",
+        messagingSenderId: "1097703662378",
+        appId: "1:1097703662378:web:d66126bbf452d5c290f453"
+      };
+
+      const app = initializeApp(firebaseConfig);
+
+      import {getFirestore, doc, getDoc, getDocs, setDoc, count, getCountFromServer, collection, query, onSnapshot, where, addDoc, updateDoc, deleteDoc, deleteField, limit} from "https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore.js";
+      import {getStorage, ref, getDownloadURL, getBlob} from "https://www.gstatic.com/firebasejs/9.22.1/firebase-storage.js";
+      import {getAuth, onAuthStateChanged, signOut} from "https://www.gstatic.com/firebasejs/9.22.1/firebase-auth.js";
+
+      const db = getFirestore(app);
+      const storage = getStorage(app);
+      const auth = getAuth(app);
+      
+      var user = document.getElementById("userspan");
+      
+      const signout = document.querySelector("#logout");
+      
+      const appuse = document.querySelector("#appuser");
+      const cdnum = document.querySelector("#cardno");
+      const cdname = document.querySelector("#cardname");
+      const rectype = document.querySelector("#rtype");
+      const rcidate = document.querySelector("#recdate");
+      const rcitime = document.querySelector("#rectime");
+      
+      const searchrun = document.querySelector("#tosearch");
+      
+      const getschedule = document.querySelector("#getscheddata");
+      const addschedule = document.querySelector("#addscheddata");
+      const updateschedule = document.querySelector("#updatescheddata");
+      const resetform = document.querySelector("#resetfields");
+
+      const docref1 = doc(db, "stats_count", "--NewCardCount--");
+      const docref2 = doc(db, "stats_count", "--RenewalCount--");
+      const docref3 = doc(db, "stats_count", "--ReprintCount--");
+      
+      var scheddoc = "";
+      
+      onAuthStateChanged(auth, (user) => {
+        if (user) {
+         const uemail = user.email;
+         userspan.innerHTML = uemail;
+        } else {
+         window.location.href = "logsign.html";
+        }
+      })
+      
+      const signOutUser = async() => {
+        signOut(auth).then(() => {
+           window.location.href = "logsign.html";
+        }).catch((error) => {
+           alert("Sign out not working, please try again");
+        }); 
+      }
+      
+      async function GetAllOfData(){
+        const querySnapshot = query(collection(db, "schedule_receives"), where("appuserID", "!=", ""));
+
+        var schedule_receives = [];
+
+        querySnapshot.forEach(doc => {
+          schedule_receives.push(doc.data());
+        });
+
+        for(let row of tbl.rows) {
+            
+           console.log(row.cells[1].innerHTML);
+        }
+
+        AddAllDocsToTable(schedule_receives);
+      }
+
+      async function DataUpdateRealtime(){
+        const dbRef = query(collection(db, "schedule_receives"), where("appuserID", "!=", ""));
+        const dbRef2 = query(collection(db, "app_users"), where("fullname", "!=", ""));
+
+        onSnapshot(dbRef,(querySnapshot) => {
+          var schedule_receives = [];
+
+          querySnapshot.forEach(doc => {
+            schedule_receives.push({ id: doc.id, data: doc.data() });
+          });
+          AddAllDocsToTable(schedule_receives);
+        })
+        
+        onSnapshot(dbRef2,(querySnapshot2) => {
+          var app_users = [];
+          
+          querySnapshot2.forEach(doc => {
+            app_users.push(doc.data().fullname);
+          });
+          app_users.forEach(app_user => {
+            const useoption = document.createElement('option');
+            useoption.text = app_user;
+            useoption.value = app_user;
+            appuse.appendChild(useoption);
+          });
+        })
+      }
+
+      window.onload = DataUpdateRealtime;
+
+      const searchQuery = async() => {
+        const catg = category.value;
+        const srchterm = searchterm.value;
+        
+        if(catg != "unselected" && srchterm != ""){
+           const sq = query(collection(db, "schedule_receives"), where("appuserID", "!=", ""), where(catg, "==", srchterm));
+           onSnapshot(sq,(querySnapshot) => {
+              var schedule_receives = [];
+
+              querySnapshot.forEach(doc =>{
+                schedule_receives.push(doc.data());
+              });
+           AddAllDocsToTable(schedule_receives);
+           })
+        }else if(catg == "unselected" || srchterm == ""){
+           alert("Please select category or type the search key and try again.");    
+        }
+      }
+      
+      async function getAppUser(appuser){
+        const appusesnap = doc(db, "app_users", appuser);
+        try {
+          const userSnapshot = await getDoc(appusesnap);
+          if (userSnapshot.exists){
+              appuse.value = userSnapshot.data().fullname;
+          }else{
+              document.getElementById("customalert").innerHTML = "Something wrong happened, please try again.";
+              document.getElementById("customalert").style.color = "red";
+          }
+        }catch(error){
+            document.getElementById("customalert").innerHTML = "Something wrong happened, please try again.";
+            document.getElementById("customalert").style.color = "red";
+        }
+      }
+      
+      async function updateCount(reference, step){
+        await updateDoc(reference, {total: increment(step)});         
+      }
+      
+      let useID, cdno, crdnm, recty, redt;
+
+      const getScheduleData = async() => {
+        clearSchedErrors();
+        if(schedcode.value != ""){
+          const getRef = doc(db, "schedule_receives", schedcode.value);
+    
+          onSnapshot(getRef,(doc) => {
+              const data = doc.data();
+              scheddoc = doc.id;
+              getAppUser(data.appuserID);
+              appuse.disabled = true;
+              cdnum.value = doc.data().specificcardnum;
+              cdname.value = doc.data().nameofcarduser;
+              rectype.value = doc.data().receivetype;
+              rdatetime.value = doc.data().receivedateandtime;
+              cdno = doc.data().specificcardnum;
+              crdnm = doc.data().nameofcarduser;
+              recty = doc.data().receivetype;
+              redt = doc.data().receivedateandtime;
+          }) 
+        }else{
+           document.getElementById("customalert").innerHTML = "Please enter a valid card number.";  
+        }   
+      }
+      
+      var nameregex = /[A-Za-z\s.]{7,85}/;
+      
+      const addSchedule = async() => {
+        var getcardnum, apsrid;
+        var allow;
+        clearSchedErrors();
+        document.getElementById("customalert").innerHTML = " ";
+        if(appuse.value != "unselected" && cdname.value != "" && rectype.value != "unselected" && rcidate.value != "" && rcitime.value != "unselected"){
+            const numquery = query(collection(db, "cards"), where("registrantfullname", "==", cdname.value), limit(1));
+            const numSnapshot = await getDocs(numquery);
+            numSnapshot.forEach((doc) => {getcardnum = doc.data().cardnumber;});
+            const checkType = query(collection(db, "schedule_receives"), where("receivetype", "==", "CARD_CREATION"), limit(1));
+            const chkcrtSnapshot = await getCountFromServer(checkType);
+            if(chkcrtSnapshot.data().count > 0 && rectype.value == "CARD_CREATION"){
+            document.getElementById("schederr4").innerHTML = "There should be only one card creation receive type for a carduser. Please enter another cardholder name."; 
+              rectype.style.border = "2px solid red";
+            }else{
+              var rdt = formatRecDate(rcidate.value) + " at " + rcitime.value;
+              const checkuseID = query(collection(db, "app_users"), where("fullname", "==", appuse.value), limit(1));
+              const userFindSnapshot = await getDocs(checkuseID);
+              userFindSnapshot.forEach((doc) => {apsrid = doc.id;});
+              const newscheddata = {
+                 appuserID: apsrid,
+                 nameofcarduser: cdname.value,
+                 receivedateandtime: rdt,
+                 receivetype: rectype.value,
+                 specificcardnum: getcardnum
+              }
+              console.log(newscheddata);
+              setDoc(doc(db, "schedule_receives", scodeval), newscheddata).then(()=>{
+                 document.getElementById("customalert").innerHTML = "Data added successfully."; 
+                 document.getElementById("customalert").style.color = "midnightblue";
+                 appuse.selectedIndex = 0;
+                 cdnum.value = "";
+                 cdname.value = "";
+                 rectype.selectedIndex = 0;
+                 rcidate.value = "";
+                 rcitime.selectedIndex = 0;
+                 if(rectype.value == "CARD_CREATION"){updateCount(docRef1, 1);}
+                 else if(rectype.value == "CARD_RENEWAL"){updateCount(docRef2, 1);}
+                 else if(rectype.value == "CARD_REPRINT"){updateCount(docRef3, 1);}
+              }).catch((error)=>{
+                 document.getElementById("customalert").innerHTML = "Failed to insert schedule info, please try again.";
+                 document.getElementById("customalert").style.color = "red";
+                 console.log(error);
+              })  
+            }   
+        }else{
+           if(appuse.value == "unselected"){document.getElementById("schederr1").innerHTML = "This field is required."; appuse.style.border = "2px solid red";}
+           if(cdname.value == ""){document.getElementById("schederr3").innerHTML = "This field is required."; cdname.style.border = "2px solid red";}
+           else if(!nameregex.test(cdname.value)){document.getElementById("schederr3").innerHTML = "Value has invalid characters."; cdname.style.border = "2px solid red";}
+           if(rectype.value == "unselected"){document.getElementById("schederr4").innerHTML = "This field is required."; rectype.style.border = "2px solid red";}
+           if(rcidate.value == "" || rcitime.value == "unselected"){
+             document.getElementById("schederr5").innerHTML = "Both of these fields are required."; 
+             if(rcidate.value == ""){rcidate.style.border = "2px solid red";}
+             if(rcitime.value == "unselected"){rcitime.style.border = "2px solid red";}
+           }  
+        }
+      }
+      
+      const reSchedule = async() => {
+        var getcardnum;
+        var allow, listencount;
+        clearSchedErrors();
+        document.getElementById("customalert").innerHTML = " ";
+        if(cdname.value != "" && rectype.value != "unselected" && rcidate.value != "" && rcitime.value != "unselected"){      
+           var rdt = rcidate.value + " at " + rcitime.value;
+           const updatedscheddata = {}
+           if(cdname.value != crdnm){
+              const numquery = query(collection(db, "cards"), where("registrantfullname", "==", cdname.value), limit(1));
+              const numSnapshot = await getDocs(numquery);
+              numSnapshot.forEach((doc) => {getcardnum = doc.data().cardnumber;});
+              const newname = {nameofcarduser: cdname.value};
+              const cardnoofname = {specificcardnum: getcardnum};
+              Object.assign(updatedscheddata, newname);
+              Object.assign(updatedscheddata, cardnoofname);
+           }
+           if(rectype.value != recty){
+              const checkType = query(collection(db, "schedule_receives"), where("receivetype", "==", "CARD_CREATION"), limit(1));
+              const chkcrtSnapshot = await getDocs(checkType);
+              chkcrtSnapshot.get().then(function(querySnapshot){
+                 if (querySnapshot.size > 0 && rectype.value == "CARD_CREATION"){
+                    document.getElementById("schederr4").innerHTML = "There should be only one card creation receive type for a carduser. Please enter another cardholder name."; 
+                    rectype.style.border = "2px solid red";
+                    allow = false;
+                 }else{allow = true; listencount = true;}
+              })
+           }else{listencount = false;}
+           if(rdt != redt){
+              const recidatime = {receivedatenadtime: rdt};
+              Object.assign(updatedscheddata, recdatime);  
+           }
+           if(allow == true){
+              await updateDoc(getRef, updatedscheddata).then(()=>{
+                document.getElementById("customalert").innerHTML = "Rescheduling successful."; 
+                document.getElementById("customalert").style.color = "midnightblue";
+                appuse.selectedIndex = 0;
+                cdnum.value = "";
+                cdname.value = "";
+                rectype.selectedIndex = 0;
+                rcidate.value = "";
+                rcitime.selectedIndex = 0;
+                if(listencount = true){
+                  if(rectype.value == "CARD_CREATION"){updateCount(docRef1, 1);}
+                  else if(rectype.value == "CARD_RENEWAL"){updateCount(docRef2, 1);}
+                  else if(rectype.value == "CARD_REPRINT"){updateCount(docRef3, 1);}
+                }
+              }).catch((error)=>{
+                console.log(error);
+                document.getElementById("customalert").innerHTML = "Reschedule failed, please try again."; 
+                document.getElementById("customalert").style.color = "red";
+              })
+           }
+        }else{
+          if(cdname.value == ""){document.getElementById("schederr3").innerHTML = "This field is required."; cdname.style.border = "2px solid red";}
+          else if(!nameregex.test(cdname.value)){document.getElementById("schederr3").innerHTML = "Value has invalid characters."; cdname.style.border = "2px solid red";}
+          if(rectype.value == "unselected"){document.getElementById("schederr4").innerHTML = "This field is required."; rectype.style.border = "2px solid red";}
+          if(rcidate.value == "" || rcitime.value == "unselected"){
+            document.getElementById("schederr5").innerHTML = "Both of these fields are required."; 
+            if(rcidate.value == ""){rcidate.style.border = "2px solid red";}
+            if(rcitime.value == "unselected"){rcitime.style.border = "2px solid red";}
+          }
+        } 
+      }
+      
+      const resetFormFields = async() => {
+        clearSchedErrors();
+        document.getElementById("customalert").innerHTML = " "; 
+        schedcode.value = "";
+        appuse.selectedIndex = 0;
+        appuse.disabled = false;
+        cdnum.value = "";
+        cdname.value = "";
+        rectype.selectedIndex = 0;
+        rcidate.value = "";
+        rcitime.selectedIndex = 0;
+      }
+      
+      const clearSchedErrors = async() => {
+        document.getElementById("schederr1").innerHTML = "";
+        document.getElementById("schederr2").innerHTML = "";
+        document.getElementById("schederr3").innerHTML = "";
+        document.getElementById("schederr4").innerHTML = "";
+        document.getElementById("schederr5").innerHTML = "";
+        appuse.style.border = "none";
+        cdnum.style.border = "none";
+        cdname.style.border = "none";
+        rectype.style.border = "none";
+        rcidate.style.border = "none";
+        rcitime.style.border = "none";
+      }
+      
+      searchrun.addEventListener('click', searchQuery);
+      
+      getschedule.addEventListener('click', getScheduleData);
+      addschedule.addEventListener('click', addSchedule);
+      updateschedule.addEventListener('click', reSchedule);
+      resetform.addEventListener('click', resetFormFields);
+      
+      signout.addEventListener('click', signOutUser);
+    </script>
+  </body>
+</html>

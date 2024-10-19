@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>PWDAssistant</title>
+
+     <!-- Latest compiled and minified CSS --> 
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"> 
+     <!-- jQuery library --> 
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script> 
+     <!-- Popper JS --> 
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script> 
+     <!-- Latest compiled JavaScript --> 
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+     <!-- Font Awesome 6 Icon Library --> 
+        <link rel="stylesheet" href="css/all.min.css"> 
+        <link rel="stylesheet" href="css/fontawesome.min.css">
+        <script src="https://kit.fontawesome.com/3b9f69c096.js" crossorigin="anonymous"></script>   
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="css/dashhomestyle.css"/>
+    <link rel="icon" type="image/png" href="images/appmainlogo.png" sizes="48x48"/>
+
+    <!-- Boxicons CSS -->
+    <link
+      href="https://unpkg.com/boxicons@2.1.2/css/boxicons.min.css"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <nav>
+      <div class="logo">
+        <span class="logo-name">PWDAssistant</span>
+      </div>
+      <p class="nav-link-queue">
+          <i class="fas fa-user icon"></i>
+          <span class="account" id="userspan"></span>
+        </p>
+    </nav>
+    <div class="queuediv">
+        <h2 class="queueheading">Walk-in number caller</h2>
+    </div>
+    <div class="queuecallers">
+        <div class="qcaller1">
+            <div class="qcard">
+              <div class="row">
+                <div class="col-sm-5 col-lg-5">
+                 <p class="qty">Registration:</p>
+                 <p class="qnum1" id="qnum1"></p>
+                </div>
+                <div class="col-sm-5 col-lg-4">
+                  <button type="button" class="btn btn-primary call1" id="callreg"><i class="fas fa-arrow-right"></i> Call Next</button>
+                  <button type="button" class="btn btn-info notify1" id="notifyreg"><i class="fas fa-bullhorn"></i> Notify</button>
+                </div>
+              </div>     
+            </div>
+        </div>
+        <div class="qcaller2">
+            <div class="qcard">
+              <div class="row">
+                <div class="col-sm-5 col-lg-5">
+                  <p class="qty">Renewal:</p>
+                  <p class="qnum2" id="qnum2"></p>
+                </div>
+                <div class="col-sm-5 col-lg-4">
+                  <button type="button" class="btn btn-primary call2" id="callren"><i class="fas fa-arrow-right"></i> Call Next</button>
+                  <button type="button" class="btn btn-info notify2" id="notifyren"><i class="fas fa-bullhorn"></i> Notify</button>
+                </div>
+              </div>
+            </div>
+        </div>
+        <div class="qcaller3">
+            <div class="qcard">
+              <div class="row">
+                <div class="col-sm-5 col-lg-5">
+                  <p class="qty">Reprint:</p>
+                  <p class="qnum3" id="qnum3"></p>
+                </div>
+                <div class="col-sm-5 col-lg-4">
+                  <button type="button" class="btn btn-primary call3" id="callrep"><i class="fas fa-arrow-right"></i> Call Next</button>
+                  <button type="button" class="btn btn-info notify3" id="notifyrep"><i class="fas fa-bullhorn"></i> Notify</button>
+                </div>
+              </div> 
+            </div>
+        </div>
+    </div>
+    <div class="servinginfo">
+      <div class="card w-100 h-100">
+        <div class="card-body">
+          <table class="countertable" id="countertable">
+            <tr>
+              <th>Counter</th>
+              <th>Now Serving</th>
+            </tr>
+            <tr>
+              <td id="countnum"></td>
+              <td id="customno"></td>
+            </tr>
+          </table>
+        </div>
+      </div>
+    </div>
+  </body>
+  <script type="module">
+    import {initializeApp} from "https://www.gstatic.com/firebasejs/9.22.1/firebase-app.js";
+       
+    const firebaseConfig = {
+      apiKey: "AIzaSyCDNLsVNK45kH5PRCaXBw3wV9Nkw2jGdv8",
+      authDomain: "pwdcardregisterapp.firebaseapp.com",
+      databaseURL: "https://pwdcardregisterapp-default-rtdb.firebaseio.com",
+      projectId: "pwdcardregisterapp",
+      storageBucket: "pwdcardregisterapp.appspot.com",
+      messagingSenderId: "1097703662378",
+      appId: "1:1097703662378:web:d66126bbf452d5c290f453"
+    };
+
+    const app = initializeApp(firebaseConfig);
+
+    import {getFirestore, doc, getDoc, getDocs, setDoc, collection, query, onSnapshot, limit, where, updateDoc, increment} from "https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore.js";
+    import {getAuth, onAuthStateChanged, signOut} from "https://www.gstatic.com/firebasejs/9.22.1/firebase-auth.js";
+
+    const db = getFirestore(app);
+    const auth = getAuth(app);
+    
+    var regtype = "E-";
+    var rentype = "N-";
+    var reptype = "P-";
+    
+    var regqueue = document.getElementById("qnum1");
+    var renqueue = document.getElementById("qnum2");
+    var repqueue = document.getElementById("qnum3");
+    
+    var counterinfo = document.getElementById("countnum");
+    var ctable = document.getElementById("countertable");
+    var customerinfo = document.getElementById("customno");
+    
+    const regnext = document.querySelector("#callreg");
+    const rennext = document.querySelector("#callren");
+    const repnext = document.querySelector("#callrep");
+    
+    let counterNum;
+    let countstring = "counter";
+    let uemail;
+
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        uemail = user.email;
+        userspan.innerHTML = uemail;
+        getAssignedCount(uemail);
+      } else {
+        window.location.href = "logsign.html";
+      }
+    })
+    
+    const numref1 = doc(db, "queue_tracker", "registerqueue");
+    const numref2 = doc(db, "queue_tracker", "renewqueue");
+    const numref3 = doc(db, "queue_tracker", "reprintqueue");
+
+    window.onload = DataUpdateRealtime;
+
+    async function getAssignedCount(email) {
+      let conum;
+      const adminsRef = collection(db, "app_admins");
+      const numq = query(adminsRef, where("adminemail", "==", email), limit(1));
+      console.log(userspan.innerHTML);
+      const numqSnapshot = await getDocs(numq);
+      numqSnapshot.forEach(doc =>{
+        counterinfo.innerHTML = doc.data().assignedcounter;
+      });
+    }
+
+    async function DataUpdateRealtime(){
+      
+      const qreg = onSnapshot(doc(db, "queue_tracker", "registerqueue"), (doc) => {
+          var regnum = doc.data().queuenum;
+          var padEref = regnum.toString().padStart(3,"0");
+          var regcustno = regtype.concat(padEref); 
+          qnum1.innerHTML = regcustno;
+      });
+      
+      const qren = onSnapshot(doc(db, "queue_tracker", "renewqueue"), (doc) => {
+          var rennum = doc.data().queuenum;
+          var padNref = rennum.toString().padStart(3,"0");
+          var rencustno = rentype.concat(padNref); 
+          qnum2.innerHTML = rencustno;
+      });
+      
+      const qrep = onSnapshot(doc(db, "queue_tracker", "reprintqueue"), (doc) => {
+          var repnum = doc.data().queuenum;
+          var padPref = repnum.toString().padStart(3,"0");
+          var repcustno = reptype.concat(padPref);
+          qnum3.innerHTML = repcustno;
+      });
+      
+      const qcount = onSnapshot(doc(db, "counter_is_serving", countstring.concat(counterinfo.innerHTML)), (doc) => {
+          console.log(countstring.concat(counterinfo.innerHTML));
+          customerinfo.innerHTML = doc.data().nowserving;
+          if(customerinfo.innerHTML == "pending"){
+            customerinfo.innerHTML = "";
+          }
+      });
+    }
+    
+    async function callNextRegister(){
+      await updateDoc(numref1, {
+        queuenum: increment(1)
+      }).then(()=>{
+        customerinfo.innerHTML = regqueue.innerHTML;
+        const counterRef = doc(db, "counter_is_serving", countstring.concat(counterinfo.innerHTML));
+        updateDoc(counterRef, {nowserving: regqueue.innerHTML});
+      });         
+    }
+    
+    async function callNextRenew(){
+      await updateDoc(numref2, {
+        queuenum: increment(1)
+      }).then(()=>{
+        customerinfo.innerHTML = renqueue.innerHTML;
+        const counterRef = doc(db, "counter_is_serving", countstring.concat(counterinfo.innerHTML));
+        updateDoc(counterRef, {nowserving: renqueue.innerHTML});
+      });        
+    }
+    
+    async function callNextReprint(){
+      await updateDoc(numref3, {
+        queuenum: increment(1)
+      }).then(()=>{
+        customerinfo.innerHTML = repqueue.innerHTML;
+        const counterRef = doc(db, "counter_is_serving", countstring.concat(counterinfo.innerHTML));
+        updateDoc(counterRef, {nowserving: repqueue.innerHTML});
+      });        
+    }
+    
+    regnext.addEventListener('click', callNextRegister);
+    rennext.addEventListener('click', callNextRenew);
+    repnext.addEventListener('click', callNextReprint);
+  </script>
+</html>

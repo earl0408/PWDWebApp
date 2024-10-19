@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>PWDAssistant</title>
+
+     <!-- Latest compiled and minified CSS --> 
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"> 
+     <!-- jQuery library --> 
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script> 
+     <!-- Popper JS --> 
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script> 
+     <!-- Latest compiled JavaScript --> 
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+     <!-- Font Awesome 6 Icon Library --> 
+        <link rel="stylesheet" href="css/all.min.css"> 
+        <link rel="stylesheet" href="css/fontawesome.min.css">
+        <script src="https://kit.fontawesome.com/3b9f69c096.js" crossorigin="anonymous"></script>   
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="css/dashhomestyle.css"/>
+    <link rel="icon" type="image/png" href="images/appmainlogo.png" sizes="48x48"/>
+
+    <!-- Boxicons CSS -->
+    <link
+      href="https://unpkg.com/boxicons@2.1.2/css/boxicons.min.css"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <nav>
+      <div class="logo">
+        <i class="fas fa-bars"></i>
+        <span class="logo-name">PWDAssistant</span>
+      </div>
+
+      <div class="sidebar">
+        <div class="logo">
+          <i class="fas fa-bars"></i>
+          <span class="logo-name">PWDAssistant</span>
+        </div>
+
+        <div class="sidebar-content">
+          <ul class="lists">
+            <li class="list">
+              <a href="dashboardhome.html" class="nav-link active">
+                <i class="fas fa-house icon"></i>
+                <span class="link">Dashboard</span>
+              </a>
+            </li>
+            <li class="list">
+              <a href="chartanalysis.html" class="nav-link">
+                <i class="fas fa-chart-simple icon"></i>
+                <span class="link">Analytics</span>
+              </a>
+            </li>
+            <li class="list">
+              <a onclick="window.open('queuecaller.html', 'name', 'width=700', 'height=1200')" style="cursor: pointer;" class="nav-link">
+                <i class="fas fa-bell icon"></i>
+                <span class="link">Queue Caller</span>
+              </a>
+            </li>
+            <li class="list">
+              <a href="carduserslist.html" class="nav-link">
+                <i class="fas fa-id-card icon"></i>
+                <span class="link">Card Users List</span>
+              </a>
+            </li>
+            <li class="list">
+              <a href="scheduleslist.html" class="nav-link">
+                <i class="fas fa-clock icon"></i>
+                <span class="link">Schedule List</span>
+              </a>
+            </li>
+            <li class="list">
+              <a href="uploadfiles.html" class="nav-link">
+                <i class="fas fa-file-import icon"></i>
+                <span class="link">Upload Files</span>
+              </a>
+            </li>
+            <li class="list">
+              <a href="updatepassword.html" class="nav-link">
+                <i class="fas fa-pen icon"></i>
+                <span class="link">Edit Account</span>
+              </a>
+            </li>
+          </ul>
+
+          <div class="bottom-cotent">
+            <li class="list">
+              <a href="#" class="nav-link">
+                <i class="fas fa-user icon"></i>
+                <span class="link" id="userspan"></span>
+              </a>
+            </li>
+            <li class="list">
+              <a href="#" class="nav-link">
+                <i class="bx bx-log-out icon"></i>
+                <span class="link" id="logout">Logout</span>
+              </a>
+            </li>
+          </div>
+        </div>
+      </div>
+    </nav>
+    
+    <div class="cheaddiv">
+      <h1 class="chartheading">Dashboard Charts</h1>
+    </div>
+    
+    <div class="printclick">
+        <button type="button" class="printtableBTN" id="printtable" onclick="window.print();">Print Charts</button>
+    </div>
+    
+    <div id="chartcontainer">
+      <div class="chart1" id="chart1"></div>
+      <div class="chart2" id="chart2"></div>
+      <div class="chart3" id="chart3"></div>
+      <div class="chart4" id="chart4"></div>
+    </div>
+    
+    <section class="overlay"></section>
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.0.0/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.5.3/jspdf.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.6/jspdf.plugin.autotable.min.js"></script>
+    <script src="https://cdn.canvasjs.com/canvasjs.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/0.4.1/html2canvas.min.js"></script>
+    <script type="module">
+      const navBar = document.querySelector("nav"),
+        menuBtns = document.querySelectorAll(".fa-bars"),
+        overlay = document.querySelector(".overlay");
+
+        menuBtns.forEach((menuBtn) => {
+        menuBtn.addEventListener("click", () => {
+          navBar.classList.toggle("open");
+        });
+      });
+
+      overlay.addEventListener("click", () => {
+        navBar.classList.remove("open");
+      });
+      
+      import {initializeApp} from "https://www.gstatic.com/firebasejs/9.22.1/firebase-app.js";
+       
+      const firebaseConfig = {
+        apiKey: "AIzaSyCDNLsVNK45kH5PRCaXBw3wV9Nkw2jGdv8",
+        authDomain: "pwdcardregisterapp.firebaseapp.com",
+        databaseURL: "https://pwdcardregisterapp-default-rtdb.firebaseio.com",
+        projectId: "pwdcardregisterapp",
+        storageBucket: "pwdcardregisterapp.appspot.com",
+        messagingSenderId: "1097703662378",
+        appId: "1:1097703662378:web:d66126bbf452d5c290f453"
+      };
+
+      const app = initializeApp(firebaseConfig);
+
+      import {getFirestore, getCountFromServer, doc, getDoc, getDocs, collection, query, onSnapshot, where, orderBy, 
+              startAt, limit, count} from "https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore.js";
+      import {getAuth, onAuthStateChanged, signOut} from "https://www.gstatic.com/firebasejs/9.22.1/firebase-auth.js";
+
+      const db = getFirestore(app);
+      const auth = getAuth(app);
+      
+      const signout = document.querySelector("#logout");
+      
+      const coll1 = collection(db, "cards");
+      const coll2 = collection(db, "schedule_receives");
+      
+      const qD1 = query(coll1, where("disabilitytype", "==", "Psychosocial disability"));
+      const qD2 = query(coll1, where("disabilitytype", "==", "Disability resulting from a chronic illness"));
+      const qD3 = query(coll1, where("disabilitytype", "==", "Learning disability"));
+      const qD4 = query(coll1, where("disabilitytype", "==", "Visual disability"));
+      const qD5 = query(coll1, where("disabilitytype", "==", "Orthopedic/Physical disability"));
+      const qD6 = query(coll1, where("disabilitytype", "==", "Mental disability"));
+      const qD7 = query(coll1, where("disabilitytype", "==", "Intellectual disability"));
+      const qD8 = query(coll1, where("disabilitytype", "==", "Hearing disability"));
+      const qD9 = query(coll1, where("disabilitytype", "==", "Speech or language impairment"));
+      const qD10 = query(coll1, where("disabilitytype", "==", "Cancer"));
+      const qD11 = query(coll1, where("disabilitytype", "==", "Rare Disease"));
+      const snapshotD1 = await getCountFromServer(qD1);
+      const snapshotD2 = await getCountFromServer(qD2);
+      const snapshotD3 = await getCountFromServer(qD3);
+      const snapshotD4 = await getCountFromServer(qD4);
+      const snapshotD5 = await getCountFromServer(qD5);
+      const snapshotD6 = await getCountFromServer(qD6);
+      const snapshotD7 = await getCountFromServer(qD7);
+      const snapshotD8 = await getCountFromServer(qD8);
+      const snapshotD9 = await getCountFromServer(qD9);
+      const snapshotD10 = await getCountFromServer(qD10);
+      const snapshotD11 = await getCountFromServer(qD11);
+      
+      const qG1 = query(coll1, where("registrantgender", "==", "Male"));
+      const qG2 = query(coll1, where("registrantgender", "==", "Female"));
+      const snapshotG1 = await getCountFromServer(qG1);
+      const snapshotG2 = await getCountFromServer(qG2);
+      
+      const qB1 = query(coll1, where("registrantbloodtype", "==", "A+"));
+      const qB2 = query(coll1, where("registrantbloodtype", "==", "A-"));
+      const qB3 = query(coll1, where("registrantbloodtype", "==", "B+"));
+      const qB4 = query(coll1, where("registrantbloodtype", "==", "B-"));
+      const qB5 = query(coll1, where("registrantbloodtype", "==", "AB+"));
+      const qB6 = query(coll1, where("registrantbloodtype", "==", "AB-"));
+      const qB7 = query(coll1, where("registrantbloodtype", "==", "O+"));
+      const qB8 = query(coll1, where("registrantbloodtype", "==", "O-"));
+      const snapshotB1 = await getCountFromServer(qB1);
+      const snapshotB2 = await getCountFromServer(qB2);
+      const snapshotB3 = await getCountFromServer(qB3);
+      const snapshotB4 = await getCountFromServer(qB4);
+      const snapshotB5 = await getCountFromServer(qB5);
+      const snapshotB6 = await getCountFromServer(qB6);
+      const snapshotB7 = await getCountFromServer(qB7);
+      const snapshotB8 = await getCountFromServer(qB8);
+      
+      const docref1 = doc(db, "stats_count", "--NewCardCount--");
+      const docref2 = doc(db, "stats_count", "--RenewalCount--");
+      const docref3 = doc(db, "stats_count", "--ReprintCount--");
+      const snapshotC1 = await getDoc(docref1);
+      const snapshotC2 = await getDoc(docref2);
+      const snapshotC3 = await getDoc(docref3);
+      
+      google.charts.load('current', {'packages':['corechart']});
+      google.charts.setOnLoadCallback(drawChart1);
+      google.charts.setOnLoadCallback(drawChart2);
+      google.charts.setOnLoadCallback(drawChart3);
+      google.charts.setOnLoadCallback(drawChart4);
+      
+      var user = document.getElementById("userspan");
+      
+      onAuthStateChanged(auth, (user) => {
+        if (user) {
+         const uemail = user.email;
+         userspan.innerHTML = uemail;
+        } else {
+         window.location.href = "logsign.html";
+        }
+      })
+      
+      const signOutUser = async() => {
+        signOut(auth).then(() => {
+           window.location.href = "logsign.html";
+        }).catch((error) => {
+           alert("Sign out not working, please try again");
+        }); 
+      }
+      
+      function drawChart1(){
+         const data1 = google.visualization.arrayToDataTable([
+          ['Disability', 'Total'],
+          ['Psychosocial\ndisability', snapshotD1.data().count],
+          ['Disability resulting\nfrom a chronic\nillness', snapshotD2.data().count],
+          ['Learning disability', snapshotD3.data().count],
+          ['Visual disability', snapshotD4.data().count],
+          ['Orthopedic/\nPhysical disability', snapshotD5.data().count],
+          ['Mental Disability', snapshotD6.data().count],
+          ['Intellectual\nDisability', snapshotD7.data().count],
+          ['Hearing Disability', snapshotD8.data().count],
+          ['Speech or\nlanguage\nimpairment', snapshotD9.data().count],
+          ['Cancer', snapshotD10.data().count],
+          ['Rare Disease', snapshotD11.data().count],
+         ]);
+         
+         var paddingHeight = 30;
+         var rowHeight = data1.getNumberOfRows() * 50;
+         var chartHeight = rowHeight + paddingHeight + 50;
+      
+         const options1 = {
+           responsive:true,
+           title:'Number of PWDs per Disability',
+          
+           height: chartHeight,
+             chartArea: {
+               height: rowHeight
+           },
+          
+           titleTextStyle: {
+             fontName: 'Segoe UI', 
+             fontSize: 20,
+             bold: true,
+           }
+         };
+         
+         /*const dchartone = document.getElementById('chart1');
+         const chone = new google.visualization.BarChart(document.getElementById('chart1'));
+         google.visualization.events.addListener(chone, 'ready', function () {
+           dchartone.innerHTML = '<img src="' + chone.getImageURI() + '">';
+         })
+         chone.draw(data1, options1); */
+         const chart = new google.visualization.BarChart(document.getElementById('chart1'));
+         chart.draw(data1, options1);   
+      }
+      
+      function drawChart2(){
+         const data2 = google.visualization.arrayToDataTable([
+          ['Disability', 'Total'],
+          ['Male', snapshotG1.data().count],
+          ['Female', snapshotG2.data().count],
+         ]);
+         
+         const options2 = {
+          title:'Number of PWDs per Gender',
+          
+          titleTextStyle: {
+            fontName: 'Segoe UI', 
+            fontSize: 20,
+            bold: true,
+          }
+         };
+
+         // Draw
+         /*const dcharttwo = document.getElementById('chart2');
+         const chtwo = new google.visualization.PieChart(document.getElementById('chart2'));
+         google.visualization.events.addListener(chtwo, 'ready', function () {
+           dcharttwo.innerHTML = '<img src="' + chtwo.getImageURI() + '">';
+         })
+         chtwo.draw(data2, options2);*/
+        
+         const chart = new google.visualization.PieChart(document.getElementById('chart2'));
+         chart.draw(data2, options2); 
+      }
+      
+      function drawChart3(){
+         const data3 = google.visualization.arrayToDataTable([
+          ['Blood Type', 'Total'],
+          ['A+', snapshotB1.data().count],
+          ['A-', snapshotB2.data().count],
+          ['B+', snapshotB3.data().count],
+          ['B-', snapshotB4.data().count],
+          ['AB+', snapshotB5.data().count],
+          ['AB-', snapshotB6.data().count],
+          ['O+', snapshotB7.data().count],
+          ['O-', snapshotB8.data().count],
+         ]);
+         
+         const options3 = {
+          title:'Number of PWDs per Blood Type',
+          
+          titleTextStyle: {
+            fontName: 'Segoe UI', 
+            fontSize: 20,
+            bold: true,
+          }
+         };
+
+         const chart = new google.visualization.ColumnChart(document.getElementById('chart3'));
+         chart.draw(data3, options3); 
+      }
+      
+      function drawChart4(){
+          const data4 = google.visualization.arrayToDataTable([
+              ['Card Receive Type', 'Total'],
+              ['Card Creation', snapshotC1.data().total], 
+              ['Card Renewal', snapshotC2.data().total], 
+              ['Card Reprint', snapshotC3.data().total], 
+          ]);
+          
+          const options4 = {
+            title:'Scheduled Receives per Receive Type',
+          
+            titleTextStyle: {
+              fontName: 'Segoe UI', 
+              fontSize: 20,
+              bold: true,
+            }
+          };
+          
+          const chart = new google.visualization.BarChart(document.getElementById('chart4'));
+          chart.draw(data4, options4); 
+      }
+      
+      signout.addEventListener('click', signOutUser);
+    </script>
+    </body>
+</html>

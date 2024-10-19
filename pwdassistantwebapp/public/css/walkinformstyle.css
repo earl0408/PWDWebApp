@@ -1,0 +1,173 @@
+.walkinform{
+    margin-top: 50px;
+    margin-bottom: 30px;
+    min-width: 900px;
+    max-width: 1100px;
+    height: auto;
+    margin-left: auto;
+    margin-right: auto;
+    align-items: center;
+    background-color: chartreuse;
+    padding: 28px;
+    border-radius: 15px;
+    border: 5px solid limegreen;
+}
+
+.carduserdata{
+    display: inline-flex;
+    flex-wrap: wrap;
+    margin-top: 10px;
+    margin-right: 10px;
+}
+  
+.carduserdata .input-box-short{
+    display: inline-flex;
+    flex-wrap: wrap;
+    width: 340px;
+}
+
+.carduserdata .input-box-long{
+    display: inline-flex;
+    flex-wrap: wrap;
+    width: 825px;
+}
+
+.carduserdata label{
+    display: inline-flex;
+    width: 160px;
+    margin-right: 5px;
+    padding-right: 10px;
+    text-align: right;
+    font-size: 20px;
+    font-weight: 400;
+}
+
+.carduserdata .input-box-long input{
+    height: 40px;
+    width: 100%;
+    border-radius: 10px;
+    font-size: 20px;
+    outline: none;
+    border: 1px solid #ccc;
+    padding: 0 7px;
+}
+
+.carduserdata .input-box-short input, 
+.carduserdata .input-box-short select{
+    height: 40px;
+    width: 90%;
+    border-radius: 10px;
+    font-size: 20px;
+    outline: none;
+    border: 1px solid #ccc;
+    padding: 0 7px;
+}
+
+.btnarray{
+    width: 1100px;
+}
+
+.btnarray .registerBTN, 
+.btnarray .renewBTN, .btnarray .reprintBTN{
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 7px;
+  margin-left: 2px;
+  font-size: 18px;
+  background-color: cyan;
+  border: 3px solid dodgerblue;
+  border-radius: 7px;
+  padding: 5px;
+  text-align: center;
+  text-decoration: none;
+  font-size: 20px;
+  color: black;
+  width: 22%;
+  height: 40px;
+}
+
+.btnarray .resetBTN{
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 7px;
+  margin-left: 2px;
+  font-size: 18px;
+  background-color: orange;
+  border: 3px solid khaki;
+  border-radius: 7px;
+  padding: 5px;
+  text-align: center;
+  text-decoration: none;
+  font-size: 20px;
+  color: black;
+  width: 25%;
+  height: 40px;
+}
+
+.alertsnack{
+    position: absolute;
+    bottom: 7%;
+    left: 30.8%;
+    font-size: 22px;
+    color: snow;
+    background-color:#353434;
+    padding: 5px 10px 5px 10px;
+    border-radius: 5px;
+    text-align: center;
+    opacity: 0;
+}
+
+.active{
+    position: absolute;
+    bottom: 7%;
+    left: 30.8%;
+    font-size: 22px;
+    color: snow;
+    background-color:#353434;
+    padding: 5px 10px 5px 10px;
+    border-radius: 5px;
+    text-align: center;
+    opacity: 1;
+    -webkit-animation: fadein 0.5s, fadeout 0.5s 2.5s;
+    animation: fadein 0.5s, fadeout 0.5s 2.5s;
+}
+
+@-webkit-keyframes fadein {
+    from {opacity: 0;}
+    to {opacity: 1;}
+  }
+  
+  @keyframes fadein {
+    from {opacity: 0;}
+    to {opacity: 1;}
+  }
+  
+  @-webkit-keyframes fadeout {
+    from {opacity: 1;}
+    to {opacity: 0;}
+  }
+  
+  @keyframes fadeout {
+    from {opacity: 1;}
+    to {opacity: 0;}
+  }
+
+@media screen and (max-width: 1125px) {
+
+    .walkinform{
+        margin-top: 50px;
+        margin-bottom: 30px;
+        min-width: 1130px;
+        max-width: 1250px;
+        height: auto;
+        margin-left: auto;
+        margin-right: auto;
+        align-items: center;
+        background-color: chartreuse;
+        padding: 28px;
+        border-radius: 15px;
+        border: 5px solid limegreen;
+    }
+}

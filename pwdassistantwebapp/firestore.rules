@@ -1,0 +1,337 @@
+rules_version = '2';
+service cloud.firestore {
+   match /databases/{database}/documents {
+    // Rowy: Allow signed in users to read Rowy configuration and admins to write
+    match /_rowy_/{docId} {
+      allow read: if request.auth.token.roles.size() > 0;
+      allow write: if hasAnyRole(["ADMIN", "OWNER"]);
+    	match /{document=**} {
+        allow read: if request.auth.token.roles.size() > 0;
+        allow write: if hasAnyRole(["ADMIN", "OWNER"]);
+      }
+      match /schema/{tableId} {
+        allow update: if canModify(tableId,'pc')
+        match /{document=**} {allow read,write: if canModify(tableId,'pc')}
+      }
+       match /groupSchema/{tableId} {
+        allow update: if canModify(tableId,'cg')
+        match /{document=**} {allow read,write: if canModify(tableId,'cg')}
+      }
+    	function canModify(tableId,tableType) {
+      	return hasAnyRole(get(/databases/$(database)/documents/_rowy_/settings)
+        .data.tablesSettings[tableType][tableId].modifiableBy)
+	   	}
+    }
+    // Rowy: Allow users to edit their settings
+    match /_rowy_/userManagement/users/{userId} {
+      allow get, update, delete: if isDocOwner(userId);
+      allow create: if request.auth.token.roles.size() > 0;
+    }
+    // Rowy: Allow public to read public Rowy configuration
+    match /_rowy_/publicSettings {
+      allow get: if true;
+    }
+
+    // Rowy: Utility functions
+    function isDocOwner(docId) {
+      return request.auth != null && (request.auth.uid == resource.id || request.auth.uid == docId);
+    }
+    function hasAnyRole(roles) {
+      return request.auth != null && request.auth.token.roles.hasAny(roles);
+    }
+    
+    match /{collectionName}/{doc}{
+      allow read: if (collectionName == "app_users" || collectionName == "app_admins"
+      || collectionName == "stats_count");
+      allow get: if collectionName == "logstatus";
+    }
+    
+    //User account should have admin email, adminname and assigned counter number. Should not be null
+    //and should match the respective regex of each field.
+    match /app_admins/{admindoc}{
+      allow create: if request.auth != null
+      && (request.resource.data.keys().hasAll(['adminemail', 'adminname', 'assignedcounter']) 
+      && request.resource.data.adminemail is string && request.resource.data.adminame is string 
+      && request.resource.data.assignedcounter is number 
+      && (request.resource.data.adminemail.size() > 0 
+      && request.resource.data.adminemail.matches("[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}"))
+      && (request.resource.data.adminname.size() > 0
+      && request.resource.data.adminname.matches("^[A-Za-zñ.\\s]+[A-Za-zñ.\\s]+(?:\\s(?:Jr\\.|Sr\\.|[IVX]+))?$")));
+      allow read: if request.auth != null;
+      allow update, delete: if request.auth != null && request.auth.uid == admindoc;
+    }
+    
+    //User account should have email, fullname and username. Should not be null
+    //and should match the respective regex of each field.
+    match /app_users/{userdoc}{
+      allow create: if request.auth != null
+      && request.resource.data.keys().hasAll(['email', 'fullname', 'username']) 
+      && (request.resource.data.email is string && request.resource.data.fullname is string 
+      && request.resource.data.username is string 
+      && (request.resource.data.email.size() > 0 
+      && request.resource.data.email.matches("[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}"))
+      && (request.resource.data.fullname.size() > 0
+      && request.resource.data.fullname.matches("^[A-Za-zñ.\\s]+[A-Za-zñ.\\s]+(?:\\s(?:Jr\\.|Sr\\.|[IVX]+))?$"))
+      && (request.resource.data.username.size() > 0) 
+      && request.resource.data.username.matches("^[\\w\\.]{7,29}$"));
+      allow update: if (request.auth != null && request.auth.uid == userdoc)
+      && (request.resource.data.diff(resource.data).affectedKeys().hasOnly(['username'])
+      && request.resource.data.username is string && request.resource.data.username.size() > 0 
+      && request.resource.data.username.matches("^[\\w\\.]{7,29}$"));
+      allow read: if request.auth != null;
+      allow delete: if request.auth != null && request.auth.uid == userdoc;
+    }
+    
+    match /logstatus/{logdoc}{
+      allow get, create, update: if request.auth != null;
+      allow delete: if false;
+    }
+    
+    match /stats_count/{countdoc}{
+      allow read: if request.auth != null && exists(/databases/$(database)/documents/app_admins/$(request.auth.uid));
+      allow update: if request.auth != null && ((request.auth != null && (exists(/databases/$(database)/documents/app_users/$(request.auth.uid)) 
+      || exists(/databases/$(database)/documents/app_admins/$(request.auth.uid))))  
+      || get(/databases/$(database)/documents/formstate/walkinformstate).data.formstatus == "ACTIVE")
+      && (request.resource.data.diff(resource.data).affectedKeys().hasOnly(['total'])
+      && request.resource.data.total is number);
+      allow create, delete: if false;
+    }
+    
+    function isValueIncluded(value, allowedValues) {
+         return value in allowedValues;
+    }
+    
+    match /cards/{carddoc}{
+      allow create: if (((request.auth != null
+      && (exists(/databases/$(database)/documents/app_users/$(request.auth.uid))
+      || exists(/databases/$(database)/documents/app_admins/$(request.auth.uid))))
+      || get(/databases/$(database)/documents/formstate/walkinformstate).data.formstatus == "ACTIVE"))
+      && (request.resource.data.keys().hasOnly(['appuserID', 'cardnumber', 
+      'cardstatus', 'dateofissue', 'disabilitytype', 'guardianname', 'guardianphone', 
+      'registrantaddress', 'registrantbirthday', 'registrantbloodtype','registrantfullname', 
+      'registrantgender', 'renewaldate', 'receivedate', 'medicertpath', 
+      'psacertpath', 'brycertpath', 'imagefilepath', 'affidavitpath', 'esignpath'])
+      && request.resource.data.keys().hasAll(['appuserID', 'cardnumber', 'cardstatus', 
+      'dateofissue', 'disabilitytype', 'guardianname', 'guardianphone', 'registrantaddress', 
+      'registrantbirthday', 'registrantbloodtype','registrantfullname', 'registrantgender', 
+      'renewaldate']))
+      && (request.resource.data.appuserID is string && request.resource.data.cardnumber is string
+      && request.resource.data.cardstatus is string && request.resource.data.dateofissue is string
+      && request.resource.data.disabilitytype is string && request.resource.data.guardianname is string
+      && request.resource.data.guardianphone is string && request.resource.data.registrantaddress is string
+      && request.resource.data.registrantbirthday is string && request.resource.data.registrantbloodtype is string
+      && request.resource.data.registrantfullname is string && request.resource.data.registrantgender is string
+      && request.resource.data.renewaldate is string)
+      && (request.resource.data.appuserID.size() > 0
+      && request.resource.data.cardnumber.size() > 0
+      && request.resource.data.cardstatus.size() > 0
+      && request.resource.data.dateofissue.size() > 0
+      && request.resource.data.disabilitytype.size() > 0
+      && request.resource.data.guardianname.size() > 0
+      && request.resource.data.guardianphone.size() > 0
+      && request.resource.data.registrantaddress.size() > 0
+      && request.resource.data.registrantbirthday.size() > 0
+      && request.resource.data.registrantbloodtype.size() > 0
+      && request.resource.data.registrantfullname.size() > 0
+      && request.resource.data.registrantgender.size() > 0
+      && request.resource.data.renewaldate.size() > 0)
+      && (isValueIncluded(request.resource.data.disabilitytype, 
+      ['n.a.', 'Psychosocial disability', 'Disability resulting from a chronic illness', 'Learning disability',
+       'Visual disability', 'Orthopedic/Physical disability', 'Mental disability', 'Intellectual disability', 
+       'Hearing disability', 'Speech or language impairment', 'Cancer', 'Rare Disease'])
+      && isValueIncluded(request.resource.data.registrantgender, ['n.a.', 'Male', 'Female'])
+      && isValueIncluded(request.resource.data.registrantbloodtype, ['n.a.', 'A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-'])
+      && isValueIncluded(request.resource.data.cardstatus, ['DRAFT', 'SUBMITTED', 'RENEWED', 'PENDING_RENEWAL',
+      'RENEW_DRAFT', 'PENDING_REPRINT']))
+      && (request.resource.data.appuserID.matches('\\b[a-zA-Z0-9]{28}\\b|Walk-in submission')
+      && request.resource.data.cardnumber.matches('^\\d{2}-\\d{4}-\\d{3}-\\d{4}$|To be assigned\\.')
+      && request.resource.data.registrantfullname.matches('^[A-Za-zñ.\\s]+[A-Za-zñ.\\s]+(?:\\s(?:Jr\\.|Sr\\.|[IVX]+))?$')
+      && request.resource.data.registrantaddress.matches('^[\\w\\d,-ñ#&.\\s]*$')
+      && request.resource.data.registrantbirthday.matches('\\b(19[0-9]{2}|20[0-9]{2})\\/(0[1-9]|1[0-2])\\/([0-2][0-9]|3[01])\\b')
+      && request.resource.data.guardianname.matches('^[A-Za-zñ.\\s]+[A-Za-zñ.\\s]+(?:\\s(?:Jr\\.|Sr\\.|[IVX]+))?$')
+      && request.resource.data.guardianphone.matches('\\d{11}|(?:\\d{3}-){2}\\d{4}|\\(\\d{3}\\)\\d{3}-?\\d{4}')
+      && request.resource.data.dateofissue.matches('\\b(0[1-9]|1[0-2])\\/(0[1-9]|[12][0-9]|3[01])\\/(20[0-9]{2})\\b|Not yet scheduled\\.')
+      && request.resource.data.renewaldate.matches('\\b(20[0-9]{2})\\/(0[1-9]|1[0-2])\\/(0[1-9]|[12][0-9]|3[01])\\b|Not yet assigned\\.'));
+      allow read: if (request.auth != null
+      && (exists(/databases/$(database)/documents/app_users/$(request.auth.uid))
+      || exists(/databases/$(database)/documents/app_admins/$(request.auth.uid))))
+      || get(/databases/$(database)/documents/formstate/walkinformstate).data.formstatus == "ACTIVE"; 
+      allow update: if (request.auth != null
+      && (exists(/databases/$(database)/documents/app_users/$(request.auth.uid))
+      || exists(/databases/$(database)/documents/app_admins/$(request.auth.uid))))
+      || get(/databases/$(database)/documents/formstate/walkinformstate).data.formstatus == "ACTIVE"
+      && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['cardnumber', 
+      'cardstatus', 'dateofissue', 'disabilitytype', 'guardianname', 'guardianphone', 
+      'registrantaddress', 'registrantbirthday', 'registrantbloodtype','registrantfullname', 
+      'registrantgender', 'renewaldate', 'receivedate', 'medicertpath', 'psacertpath', 
+      'brycertpath', 'imagefilepath', 'affidavitpath', 'esignpath'])
+      && (request.resource.data.cardnumber is string && request.resource.data.cardstatus is string 
+      && request.resource.data.dateofissue is string && request.resource.data.disabilitytype is string
+      && request.resource.data.guardianname is string && request.resource.data.guardianphone is string
+      && request.resource.data.registrantaddress is string && request.resource.data.registrantbirthday is string 
+      && request.resource.data.registrantbloodtype is string && request.resource.data.registrantfullname is string
+      && request.resource.data.registrantgender is string && request.resource.data.renewaldate is string)
+      && (request.resource.data.cardnumber.size() > 0
+      && request.resource.data.cardstatus.size() > 0
+      && request.resource.data.dateofissue.size() > 0
+      && request.resource.data.disabilitytype.size() > 0
+      && request.resource.data.guardianname.size() > 0
+      && request.resource.data.guardianphone.size() > 0
+      && request.resource.data.registrantaddress.size() > 0
+      && request.resource.data.registrantbirthday.size() > 0
+      && request.resource.data.registrantbloodtype.size() > 0
+      && request.resource.data.registrantfullname.size() > 0
+      && request.resource.data.registrantgender.size() > 0
+      && request.resource.data.renewaldate.size() > 0)
+      && (isValueIncluded(request.resource.data.disabilitytype, 
+      ['n.a.', 'Psychosocial disability', 'Disability resulting from a chronic illness', 'Learning disability',
+       'Visual disability', 'Orthopedic/Physical disability', 'Mental disability', 'Intellectual disability', 
+       'Hearing disability', 'Speech or language impairment', 'Cancer', 'Rare Disease'])
+      && isValueIncluded(request.resource.data.registrantgender, ['n.a.', 'Male', 'Female'])
+      && isValueIncluded(request.resource.data.registrantbloodtype, ['n.a.', 'A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-'])
+      && isValueIncluded(request.resource.data.cardstatus, ['DRAFT', 'SUBMITTED', 'RENEWED', 'PENDING_RENEWAL', 'RENEW_DRAFT', 'PENDING_REPRINT']))
+      && (request.resource.data.cardnumber.matches('^\\d{2}-\\d{4}-\\d{3}-\\d{4}$|To be assigned\\.')
+      && request.resource.data.registrantfullname.matches('^[A-Za-zñ.\\s]+[A-Za-zñ.\\s]+(?:\\s(?:Jr\\.|Sr\\.|[IVX]+))?$')
+      && request.resource.data.registrantaddress.matches('^[\\w\\d,-ñ#&.\\s]*$')
+      && request.resource.data.registrantbirthday.matches('\\b(19[0-9]{2}|20[0-9]{2})\\/(0[1-9]|1[0-2])\\/([0-2][0-9]|3[01])\\b')
+      && request.resource.data.guardianname.matches('^[A-Za-zñ.\\s]+[A-Za-zñ.\\s]+(?:\\s(?:Jr\\.|Sr\\.|[IVX]+))?$')
+      && request.resource.data.guardianphone.matches('\\d{11}|(?:\\d{3}-){2}\\d{4}|\\(\\d{3}\\)\\d{3}-?\\d{4}')
+      && request.resource.data.dateofissue.matches('\\b(0[1-9]|1[0-2])\\/(0[1-9]|[12][0-9]|3[01])\\/(20[0-9]{2})\\b|Not yet scheduled\\.')
+      && request.resource.data.renewaldate.matches('\\b(20[0-9]{2})\\/(0[1-9]|1[0-2])\\/(0[1-9]|[12][0-9]|3[01])\\b|Not yet assigned\\.'));
+      allow delete: if (request.auth != null 
+      && exists(/databases/$(database)/documents/app_admins/$(request.auth.uid)));
+    }
+    
+    match /queue_tracker/{queuedoc}{
+      allow read: if request.auth != null
+      || get(/databases/$(database)/documents/formstate/walkinformstate).data.formstatus == "ACTIVE";
+      allow update: if request.auth != null
+      || get(/databases/$(database)/documents/formstate/walkinformstate).data.formstatus == "ACTIVE"
+      && (request.resource.data.diff(resource.data).affectedKeys().hasOnly(['queuenum'])
+      && request.resource.data.queuenum is number);
+      allow create, delete: if false;
+    }
+    
+    match /assign_tracker/{assignnumdoc}{
+      allow read: if get(/databases/$(database)/documents/formstate/walkinformstate).data.formstatus == "ACTIVE";
+      allow update: if get(/databases/$(database)/documents/formstate/walkinformstate).data.formstatus == "ACTIVE"
+      && (request.resource.data.diff(resource.data).affectedKeys().hasOnly(['customernum'])
+      && request.resource.data.customernum is number);
+      allow create, delete: if false;
+    }
+    
+    match /counter_is_serving/{servedoc}{
+      allow get: if request.auth != null
+      || get(/databases/$(database)/documents/formstate/walkinformstate).data.formstatus == "ACTIVE";
+      allow update: if request.resource.data.diff(resource.data).affectedKeys().hasOnly(['nowserving'])
+      && request.resource.data.nowserving is string;
+      allow create, delete: if false;
+    }
+    
+    match /schedule_receives/{scheddoc}{
+      allow create : if ((request.auth != null
+      && (exists(/databases/$(database)/documents/app_users/$(request.auth.uid))
+      || exists(/databases/$(database)/documents/app_admins/$(request.auth.uid))))
+      || get(/databases/$(database)/documents/formstate/walkinformstate).data.formstatus == "ACTIVE")
+      && (request.resource.data.keys().hasAll(['appuserID', 'nameofcarduser', 'receivedateandtime',
+      'receivetype', 'specificcardnum']) 
+      && ((request.resource.data.appuserID is string && request.resource.data.nameofcarduser is string
+      && request.resource.data.receivedateandtime is string && request.resource.data.receivetype is string
+      && request.resource.data.specificcardnum is string)
+      && (request.resource.data.appuserID.size() > 0 && request.resource.data.nameofcarduser.size() > 0
+      && request.resource.data.receivedateandtime.size() > 0 && request.resource.data.receivetype.size() > 0
+      && request.resource.data.specificcardnum.size() > 0))
+      && isValueIncluded(request.resource.data.receivetype, ['CARD_CREATION', 'CARD_RENEWAL',
+      'CARD_REPRINT'])
+      && (request.resource.data.appuserID.matches('\\b[a-zA-Z0-9]{28}\\b')
+      && request.resource.data.nameofcarduser.matches('^[A-Za-zñ.\\s]+[A-Za-zñ.\\s]+(?:\\s(?:Jr\\.|Sr\\.|[IVX]+))?$')
+      && request.resource.data.receivedateandtime.matches('\\d{2}\\/\\d{2}\\/\\d{4} at \\d{1,2}:\\d{2}(AM|NN|PM) to \\d{1,2}:\\d{2}(AM|NN|PM)')
+      && request.resource.data.specificcardnum.matches('^\\d{2}-\\d{4}-\\d{3}-\\d{4}$')));
+      allow read: if (request.auth != null
+      && (exists(/databases/$(database)/documents/app_users/$(request.auth.uid))
+      || exists(/databases/$(database)/documents/app_admins/$(request.auth.uid))))
+      || get(/databases/$(database)/documents/formstate/walkinformstate).data.formstatus == "ACTIVE";
+      allow update: if (request.auth != null
+      && (exists(/databases/$(database)/documents/app_users/$(request.auth.uid))
+      || exists(/databases/$(database)/documents/app_admins/$(request.auth.uid))))
+      || get(/databases/$(database)/documents/formstate/walkinformstate).data.formstatus == "ACTIVE"
+      && (request.resource.data.diff(resource.data).affectedKeys().hasOnly(['appuserID', 'nameofcarduser', 
+      'receivedateandtime', 'receivetype', 'specificcardnum'])
+      && ((request.resource.data.appuserID is string && request.resource.data.nameofcarduser is string
+      && request.resource.data.receivedateandtime is string && request.resource.data.receivetype is string
+      && request.resource.data.specificcardnum is string)
+      && (request.resource.data.appuserID.size() > 0 && request.resource.data.nameofcarduser.size() > 0
+      && request.resource.data.receivedateandtime.size() > 0 && request.resource.data.receivetype.size() > 0
+      && request.resource.data.specificcardnum.size() > 0))
+      && isValueIncluded(request.resource.data.receivetype, ['CARD_CREATION', 'CARD_RENEWAL',
+      'CARD_REPRINT'])
+      && (request.resource.data.appuserID.matches('\\b[a-zA-Z0-9]{28}\\b')
+      && request.resource.data.nameofcarduser.matches('^[A-Za-zñ.\\s]+[A-Za-zñ.\\s]+(?:\\s(?:Jr\\.|Sr\\.|[IVX]+))?$')
+      && request.resource.data.receivedateandtime.matches('\\d{2}\\/\\d{2}\\/\\d{4} at \\d{1,2}:\\d{2}(AM|NN|PM) to \\d{1,2}:\\d{2}(AM|NN|PM)')
+      && request.resource.data.specificcardnum.matches('^\\d{2}-\\d{4}-\\d{3}-\\d{4}$')));
+      allow delete: if (request.auth != null 
+      && exists(/databases/$(database)/documents/app_admins/$(request.auth.uid)));
+    }
+    
+    match /archived_cards/{archivedoc}{
+      allow create: if (request.auth != null
+      && (exists(/databases/$(database)/documents/app_users/$(request.auth.uid))
+      || exists(/databases/$(database)/documents/app_admins/$(request.auth.uid))))
+      || get(/databases/$(database)/documents/formstate/walkinformstate).data.formstatus == "ACTIVE"
+      && request.resource.data.keys().hasOnly(['appuserID', 'cardnumber', 
+      'cardstatus', 'dateofissue', 'disabilitytype', 'guardianname', 'guardianphone', 
+      'registrantaddress', 'registrantbirthday', 'registrantbloodtype','registrantfullname', 
+      'registrantgender', 'renewaldate', 'receivedate', 'medicertpath', 'psacertpath', 
+      'brycertpath', 'imagefilepath', 'affidavitpath', 'esignpath'])
+      && (request.resource.data.appuserID is string && request.resource.data.cardnumber is string 
+      && request.resource.data.cardstatus is string && request.resource.data.dateofissue is string
+      && request.resource.data.disabilitytype is string && request.resource.data.guardianname is string
+      && request.resource.data.guardianphone is string && request.resource.data.registrantaddress is string 
+      && request.resource.data.registrantbirthday is string && request.resource.data.registrantbloodtype is string 
+      && request.resource.data.registrantfullname is string && request.resource.data.registrantgender is string
+      && request.resource.data.renewaldate is string)
+      && (request.resource.data.appuserID.size() > 0
+      && request.resource.data.cardnumber.size() > 0
+      && request.resource.data.cardstatus.size() > 0
+      && request.resource.data.dateofissue.size() > 0
+      && request.resource.data.disabilitytype.size() > 0
+      && request.resource.data.guardianname.size() > 0
+      && request.resource.data.guardianphone.size() > 0
+      && request.resource.data.registrantaddress.size() > 0
+      && request.resource.data.registrantbirthday.size() > 0
+      && request.resource.data.registrantbloodtype.size() > 0
+      && request.resource.data.registrantfullname.size() > 0
+      && request.resource.data.registrantgender.size() > 0
+      && request.resource.data.renewaldate.size() > 0)
+      && (isValueIncluded(request.resource.data.disabilitytype, 
+      ['n.a.', 'Psychosocial disability', 'Disability resulting from a chronic illness', 'Learning disability',
+       'Visual disability', 'Orthopedic/Physical disability', 'Mental disability', 'Intellectual disability', 
+       'Hearing disability', 'Speech or language impairment', 'Cancer', 'Rare Disease'])
+      && isValueIncluded(request.resource.data.registrantgender, ['n.a.', 'Male', 'Female'])
+      && isValueIncluded(request.resource.data.registrantbloodtype, ['n.a.', 'A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-'])
+      && isValueIncluded(request.resource.data.cardstatus, ['DRAFT', 'SUBMITTED', 'RENEWED', 'PENDING_RENEWAL', 'RENEW_DRAFT', 'PENDING_REPRINT']))
+      && (request.resource.data.appuserID.matches('\\b[a-zA-Z0-9]{28}\\b|Walk-in submission')
+      && request.resource.data.cardnumber.matches('^\\d{2}-\\d{4}-\\d{3}-\\d{4}$|To be assigned\\.')
+      && request.resource.data.registrantfullname.matches('^[A-Za-zñ.\\s]+[A-Za-zñ.\\s]+(?:\\s(?:Jr\\.|Sr\\.|[IVX]+))?$')
+      && request.resource.data.registrantaddress.matches('^[\\w\\d,-ñ#&.\\s]*$')
+      && request.resource.data.registrantbirthday.matches('\\b(19[0-9]{2}|20[0-9]{2})\\/(0[1-9]|1[0-2])\\/([0-2][0-9]|3[01])\\b')
+      && request.resource.data.guardianname.matches('^[A-Za-zñ.\\s]+[A-Za-zñ.\\s]+(?:\\s(?:Jr\\.|Sr\\.|[IVX]+))?$')
+      && request.resource.data.guardianphone.matches('\\d{11}|(?:\\d{3}-){2}\\d{4}|\\(\\d{3}\\)\\d{3}-?\\d{4}')
+      && request.resource.data.dateofissue.matches('\\b(0[1-9]|1[0-2])\\/(0[1-9]|[12][0-9]|3[01])\\/(20[0-9]{2})\\b|Not yet scheduled\\.')
+      && request.resource.data.renewaldate.matches('\\b(20[0-9]{2})\\/(0[1-9]|1[0-2])\\/(0[1-9]|[12][0-9]|3[01])\\b|Not yet assigned\\.'));
+      allow update, delete: if false;
+    }
+    
+    match /delete_requests/{requestdoc}{
+      allow create: if request.resource.data.keys().hasAll(["name", "email", "message"])
+      && (request.resource.data.name is string && request.resource.data.email is string
+      && request.resource.data.message is string && (request.resource.data.name.size() > 0 
+      && request.resource.data.email.size() > 0 && request.resource.data.message.size() > 0)
+      && (request.resource.data.name.matches('^[A-Za-zñ.\\s]+[A-Za-zñ.\\s]+(?:\\s(?:Jr\\.|Sr\\.|[IVX]+))?$')
+      && request.resource.data.email.matches('[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}')
+      && request.resource.data.message.matches('^[a-zA-Z0-9\\s\\-@%#&!?,.]{1,800}$')));
+      allow read: if request.auth != null && exists(/databases/$(database)/documents/app_admins/$(request.auth.uid));
+      allow update, delete: if false;
+    }
+  }
+}

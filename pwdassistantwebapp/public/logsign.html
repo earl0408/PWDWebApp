@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Login & Registration</title>
+	<link rel="stylesheet" href="css/logsignstyle.css">
+   <link rel="icon" type="image/png" href="images/appmainlogo.png" sizes="48x48"/>
+</head>
+<body>
+	<div class="container">
+		<div id="LoginAndRegistrationForm">
+			<h1 id="formTitle">Log In</h1>
+			<div id="formSwitchBtn">
+				<button onclick="tologinform()" id="ShowLoginBtn" class="active">Log In</button>
+				<button onclick="tosignupform()" id="ShowRegistrationBtn">Sign Up</button>
+			</div>
+			<div id="LoginForm">
+				<form>
+					<div class="center">
+						<input id="LoginEmail" class="input-text" type="text" placeholder="Email Address"
+                   oninput="this.value = this.value.replace(/[^0-9a-z.\@]/g, '');"> 
+						<input id="LoginPassword" class="mt-10 input-text" type="password" placeholder="Password"
+                   oninput="this.value = this.value.replace(/[^0-9A-Za-z.\#\&\!\?\^\+\=\,\@\%\$]/g, '');">
+					</div>
+					
+					<div class="forgot-pass-remember-me mt-10">
+						<div class="forgot-pass">
+							<a id="ForgotPassword" href="JavaScript:void(0);" onclick="toforgotpassword()">Forgot Password?</a>
+						</div>
+						<div class="remember-me">
+							<input id="rememberMe" type="checkbox">
+							<label for="rememberMe">Remember Me</label>
+						</div>
+					</div>
+
+					<div class="center mt-20">
+						<input class="Submit-Btn" type="button" value="Log In" id="LoginBtn">
+					</div>
+				</form>
+				<p class="center mt-20 dont-have-account">
+					Don't have an account? 
+					<a href="JavaScript:void(0);" onclick="tosignupform()">Sign up now</a>
+				</p>
+			</div>
+			<div id="RegistrationFrom">
+				<form>
+					<div class="center">
+						<input id="RegiName" class="input-text" type="text" placeholder="Full Name">
+						<input id="RegiEmailAddress" class="input-text mt-10" type="email" placeholder="Email Address"
+                   oninput="this.value = this.value.replace(/[^0-9a-z.\@]/g, '');">
+						<input id="RegiPassword" class="mt-10 input-text" type="password" placeholder="Password"
+						       oninput="this.value = this.value.replace(/[^0-9A-Za-z.\#\&\!\?\^\+\=\,\@\%\$]/g, '');">
+						<input id="RegiConfirmPassword" class="mt-10 input-text" type="password" placeholder="Confirm Password"
+						       oninput="this.value = this.value.replace(/[^0-9A-Za-z.\#\&\!\?\^\+\=\,\@\%\$]/g, '');">
+					</div>
+					<div class="center mt-20">
+						<input class="Submit-Btn" type="button" value="Create Account" id="RegistrationitBtn">
+					</div>
+				</form>
+				<p class="center mt-20 already-have-account">
+					Already have an account? 
+					<a href="JavaScript:void(0);" onclick="tologinform()">Log in now</a>
+				</p>
+			</div>
+			<div id="ForgotPasswordForm">
+				<form>
+					<div class="center mt-20">
+						<input class="input-text " type="email" id="ForgotPassEmail" placeholder="Email Address"
+                   oninput="this.value = this.value.replace(/[^0-9a-z.\@]/g, '');">
+					</div>
+					<div class="center mt-20">
+						<input onclick="return resetvalidation();" class="Submit-Btn" type="submit" value="Reset Password" id="PasswordResetBtn" >
+					</div>
+				</form>
+				<p class="center mt-20 already-have-account">
+					Back to the 
+					<a href="JavaScript:void(0);" onclick="tologinform()">Login page</a> | <a href="JavaScript:void(0);" onclick="tosignupform()">Registration page</a>
+				</p>
+			</div>
+		</div>
+	</div>
+
+	<script src="js/logsigntransition.js" type="text/javascript"></script>
+	<script src="js/logsignvalidation.js" type="text/javascript"></script>
+	<script type="module">
+		    import {initializeApp} from "https://www.gstatic.com/firebasejs/9.22.1/firebase-app.js";
+       
+        const firebaseConfig = {
+          apiKey: "AIzaSyCDNLsVNK45kH5PRCaXBw3wV9Nkw2jGdv8",
+          authDomain: "pwdcardregisterapp.firebaseapp.com",
+          databaseURL: "https://pwdcardregisterapp-default-rtdb.firebaseio.com",
+          projectId: "pwdcardregisterapp",
+          storageBucket: "pwdcardregisterapp.appspot.com",
+          messagingSenderId: "1097703662378",
+          appId: "1:1097703662378:web:d66126bbf452d5c290f453"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        import {getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, sendPasswordResetEmail} from "https://www.gstatic.com/firebasejs/9.22.1/firebase-auth.js";
+        import {getFirestore, doc, getDoc, getDocs, setDoc, collection, query, where, addDoc} from "https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore.js";
+        const db = getFirestore(app);
+        const auth = getAuth(app);
+
+        const LogEmailFLD = document.querySelector("#LoginEmail");
+        const LogPasswordFLD = document.querySelector("#LoginPassword");
+        const LogInBTN = document.querySelector("#LoginBtn");
+
+        const SignNameFLD = document.querySelector("#RegiName");
+        const SignEmailFLD = document.querySelector("#RegiEmailAddress");
+        const SignPasswordFLD = document.querySelector("#RegiPassword");
+        const SignUpBTN = document.querySelector("#RegistrationitBtn");
+    
+        const ResetPassEmailFLD = document.querySelector("#ForogtPassEmail");
+        const ResetPassBTN = document.querySelector("#PasswordResetBtn");
+
+        const signnameval = SignNameFLD.value;
+        const signemailval = SignEmailFLD.value;
+        const signpassval = SignPasswordFLD.value;
+
+        var isSignSuccess;
+    
+        function generateRandomString(length) {
+          const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+          let result = '';
+
+          for (let i = 0; i < length; i++) {
+             result += characters.charAt(Math.floor(Math.random() * characters.length));
+          }
+
+          return result;
+        }
+
+        const randomString = generateRandomString(20);
+    
+        function getRandomValueFromArray(array) {
+           if (array.length === 0) {
+             return null;
+           }
+
+           const randomIndex = Math.floor(Math.random() * array.length);
+           return array[randomIndex];
+        }
+
+        const counternums = [1, 2, 3, 4, 5];
+
+        const userSignUp = async() => {
+          signupvalidation();
+          if(signupvalidation() === true){
+            const signnameval = SignNameFLD.value;
+            const signemailval = SignEmailFLD.value;
+            const signpassval = SignPasswordFLD.value;
+            var adminref = collection(db, "app_admins");
+            const maindocref = doc(db, "adminstafflist", signnameval);
+            const docref1 = await query(adminref, where("adminname", "==", signnameval));
+            if(maindocref.exists){
+              ifnameexists();
+            }else{
+              createUserWithEmailAndPassword(auth, signemailval, signpassval)
+              .then((userCredential) => {
+                 const user = userCredential.user;
+                 const rcount = getRandomValueFromArray(counternums);
+                 const adminuserData = {
+                    adminname: signnameval,
+                    adminemail: signemailval,
+                    assignedcounter: rcount
+                 }
+                 const signUpDoc = doc(db, "app_admins", randomString);
+                 setDoc(signUpDoc, adminuserData).then(()=>{
+                    window.location.href = "dashboardhome.html";
+                 }).catch((error)=>{
+                    alert("Something wrong happened, please try again. Error: " + error);
+                 });
+              }).catch((error) => {
+                 if(error = "auth/email-already-in-use"){
+                   ifemailexists();
+                 }else{
+                   alert("Something wrong happened, please try again. Error: " + error);	
+                 }
+              })
+            }			
+          }
+        }
+
+        const userLogIn = async() => {
+          loginvalidation();
+          if(loginvalidation() == true){
+             const logemailval = LogEmailFLD.value;
+             const logpassval = LogPasswordFLD.value;
+             signInWithEmailAndPassword(auth, logemailval, logpassval)
+             .then((userCredential) => {
+                const user = userCredential.user;
+                window.location.href = "dashboardhome.html";
+             }).catch((error) => {
+                if(error = "auth/invalid-email"){
+                ifemaildoesnotexist();
+                console.log(error);
+                }else{
+                alert("Something wrong happened, please try again. Error: " + error);
+                console.log(error);
+                }
+             })
+          } 
+        }
+        
+        const userResetPassword = async() => {
+          resetvalidation();
+          if(resetvalidation() == true){
+             const emailtoRescue = ResetPassEmailFLD.value;
+             sendPasswordResetEmail(auth, emailtoRescue).then(() => {
+                alert("Password successfully reset. We have sent a message to your email, Please click the link to set a new password for your account.");
+             }).catch((error) => {
+                if(error = "auth/invalid-email"){
+                ifemaildoesnotexist();
+                console.log(error);
+                }else{
+                alert("Something wrong happened, please try again. Error: " + error);
+                console.log(error);
+                }
+             })
+          }
+        }
+
+        SignUpBTN.addEventListener('click', userSignUp);
+        LogInBTN.addEventListener('click', userLogIn);
+        ResetPassBTN.addEventListener('click', userResetPassword);
+	</script>
+</body>
+</html>

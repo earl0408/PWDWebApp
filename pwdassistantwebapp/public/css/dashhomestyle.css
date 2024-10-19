@@ -1,0 +1,488 @@
+/* Google Fonts - Poppins */
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap");
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Poppins", sans-serif;
+}
+body {
+  min-height: 100%;
+  background: #e3f2fd;
+}
+nav {
+  position: sticky;
+  top: 0;
+  left: 0;
+  height: 70px;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  background: snow;
+  box-shadow: 0 0 1px rgba(0, 0, 0, 0.1);
+}
+
+nav .logo {
+  display: flex;
+  align-items: center;
+  margin: 0 24px;
+}
+
+.logo .fa-bars {
+  color: #333;
+  font-size: 19px;
+  margin-right: 14px;
+  cursor: pointer;
+}
+
+.logo .logo-name {
+  color: #333;
+  font-size: 22px;
+  font-weight: 500;
+}
+
+.sidebar .logo .fa-bars {
+  color: white;
+  font-size: 19px;
+  margin-right: 14px;
+  cursor: pointer;
+} 
+
+.sidebar .logo .logo-name {
+  color: white;
+  font-size: 22px;
+  font-weight: 500;
+}
+
+nav .sidebar {
+  position: fixed;
+  top: 0;
+  left: -100%;
+  height: 100%;
+  width: 300px;
+  padding: 20px 0;
+  background-color: green;
+  box-shadow: 0 5px 1px rgba(0, 0, 0, 0.1);
+  transition: all 0.4s ease;
+}
+
+nav.open .sidebar {
+  left: 0;
+  z-index: 1100;
+}
+.sidebar .sidebar-content {
+  display: flex;
+  height: 100%;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 30px 16px;
+}
+.sidebar-content .list {
+  list-style: none;
+}
+
+.list .nav-link {
+  display: flex;
+  align-items: center;
+  margin: 8px 0;
+  padding: 14px 12px;
+  border-radius: 8px;
+  text-decoration: none;
+}
+
+.list .nav-link .active{
+  display: flex;
+  align-items: center;
+  margin: 8px 0;
+  padding: 14px 12px;
+  border-radius: 8px;
+  text-decoration: none;
+  color: white
+}
+
+.list .active{
+  display: flex;
+  align-items: center;
+  margin: 8px 0;
+  padding: 14px 12px;
+  border-radius: 8px;
+  text-decoration: none;
+  background-color: darkgoldenrod;
+}
+
+.lists .nav-link:hover {
+  
+  background-color: #4070f4;
+}
+.nav-link .icon {
+  margin-right: 14px;
+  font-size: 18px;
+  color: white;
+}
+
+.nav-link .link {
+  font-size: 16px;
+  color: white;
+  font-weight: 400;
+}
+
+.lists .nav-link:hover .icon,
+.lists .nav-link:hover .link {
+  color: #fff;
+}
+
+.overlay {
+  position: fixed;
+  top: 0;
+  left: -100%;
+  height: 1000vh;
+  width: 200%;
+  opacity: 0;
+  pointer-events: none;
+  transition: all 0.4s ease;
+  background: rgba(0, 0, 0, 0.3);
+}
+
+nav.open ~ .overlay {
+  opacity: 1;
+  left: 300px;
+  pointer-events: auto;
+}
+
+.nav-link-queue{
+  display: flex;
+  align-items: center;
+  float: right;
+  margin: 8px 0;
+  padding: 14px 12px;
+  border-radius: 8px;
+  text-decoration: none;
+}
+
+.card-content{
+  position: relative;
+  margin-top: 5vh;
+  min-height: 10vh;
+  height: 200px;
+  z-index: -1;
+}
+
+.card-content .cards, .tablescontent .tables{
+  padding: 10px, 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.card-content .cards .card{
+  width: 270px;
+  height: 150px;
+  background-color: white;
+  border-radius: 7px;
+  margin: 10px 10px;
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+}
+
+.card-content .cards .card .iconside{
+  position: relative;
+  width: 40px;
+  height: 40px;
+  float: right;
+  vertical-align: top;
+}
+
+.card-content .cards .card .iconside .icon{
+  margin-right: 12px;
+  font-size: 40px;
+  color: green;
+}
+
+.cheaddiv, .queuediv{
+  margin-top: 30px;
+}
+
+.account{
+  margin-left: 10px;
+  float: right;
+}
+
+h1{
+  font-size: 40px;
+}
+
+h1.chartheading{
+  margin-top: 10px;
+  height: fit-content;
+  text-align: center;
+}
+
+h2.queueheading{
+  margin-top: 7px;
+  height: fit-content;
+  text-align: center;
+  font-size: 32px;
+}
+
+.queuecallers{
+  width: 500px;
+  height: 375px;
+  border-radius: 7px;
+  background-color: snow;
+  margin: 10px auto 0;
+}
+
+.servinginfo{
+  width: 380px;
+  height: 150px;
+  border-radius: 7px;
+  background-color: snow;
+  margin: 20px auto 0;
+}
+
+.countertable th, .countertable td{
+  border: 1px solid black;
+}
+
+.countertable th{
+  width: 100px;
+  height: 35px;
+  text-align: center;
+  font-size: 20px;
+}
+
+.countertable th:nth-child(2){
+  width: 240px;
+}
+
+.countertable td{
+  height: 60px;
+  font-size: 45px;
+  font-weight: 600;
+}
+
+.qcaller1, .qcaller2, .qcaller3{
+  position: relative;
+  top: 10px;
+  width: 480px;
+  height: 110px;
+  border: 1px solid black;
+  margin: 10px auto 10px;
+  border-radius: 7px;
+}
+
+.queuecallers .col-lg-5{
+  height: 109px;
+  display: inline-block;
+  margin-left: 15px;
+}
+
+.queuecallers .col-lg-4{
+  height: 109px;
+  display: inline-block;
+}
+
+.qty{
+  margin-top: 5px;
+  font-size: 22px;
+  font-weight: 500;
+}
+
+.qnum1, .qnum2, .qnum3{
+  font-size: 40px;
+  font-weight: 500;
+  line-height: 40px;
+}
+
+h3{
+  font-size: 24px;
+  margin-top: 12px;
+  height: 30px;
+  width: 220px;
+}
+
+.call1, .call2, .call3, 
+.notify1, .notify2, .notify3{
+  margin-top: 10px;
+}
+
+.tablescontent{
+  width: 1175px;
+  margin-left: auto;
+  margin-right: auto;
+  min-height: 55vh;
+  display: flex;
+  justify-content: space-around;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  z-index: -7;
+}
+
+.tablescontent .receiveschedule{
+  min-height: 50vh;
+  flex: 5;
+  background: white;
+  margin: 0 20px 20px 20px;
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+}
+
+.tablescontent .useraccounts{
+  flex: 2;
+  background: white;
+  min-height: 50vh;
+  display: flex;
+  margin: 0 20px 20px 20px;
+  border-radius: 10px;
+  flex-direction: column;
+}
+
+.schedtabletitle, .usertabletitle{
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  padding: 10px 10px;
+  border-bottom: 2px solid green;
+}
+
+.viewallbtn{
+  background: chartreuse;
+  border-radius: 7px;
+  color: black;
+  padding: 5px;
+}
+
+.num, .cname, .cnum, .recdt, .rectype, td{
+  padding-left: 10px;
+  padding-top: 5px;
+}
+
+.recdt{
+  width: 240px;
+}
+
+.schedhead tr{
+  z-index: 0;
+  width: 100%;
+  background-color: snow;
+}
+
+.stablecon, .htablecon{
+  height: 300px;
+  overflow-y: auto;
+}
+
+.chart1, .chart2, .chart3, .chart4{
+  width: 800px;
+  background-color: white;
+  border-radius: 7px;
+  margin: 10px 10px;
+  display: block;
+  margin-top: 30px;
+  margin-bottom: 40px;
+  margin-left: auto;
+  margin-right: auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  z-index: -10;
+  position: relative;
+}
+
+.printclick{
+  width: 200px;
+  height: 40px;
+  margin: auto;
+  margin-top: 10px;
+}
+
+.printtableBTN{
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 3px;
+  margin-left: 3px;
+  background-color: cyan;
+  border: 3px solid dodgerblue;
+  border-radius: 7px;
+  padding-left: 7px;
+  padding-right: 7px;
+  padding-top: 3px;
+  padding-bottom: 3px;
+  text-align: center;
+  text-decoration: none;
+  font-size: 18px;
+  color: black;
+  width: 100%;
+  height: 40px;
+}
+
+.chart1{
+  height: 850px;  
+}
+
+.chart2, .chart3, .chart4{
+  height: 500px;  
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background-color: rgba(255,255,255,0);
+}
+
+::-webkit-scrollbar-thumb {
+  background: green; 
+  border-radius: 8px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: lime; 
+}
+
+@media print{
+  nav, .cheaddiv, .printclick{    
+     display: none;
+  }
+ 
+  .chart1{
+     height: 800px;  
+     width: 80%;
+     border: 1px solid black;
+  }
+
+  .chart2{
+     height: 590px; 
+     width: 80%;
+     border: 1px solid black;
+  }
+ 
+  .chart3, .chart4{
+     margin-top: 70px;
+     height: 600px; 
+     width: 80%;
+     border: 1px solid black;
+  }
+}
+
+@media screen and (max-width: 1175px) {
+  
+    .tablescontent{
+       width: 900px;
+       margin-top: 18vh;
+       margin-left: auto;
+       margin-right: auto;
+       min-height: 60vh;
+       display: flex;
+       justify-content: space-around;
+       align-items: center;
+       flex-wrap: wrap;
+        
+    }
+}
